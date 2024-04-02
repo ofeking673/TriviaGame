@@ -87,18 +87,30 @@ void MagshMessageServer::acceptClient()
 
 void MagshMessageServer::clientHandler(const SOCKET client_socket)
 {
-	char buf[6] = {0};
-	const char* sendBuf = "Hello!";
+	char* buf = new char[100];
+	std::string sendBuf;
+
 	try
 	{
-		for (int i = 0; i < 5; i++)
+		while (buf[0] != 'x')
 		{
+			for (int i = 0; i < 100; i++)
+			{
+				buf[i] = 0;
+			}
+			recv(client_socket, buf, 100, 0);
 
-			recv(client_socket, buf, 5, 0);
 			TRACE("%s", buf);
 
-			send(client_socket, sendBuf, strlen(sendBuf), 0);
+			sendBuf = "Recieved";
+			if (strcmp(buf, "Hello") == 0)
+			{
+				sendBuf = "Hello!";
+			}
+
+			send(client_socket, sendBuf.c_str(), sendBuf.size(), 0);
 		}
+		TRACE("Client sent EXIT and quit.");
 	}
 	catch (const std::exception& e)
 	{
