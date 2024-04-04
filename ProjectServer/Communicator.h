@@ -18,24 +18,27 @@ public:
 	~Communicator();
 	//void serve();
 	
-	// I really don't know if this is what they
+	// HELP: I really don't know if this is what they
 	// meant to do in this function
 	void startHandleRequests();
 
 private:
 	void bindAndListen();
 
-	// Ofek, the function 'acceptClient()' was not in the UML but I think
+	// HELP: The function 'acceptClient()' was not in the UML but I think
 	// it meant to be here toogether with 'clientHandler()'
 	// If you think of a betteer way please feel free to change
-	void handleNewClient();
+	void handleNewClient(const SOCKET client_socket);
 
 
 
 	SOCKET m_serverSocket;
 	std::map<SOCKET, IRequestHandler*> m_clients;
 
-	//void acceptClient();
+	// More functions
+	void acceptClient();
+
+
 	//void clientHandler(const SOCKET client_socket);
 	//void handleReceivedMessages();
 	/*void safeDeleteUser(const SOCKET id);

@@ -46,7 +46,7 @@ void Communicator::startHandleRequests()
 	{
 		// the main thread is only accepting clients 
 		// and add then to the list of handlers
-		handleNewClient();
+		acceptClient();
 		TRACE("accepting client...");
 	}
 }
@@ -70,20 +70,8 @@ void Communicator::bindAndListen()
 }
 
 
-void Communicator::handleNewClient()
+void Communicator::handleNewClient(const SOCKET client_socket)
 {
-	// Accept client
-	SOCKET client_socket = accept(m_serverSocket, NULL, NULL);
-	if (client_socket == INVALID_SOCKET)
-		throw std::exception(__FUNCTION__);
-
-	TRACE("Client accepted !");
-	// create new thread for client	and detach from it
-	std::thread tr(&Communicator::handleNewClient, this, client_socket);
-	tr.detach();
-	m_clients[client_socket] = new LoginRequestHandler();
-
-
 	// Handle client (send or recieve messages)
 	char* buf = new char[100];
 	std::string sendBuf;
@@ -116,4 +104,18 @@ void Communicator::handleNewClient()
 	}
 
 	closesocket(client_socket);
+}
+
+void Communicator::acceptClient()
+{
+	// Accept client
+	SOCKET client_socket = accept(m_serverSocket, NULL, NULL);
+	if (client_socket == INVALID_SOCKET)
+		throw std::exception(__FUNCTION__);
+
+	TRACE("Client accepted !");
+	// create new thread for client	and detach from it
+	std::thread tr(&Communicator::handleNewClient, this, client_socket);
+	tr.detach();
+	m_clients[client_socket] = new LoginRequestHandler();
 }
