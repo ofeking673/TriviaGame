@@ -18,6 +18,29 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Communicator.h" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="IRequestHandler.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="JsonResponsePacketDeserializer.h" />
+    <ClInclude Include="JsonResponsePacketSerializer.h" />
+    <ClInclude Include="LoginRequestHandler.h" />
+    <ClInclude Include="MagshMessageServer.h" />
+    <ClInclude Include="WSAInitializer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Communicator.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="IRequestHandler.cpp" />
+    <ClCompile Include="JsonResponsePacketDeserializer.cpp" />
+    <ClCompile Include="JsonResponsePacketSerializer.cpp" />
+    <ClCompile Include="LoginRequestHandler.cpp" />
+    <ClCompile Include="MagshMessageServer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="WSAInitializer.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{B75ECC3E-39B5-4673-BF76-8F5798337FE2}</ProjectGuid>
@@ -122,21 +145,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Helper.cpp" />
-    <ClCompile Include="IRequestHandler.cpp" />
-    <ClCompile Include="LoginRequestHandler.cpp" />
-    <ClCompile Include="MagshMessageServer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="WSAInitializer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Helper.h" />
-    <ClInclude Include="IRequestHandler.h" />
-    <ClInclude Include="LoginRequestHandler.h" />
-    <ClInclude Include="MagshMessageServer.h" />
-    <ClInclude Include="WSAInitializer.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

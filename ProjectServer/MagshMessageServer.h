@@ -24,13 +24,6 @@ private:
 	void acceptClient();
 	void clientHandler(const SOCKET client_socket);
 	void handleReceivedMessages();
-	/*void safeDeleteUser(const SOCKET id);
-
-	
-	std::string getCurrentUser();
-	std::string getNextUser();
-	std::string get_user_name(const SOCKET id);
-	std::string getAllUsernames();*/
 		
 	SOCKET _socket;
 	std::map<SOCKET, LoginRequestHandler*> _users;

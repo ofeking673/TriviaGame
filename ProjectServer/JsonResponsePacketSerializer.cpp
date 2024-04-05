@@ -68,7 +68,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& sig
 
     // Serialize the JSON object to a string
     std::string serializedString = j.dump();
-
+    std::cout << serializedString;
     // Convert the string to Buffer
     for (auto& ch : serializedString)
     {
