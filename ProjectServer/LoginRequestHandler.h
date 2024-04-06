@@ -6,13 +6,13 @@ class LoginRequestHandler : public IRequestHandler
 {
 public:
 	LoginRequestHandler() = default;
-	LoginRequestHandler(std::string name, std::string pass, std::string email) : IRequestHandler(), name(name), pass(pass), email(email) {};
+
+	virtual bool isRequestRelevant(Requestinfo req) override {
+		return  (req.status == Login || req.status == SignUp);
+	};
 
 	virtual void HandleRequest() override {
-		
+		//HELP: my brain hurts i dont even know when to start
 	};
 private:
-	std::string name;
-	std::string pass;
-	std::string email;
 };

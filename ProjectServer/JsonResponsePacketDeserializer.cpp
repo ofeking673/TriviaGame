@@ -37,7 +37,8 @@ json JsonResponsePacketDeserializer::getJsonFromString(std::vector<unsigned char
 
     for (unsigned char ch : x)
     {
-        data += static_cast<char>(ch);
+        data += static_cast<char>(ch); //just transfer unsigned chars into normal chars
+        //pretty sure this SHOULD work as a decoder
     }
 
     j = json::parse(data);

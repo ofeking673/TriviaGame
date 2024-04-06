@@ -11,12 +11,6 @@
 #include "JsonResponsePacketDeserializer.h"
 
 
-enum packetType {
-	Login,
-	SignUp,
-	Error
-};
-
 // accept new clients and handle them.
 class Communicator
 {

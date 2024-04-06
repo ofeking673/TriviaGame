@@ -1,11 +1,18 @@
 #pragma once
 #include <iostream>
+#include "JsonResponsePacketDeserializer.h"
+
+enum packetType {
+	Login,
+	SignUp,
+	Error
+};
+
+
 class IRequestHandler
 {
 public:
-	unsigned int status;
-	std::string errmsg;
-
+	virtual bool isRequestRelevant(Requestinfo req) = 0;
 	virtual void HandleRequest() = 0;
 };
 
