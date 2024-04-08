@@ -73,11 +73,30 @@ void Communicator::bindAndListen()
 void Communicator::handleNewClient(const SOCKET client_socket)
 {
 	char* buf = new char[1000];
+	std::string sendBuf;
 	try
 	{
 		while (true)
 		{
-			recv(client_socket,)
+			recv(client_socket, buf, strlen(buf), 0);
+			Requestinfo info = breakDownStr(buf);
+
+			switch (info.id) //TODO: add more types
+			{
+			case Login || SignUp:
+			{
+				LoginRequestHandler* login = new LoginRequestHandler();
+				m_clients[client_socket] = login;
+
+				RequestResult result = login->HandleRequest(info);
+
+				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+				break;
+			}
+			default:
+				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
+			}
 		}
 		TRACE("Client sent EXIT and quit.");
 	}
@@ -87,6 +106,29 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	}
 
 	closesocket(client_socket);
+}
+
+Requestinfo Communicator::breakDownStr(char* buf)
+{
+	Requestinfo info;
+	std::string str(buf);
+
+	Buffer buffer;
+	
+	for (int i = 4; i < strlen(buf); i++)
+	{
+		buffer.data.push_back(buf[i]);
+	}
+
+	info.buf = buffer;
+	info.id = getIdFromStr(str);
+
+	info.time = clock();
+}
+
+RequestId Communicator::getIdFromStr(std::string str)
+{
+	return RequestId(str[0]);
 }
 
 void Communicator::acceptClient()
