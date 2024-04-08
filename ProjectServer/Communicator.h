@@ -33,7 +33,7 @@ private:
 
 	// More functions
 	void acceptClient();
-	void sendResponse(packetType type, Requestinfo* request);
+	void sendResponse(Requestinfo* request);
 	
 
 

@@ -72,29 +72,12 @@ void Communicator::bindAndListen()
 
 void Communicator::handleNewClient(const SOCKET client_socket)
 {
-	// Handle client (send or recieve messages)
-	char* buf = new char[100];
-	std::string sendBuf;
-
+	char* buf = new char[1000];
 	try
 	{
-		while (buf[0] != 'x')
+		while (true)
 		{
-			for (int i = 0; i < 100; i++)
-			{
-				buf[i] = 0;
-			}
-			recv(client_socket, buf, 100, 0);
-
-			TRACE("%s", buf);
-
-			sendBuf = "Recieved";
-			if (strcmp(buf, "Hello") == 0)
-			{
-				sendBuf = "Hello!";
-			}
-
-			send(client_socket, sendBuf.c_str(), sendBuf.size(), 0);
+			recv(client_socket,)
 		}
 		TRACE("Client sent EXIT and quit.");
 	}
@@ -120,31 +103,24 @@ void Communicator::acceptClient()
 	m_clients[client_socket] = new LoginRequestHandler();
 }
 
-void Communicator::sendResponse(packetType type, Requestinfo* request)
+void Communicator::sendResponse(Requestinfo* request)
 {
 	//we analyze each request class
 	Buffer buf;
-	switch (type)
+	switch (request->id)
 	{
 		case Login:
 		{
 			LoginResponse login;
-			login.status = request->status;
+			login.status = request->id;
 			buf = m_serializer.serializeResponse(login);
 			break;
 		}
 		case SignUp:
 		{
 			SignupResponse signup;
-			signup.status = request->status;
+			signup.status = request->id;
 			buf = m_serializer.serializeResponse(signup);
-			break;
-		}
-		case Error:
-		{
-			ErrorResponse err;
-			err.message = "you have error\n";
-			buf = m_serializer.serializeResponse(err);
 			break;
 		}
 	}

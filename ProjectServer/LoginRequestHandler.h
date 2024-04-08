@@ -8,7 +8,7 @@ public:
 	LoginRequestHandler() = default;
 
 	virtual bool isRequestRelevant(Requestinfo req) override {
-		return  (req.status == Login || req.status == SignUp);
+		return  (req.id == Login || req.id == SignUp);
 	};
 
 	virtual void HandleRequest() override {

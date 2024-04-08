@@ -2,12 +2,23 @@
 #include <iostream>
 #include "JsonRequestPacketDeserializer.h"
 
-enum packetType {
+enum RequestId {
 	Login,
 	SignUp,
-	Error
 };
 
+struct RequestResult {
+	Buffer response;
+	IRequestHandler* newHandler;
+};
+
+
+struct Requestinfo
+{
+	RequestId id;
+	clock_t time;
+	Buffer buf;
+};
 
 class IRequestHandler
 {
