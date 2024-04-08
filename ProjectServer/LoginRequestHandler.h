@@ -6,13 +6,10 @@ class LoginRequestHandler : public IRequestHandler
 {
 public:
 	LoginRequestHandler() = default;
+	virtual ~LoginRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo req) override {
-		return  (req.id == Login || req.id == SignUp);
-	};
+	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
+	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
 
-	virtual void HandleRequest() override {
-		//HELP: my brain hurts i dont even know when to start
-	};
 private:
 };
