@@ -33,7 +33,7 @@ private:
 
 	// More functions
 	void acceptClient();
-	void sendResponse(packetType type, IRequestHandler* request);
+	void sendResponse(packetType type, Requestinfo* request);
 	
 
 

@@ -120,7 +120,7 @@ void Communicator::acceptClient()
 	m_clients[client_socket] = new LoginRequestHandler();
 }
 
-void Communicator::sendResponse(packetType type, IRequestHandler* request)
+void Communicator::sendResponse(packetType type, Requestinfo* request)
 {
 	//we analyze each request class
 	Buffer buf;
@@ -143,7 +143,7 @@ void Communicator::sendResponse(packetType type, IRequestHandler* request)
 		case Error:
 		{
 			ErrorResponse err;
-			err.message = request->errmsg;
+			err.message = "you have error\n";
 			buf = m_serializer.serializeResponse(err);
 			break;
 		}
