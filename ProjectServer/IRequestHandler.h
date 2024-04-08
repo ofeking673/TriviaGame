@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "JsonResponsePacketDeserializer.h"
+#include "JsonRequestPacketDeserializer.h"
 
 enum packetType {
 	Login,
