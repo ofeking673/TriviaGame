@@ -8,8 +8,8 @@ public:
 	LoginRequestHandler() = default;
 	virtual ~LoginRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
-	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
+	virtual bool isRequestRelevant(Requestinfo requestInfo);
+	virtual RequestResult HandleRequest(Requestinfo requestInfo);
 
 private:
 };

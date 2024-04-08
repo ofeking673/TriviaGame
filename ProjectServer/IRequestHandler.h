@@ -1,6 +1,10 @@
 #pragma once
 #include <iostream>
 #include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
+
+#define TEMP_LOGIN_STATUS 10
+#define TEMP_SIGNUP_STATUS 20
 
 enum RequestId {
 	Login,
