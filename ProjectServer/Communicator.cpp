@@ -72,14 +72,26 @@ void Communicator::bindAndListen()
 
 void Communicator::handleNewClient(const SOCKET client_socket)
 {
-	char* buf = new char[1000];
+	char* buf = new char[READ_SIZE];
 	std::string sendBuf;
+	
 	try
 	{
 		while (true)
 		{
-			recv(client_socket, buf, strlen(buf), 0);
-			Requestinfo info = breakDownStr(buf);
+			for (int i = 0; i < READ_SIZE; i++)
+			{
+				buf[i] = 0;
+			}
+
+			recv(client_socket, buf, READ_SIZE, 0);
+			std::string str(buf);
+			Buffer deserialize;
+			
+			std::string str = JsonRequestPacketDeserializer::binaryDecoder(str);
+			std::string jsonStr = str.substr(JSON_OFFSET);
+
+			Requestinfo info = breakDownStr(str);
 
 			switch (info.id) //TODO: add more types
 			{
@@ -108,22 +120,23 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	closesocket(client_socket);
 }
 
-Requestinfo Communicator::breakDownStr(char* buf)
+Requestinfo Communicator::breakDownStr(std::string buf)
 {
 	Requestinfo info;
-	std::string str(buf);
 
 	Buffer buffer;
 	
-	for (int i = 4; i < strlen(buf); i++)
+	std::string jsonStr = buf.substr(40);
+	for (int i = 4; i < buf.size(); i++)
 	{
-		buffer.data.push_back(buf[i]);
+		buffer.data.push_back(jsonStr[i]);
 	}
 
 	info.buf = buffer;
-	info.id = getIdFromStr(str);
+	info.id = getIdFromStr(buf);
 
 	info.time = clock();
+	return info;
 }
 
 RequestId Communicator::getIdFromStr(std::string str)
