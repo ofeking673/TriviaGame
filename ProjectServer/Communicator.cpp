@@ -72,12 +72,43 @@ void Communicator::bindAndListen()
 
 void Communicator::handleNewClient(const SOCKET client_socket)
 {
-	char* buf = new char[1000];
+	char* buf = new char[READ_SIZE];
+	std::string sendBuf;
+	
 	try
 	{
 		while (true)
 		{
-			recv(client_socket,)
+			for (int i = 0; i < READ_SIZE; i++)
+			{
+				buf[i] = 0;
+			}
+
+			recv(client_socket, buf, READ_SIZE, 0);
+			std::string str(buf);
+			Buffer deserialize;
+			
+			std::string str = JsonRequestPacketDeserializer::binaryDecoder(str);
+			std::string jsonStr = str.substr(JSON_OFFSET);
+
+			Requestinfo info = breakDownStr(str);
+
+			switch (info.id) //TODO: add more types
+			{
+			case Login || SignUp:
+			{
+				LoginRequestHandler* login = new LoginRequestHandler();
+				m_clients[client_socket] = login;
+
+				RequestResult result = login->HandleRequest(info);
+
+				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+				break;
+			}
+			default:
+				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
+			}
 		}
 		TRACE("Client sent EXIT and quit.");
 	}
@@ -87,6 +118,30 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	}
 
 	closesocket(client_socket);
+}
+
+Requestinfo Communicator::breakDownStr(std::string buf)
+{
+	Requestinfo info;
+
+	Buffer buffer;
+	
+	std::string jsonStr = buf.substr(40);
+	for (int i = 4; i < buf.size(); i++)
+	{
+		buffer.data.push_back(jsonStr[i]);
+	}
+
+	info.buf = buffer;
+	info.id = getIdFromStr(buf);
+
+	info.time = clock();
+	return info;
+}
+
+RequestId Communicator::getIdFromStr(std::string str)
+{
+	return RequestId(str[0]);
 }
 
 void Communicator::acceptClient()

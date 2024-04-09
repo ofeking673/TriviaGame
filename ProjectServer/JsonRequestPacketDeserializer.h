@@ -3,6 +3,8 @@
 //#include "JsonResponsePacketSerializer.h"
 #include "Buffer.h"
 #include "json.hpp"
+#include <bitset>
+#include <iostream>
 
 
 using json = nlohmann::json;
@@ -13,12 +15,6 @@ enum statusValues
 	BAD = 999
 };
 
-struct Requestinfo 
-{
-	int status;
-	clock_t time;
-	Buffer buf;
-};
 
 /*
 struct ErrorResponse
@@ -64,4 +60,6 @@ public:
 	// The parsing of message code and length will NOT be here!
 	static LoginRequest deserializeLoginRequest(const Buffer bufLoginRequest);
 	static SignupRequest deserializeSignupRequest(const Buffer bufSignupRequest);
+
+	static std::string binaryDecoder(std::string buf);
 };

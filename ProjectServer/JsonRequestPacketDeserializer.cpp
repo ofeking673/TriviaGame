@@ -33,3 +33,20 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(const Buff
     return request;
 }
 
+std::string JsonRequestPacketDeserializer::binaryDecoder(std::string buf)
+{
+    std::string output;
+    int pos = 0;
+    while (pos < buf.size())
+    {
+        std::string word = buf.substr(pos, 8);
+        pos += 8;
+        std::bitset<8> bits(word);
+        int n = bits.to_ulong();
+
+        output += char(n);
+    }
+
+    return output;
+}
+
