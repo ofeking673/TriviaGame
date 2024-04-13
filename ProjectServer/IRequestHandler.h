@@ -29,7 +29,7 @@ struct Requestinfo
 class IRequestHandler
 {
 public:
-	virtual ~IRequestHandler() = 0;
+	virtual ~IRequestHandler() {};
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
