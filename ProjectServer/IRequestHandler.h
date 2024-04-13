@@ -11,6 +11,8 @@ enum RequestId {
 	SignUp,
 };
 
+class IRequestHandler;
+
 struct RequestResult {
 	Buffer response;
 	IRequestHandler* newHandler;
