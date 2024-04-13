@@ -13,6 +13,7 @@ enum RequestId {
 
 struct RequestResult {
 	Buffer response;
+	IRequestHandler* newHandler;
 };
 
 
