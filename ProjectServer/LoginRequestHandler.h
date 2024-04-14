@@ -2,11 +2,12 @@
 #include "IRequestHandler.h"
 #include <iostream>
 #include "RequestHandlerFactory.h"
+#include "MenuRequestHandler.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
 public:
-	LoginRequestHandler() = default;
+	LoginRequestHandler(RequestHandlerFactory handlerFactory) :m_handlerFactory(handlerFactory) {}
 	virtual ~LoginRequestHandler() = default;
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo);
@@ -17,4 +18,5 @@ private:
 
 	RequestResult login(Requestinfo requestInfo);
 	RequestResult signup(Requestinfo requestInfo);
+	RequestResult error(Requestinfo requestInfo);
 };
