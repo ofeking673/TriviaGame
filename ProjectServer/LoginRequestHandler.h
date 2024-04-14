@@ -1,6 +1,7 @@
 #pragma once
 #include "IRequestHandler.h"
 #include <iostream>
+#include "RequestHandlerFactory.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
@@ -12,4 +13,8 @@ public:
 	virtual RequestResult HandleRequest(Requestinfo requestInfo);
 
 private:
+	RequestHandlerFactory& m_handlerFactory;
+
+	RequestResult login(Requestinfo requestInfo);
+	RequestResult signup(Requestinfo requestInfo);
 };
