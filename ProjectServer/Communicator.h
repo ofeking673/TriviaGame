@@ -9,6 +9,7 @@
 #include "LoginRequestHandler.h"
 #include "JsonResponsePacketSerializer.h"
 #include "JsonRequestPacketDeserializer.h"
+#include "RequestHandlerFactory.h"
 
 //offset of how many characters until json starts (1 + 4 bytes)
 #define JSON_OFFSET 40
@@ -33,6 +34,7 @@ private:
 	JsonResponsePacketSerializer m_serializer;
 	SOCKET m_serverSocket;
 	std::map<SOCKET, IRequestHandler*> m_clients;
+	RequestHandlerFactory& m_handlerFactory;
 
 	// More functions
 	void acceptClient();
