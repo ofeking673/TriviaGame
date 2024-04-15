@@ -6,9 +6,10 @@
 
 class DatabaseAccess : public IDatabase
 {
-	DatabaseAccess(std::string fileName) 
+public:
+	DatabaseAccess() 
 	{
-		open(fileName);
+		open(FILENAME);
 	};
 
 	virtual void open(std::string fileName) override
