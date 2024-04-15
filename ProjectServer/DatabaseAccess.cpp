@@ -54,6 +54,6 @@ std::map<std::string, std::string> DatabaseAccess::getAccountData(std::string na
 int getData(void* data, int argc, char** argv, char** azColName)
 {
     std::map<std::string, std::string>* map = (std::map<std::string, std::string>*)data;
-    map["password"] = argv[1];
-    map["email"] = argv[2];
+    (*map)["password"] = argv[1];
+    (*map)["email"] = argv[2];
 }
