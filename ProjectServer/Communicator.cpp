@@ -97,7 +97,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			{
 			case Login || SignUp:
 			{
-				LoginRequestHandler* login = new LoginRequestHandler();
+				LoginRequestHandler* login = new LoginRequestHandler(m_handlerFactory);
 				m_clients[client_socket] = login;
 
 				RequestResult result = login->HandleRequest(info);
