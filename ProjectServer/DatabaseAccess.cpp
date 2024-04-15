@@ -15,12 +15,7 @@ bool DatabaseAccess::doesUserExist(std::string name)
     return Exists;
 }
 
-int check(void* data, int argc, char** argv, char** azColName)
-{
-    bool* Exists = (bool*)data;
-    *Exists = argc;
-    return 0;
-}
+
 
 
 void DatabaseAccess::addUser(std::string name, std::string pass, std::string email)
@@ -37,11 +32,7 @@ bool DatabaseAccess::isPassCorrect(std::string name, std::string pass)
     return (pass == password);
 }
 
-int checkPass(void* data, int argc, char** argv, char** azColName)
-{
-    std::string* ok = (std::string*)data;
-    *ok = argv[0];
-}
+
 
 std::map<std::string, std::string> DatabaseAccess::getAccountData(std::string name)
 {
@@ -51,9 +42,24 @@ std::map<std::string, std::string> DatabaseAccess::getAccountData(std::string na
     return data;
 }
 
-int getData(void* data, int argc, char** argv, char** azColName)
+int DatabaseAccess::check(void* data, int argc, char** argv, char** azColName)
+{
+    bool* Exists = (bool*)data;
+    *Exists = argc;
+    return 0;
+}
+
+int DatabaseAccess::checkPass(void* data, int argc, char** argv, char** azColName)
+{
+    std::string* ok = (std::string*)data;
+    *ok = argv[0];
+    return 0;
+}
+
+int DatabaseAccess::getData(void* data, int argc, char** argv, char** azColName)
 {
     std::map<std::string, std::string>* map = (std::map<std::string, std::string>*)data;
     (*map)["password"] = argv[1];
     (*map)["email"] = argv[2];
+    return 0;
 }

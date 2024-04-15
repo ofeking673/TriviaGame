@@ -155,7 +155,7 @@ void Communicator::acceptClient()
 	// create new thread for client	and detach from it
 	std::thread tr(&Communicator::handleNewClient, this, client_socket);
 	tr.detach();
-	m_clients[client_socket] = new LoginRequestHandler();
+	m_clients[client_socket] = m_handlerFactory.createLoginRequestHandler();
 }
 
 void Communicator::sendResponse(Requestinfo* request)

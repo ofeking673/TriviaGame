@@ -8,6 +8,15 @@ Server::Server()
 	m_communicator = new Communicator(*m_handlerFactory);
 }
 
+Server::~Server()
+{
+	m_database->close();
+	m_database = nullptr;
+
+	m_communicator = nullptr;
+	m_database = nullptr;
+}
+
 void Server::run()
 {
 	m_communicator->startHandleRequests();

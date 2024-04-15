@@ -38,6 +38,11 @@ public:
 	virtual bool isPassCorrect(std::string name, std::string pass) override;
 
 	virtual std::map<std::string, std::string> getAccountData(std::string name) override;
+
+	static int check(void* data, int argc, char** argv, char** azColName);
+	static int checkPass(void* data, int argc, char** argv, char** azColName);
+	static int getData(void* data, int argc, char** argv, char** azColName);
+
 private:
 	sqlite3* db;
 };

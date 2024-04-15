@@ -1,8 +1,8 @@
 #pragma once
-#include "LoginRequestHandler.h"
 #include "LoginManager.h"
 #include "IDatabase.h"
 
+class LoginRequestHandler;
 
 class RequestHandlerFactory
 {

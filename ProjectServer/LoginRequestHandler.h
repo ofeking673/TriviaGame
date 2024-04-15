@@ -1,8 +1,9 @@
 #pragma once
 #include "IRequestHandler.h"
 #include <iostream>
-#include "RequestHandlerFactory.h"
 #include "MenuRequestHandler.h"
+
+class RequestHandlerFactory;
 
 class LoginRequestHandler : public IRequestHandler
 {

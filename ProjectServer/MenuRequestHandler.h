@@ -7,8 +7,8 @@ public:
 	MenuRequestHandler() = default;
 	virtual ~MenuRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo requestInfo);
-	virtual RequestResult HandleRequest(Requestinfo requestInfo);
+	virtual bool isRequestRelevant(Requestinfo requestInfo) { return true; }
+	virtual RequestResult HandleRequest(Requestinfo requestInfo) { return RequestResult(); }
 
 private:
 };

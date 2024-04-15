@@ -1,4 +1,5 @@
 #include "LoginRequestHandler.h"
+#include "RequestHandlerFactory.h"
 
 bool LoginRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
