@@ -1,14 +1,17 @@
 #include "LoginManager.h"
 
-LoginManager::LoginManager(std::string fileName) : m_database(new DatabaseAccess(fileName)) {}
+LoginManager::LoginManager(std::string fileName)
+{
+    m_database = new DatabaseAccess(fileName);
+}
 
 bool LoginManager::login(std::string name, std::string pass)
 {
-    if (db.doesUserExist(name))
+    if (m_database->doesUserExist(name))
     {
-        if (db.isPassCorrect(name, pass))
+        if (m_database->isPassCorrect(name, pass))
         {
-            auto data = db.getAccountData(name);
+            auto data = m_database.getAccountData(name);
             LoggedUser* logged = new LoggedUser(name, pass, data["email"]);
             m_loggedUsers.push_back(logged);
             return true;
@@ -19,22 +22,22 @@ bool LoginManager::login(std::string name, std::string pass)
 
 bool LoginManager::signup(std::string name, std::string pass, std::string email)
 {
-    if (!db.doesUserExist(name))
+    if (!m_database->doesUserExist(name))
     {
-        db.addUser(name, pass, email);
-        m_loggedUsers.push_back(new LoggedUser(name, pass, email));
+        m_database.addUser(name, pass, email);
+        LoggedUser user(name);
+        m_loggedUsers.push_back();
         return true;
     }
     return false;
 }
 
-bool LoginManager::logOut(std::string name)
+bool LoginManager::logout(std::string name)
 {
     for (auto it = m_loggedUsers.begin(); it != m_loggedUsers.end(); it++)
     {
-        if ((*it)->getName() == name)
+        if ((*it).getUsername() == name)
         {
-            delete* it;
             m_loggedUsers.erase(it);
             return true;
         }

@@ -6,9 +6,11 @@
 class LoginManager
 {
 public:
-	void signup(std::string username, std::string password, std::string email);
-	void login(std::string username, std::string password);
-	void logout(std::string username);
+	LoginManager(std::string fileName);
+
+	bool signup(std::string username, std::string password, std::string email);
+	bool login(std::string username, std::string password);
+	bool logout(std::string username);
 
 private:
 	IDatabase* m_database;
