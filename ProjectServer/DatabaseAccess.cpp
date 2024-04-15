@@ -18,7 +18,7 @@ bool DatabaseAccess::doesUserExist(std::string name)
 int check(void* data, int argc, char** argv, char** azColName)
 {
     bool* Exists = (bool*)data;
-    *Exists = argc;
+    *Exists = (argc == 0);
     return 0;
 }
 
@@ -32,7 +32,7 @@ void DatabaseAccess::addUser(std::string name, std::string pass, std::string ema
 bool DatabaseAccess::isPassCorrect(std::string name, std::string pass)
 {
     std::string password;
-    std::string msg = "SELECT PASS FROM USERS WHERE NAME = '" + name + "'";
+    std::string msg = "SELECT PASSWORD FROM USERS WHERE NAME = '" + name + "'";
     sqlite3_exec(db, msg.c_str(), checkPass, &password, nullptr);
     return (pass == password);
 }
@@ -43,4 +43,20 @@ int checkPass(void* data, int argc, char** argv, char** azColName)
     *ok = argv[0];
 }
 
+
+std::map<std::string, std::string> DatabaseAccess::getAccountData(std::string name)
+{
+    std::map<std::string, std::string> info;
+    std::string msg = "SELECT PASSWORD, EMAIL FROM USERS WHERE NAME = '" + name + "'";
+    sqlite3_exec(db, msg.c_str(), getInfo, &info, nullptr);
+
+    return info;
+}
+
+int getInfo(void* data, int argc, char** argv, char** azColName)
+{
+    std::map<std::string, std::string>* info = (std::map<std::string, std::string>*)data;
+    (*info)["password"] = argv[0];
+    (*info)["email"] = argv[1];
+}
 
