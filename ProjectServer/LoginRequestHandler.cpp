@@ -48,6 +48,7 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 		requestResult.response = JsonResponsePacketSerializer::serializeResponse(loginResponse);
 
 		// TO_DO add new handler to RequestResult
+		requestResult.newHandler = nullptr;
 	}
 	else if (requestInfo.id == SignUp)
 	{
@@ -64,6 +65,7 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 		requestResult.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
 
 		// TO_DO add new handler to RequestResult
+		requestResult.newHandler = nullptr;
 	}
 	else
 	{
@@ -80,6 +82,7 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 		requestResult.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 
 		// TO_DO add new handler to RequestResult
+		requestResult.newHandler = nullptr;
 	}
 
 

@@ -88,10 +88,10 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			std::string str(buf);
 			Buffer deserialize;
 			
-			std::string str = JsonRequestPacketDeserializer::binaryDecoder(str);
-			std::string jsonStr = str.substr(JSON_OFFSET);
+			std::string decodedstr = JsonRequestPacketDeserializer::binaryDecoder(str);
+			std::string jsonStr = decodedstr.substr(JSON_OFFSET);
 
-			Requestinfo info = breakDownStr(str);
+			Requestinfo info = breakDownStr(decodedstr);
 
 			switch (info.id) //TODO: add more types
 			{
