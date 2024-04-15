@@ -11,8 +11,7 @@ bool LoginManager::login(std::string name, std::string pass)
     {
         if (m_database->isPassCorrect(name, pass))
         {
-            auto data = m_database.getAccountData(name);
-            LoggedUser* logged = new LoggedUser(name, pass, data["email"]);
+            LoggedUser logged = LoggedUser(name);
             m_loggedUsers.push_back(logged);
             return true;
         }
@@ -24,9 +23,9 @@ bool LoginManager::signup(std::string name, std::string pass, std::string email)
 {
     if (!m_database->doesUserExist(name))
     {
-        m_database.addUser(name, pass, email);
+        m_database->addUser(name, pass, email);
         LoggedUser user(name);
-        m_loggedUsers.push_back();
+        m_loggedUsers.push_back(user);
         return true;
     }
     return false;
