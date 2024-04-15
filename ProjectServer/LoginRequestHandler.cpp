@@ -43,40 +43,30 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
 
-	// Login
 	// Deserialize login
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
 
 	// Login the user through login manager who uses the Database
-	m_handlerFactory.getLoginManager().login(loginRequest.username, loginRequest.password);
+	if (m_handlerFactory.getLoginManager().login(loginRequest.username, loginRequest.password))
+	{	// Succeful Login
 
-	// TO-DO
-	// Currently I DONT KNOW how to check if the login was succesful
-	// So in the future there will be a need to check that.
-	// Now I will do it as it is always succeful login.
+		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
+		MenuRequestHandler* menu = new MenuRequestHandler;
+		requestResult.newHandler = menu;
+	}
+	else
+	{	//Failed to Login
 
+		// Stay in login request handler
+		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
+		requestResult.newHandler = loginRequestHandler;
+	}
 
 	// Create response
 	LoginResponse loginResponse;
 	loginResponse.status = TEMP_LOGIN_STATUS;
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(loginResponse);
-
-	// Add new handler to RequestResult
-	// Now we say it is always succeful so it will be the menu
-	// Later we will need to check if succeful
-	if (true /*Succeful*/)
-	{
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
-		requestResult.newHandler = menu;
-	}
-	else //Faied to Login
-	{
-		// Stay in login request handler
-		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
-		requestResult.newHandler = loginRequestHandler;
-	}
 
 	return requestResult;
 }
@@ -96,34 +86,26 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buf);
 
 	// Signup the user through login manager who uses the Database
-	m_handlerFactory.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email);
-	
-	// TO-DO
-	// Currently I DONT KNOW how to check if the signup was succesful
-	// So in the future there will be a need to check that.
-	// Now I will do it as it is always succeful signup.
+	if (m_handlerFactory.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email))
+	{	// Succeful Signup
+
+		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
+		MenuRequestHandler* menu = new MenuRequestHandler;
+		requestResult.newHandler = menu;
+	}
+	else 
+	{	//Faied to Signup
+
+		// Stay in login request handler
+		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
+		requestResult.newHandler = loginRequestHandler;
+	}
 
 	// Create response
 	SignupResponse signupResponse;
 	signupResponse.status = TEMP_SIGNUP_STATUS;
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
-
-	// Add new handler to RequestResult
-	// Now we say it is always succeful so it will be the menu
-	// Later we will need to check if succeful
-	if (true /*Succeful*/)
-	{
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
-		requestResult.newHandler = menu;
-	}
-	else //Faied to Signup
-	{
-		// Stay in login request handler
-		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
-		requestResult.newHandler = loginRequestHandler;
-	}
 
 	return requestResult;
 }
