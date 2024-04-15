@@ -43,4 +43,17 @@ int checkPass(void* data, int argc, char** argv, char** azColName)
     *ok = argv[0];
 }
 
+std::map<std::string, std::string> DatabaseAccess::getAccountData(std::string name)
+{
+    std::string msg = "SELECT * FROM USERS WHERE NAME = '" + name + "'";
+    std::map<std::string, std::string> data;
+    sqlite3_exec(db, msg.c_str(), getData, &data, nullptr);
+    return data;
+}
 
+int getData(void* data, int argc, char** argv, char** azColName)
+{
+    std::map<std::string, std::string>* map = (std::map<std::string, std::string>*)data;
+    map["password"] = argv[1];
+    map["email"] = argv[2];
+}

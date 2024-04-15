@@ -8,22 +8,35 @@ class DatabaseAccess : public IDatabase
 {
 	DatabaseAccess(std::string fileName) 
 	{
+		open(fileName);
+	};
+
+	virtual void open(std::string fileName) override
+	{
 		int test = _access(fileName.c_str(), 0);
 		sqlite3_open(fileName.c_str(), &db);
-		
+
 		if (test == -1)
 		{
 			InitDb();
 		}
 	};
 
-	~DatabaseAccess() { sqlite3_close(db); db = nullptr; };
+	virtual void close() override {
+		sqlite3_close(db);
+		db = nullptr;
+	};
+
+
+	~DatabaseAccess() { close(); };
 
 	virtual void InitDb() override;
 	
 	virtual bool doesUserExist(std::string name) override;
 	virtual void addUser(std::string name, std::string pass, std::string email) override;
 	virtual bool isPassCorrect(std::string name, std::string pass) override;
+
+	virtual std::map<std::string, std::string> getAccountData(std::string name) override;
 private:
 	sqlite3* db;
 };
