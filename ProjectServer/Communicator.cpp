@@ -89,19 +89,22 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			Buffer deserialize;
 			
 			std::string decodedstr = JsonRequestPacketDeserializer::binaryDecoder(str);
-			std::string jsonStr = decodedstr.substr(JSON_OFFSET);
+			std::string jsonStr = decodedstr.substr(5);
 
-			Requestinfo info = breakDownStr(decodedstr);
+			Requestinfo info; 
+			breakDownStr(info, decodedstr);
 
+			std::cout << "'" << info.id << "'";
 			switch (info.id) //TODO: add more types
 			{
-			case Login || SignUp:
+			case SignUp:
+			case Login:
 			{
 				LoginRequestHandler* login = new LoginRequestHandler(m_handlerFactory);
 				m_clients[client_socket] = login;
 
 				RequestResult result = login->HandleRequest(info);
-
+				
 				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
 				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
@@ -120,14 +123,12 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	closesocket(client_socket);
 }
 
-Requestinfo Communicator::breakDownStr(std::string buf)
+void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 {
-	Requestinfo info;
-
 	Buffer buffer;
 	
-	std::string jsonStr = buf.substr(40);
-	for (int i = 4; i < buf.size(); i++)
+	std::string jsonStr = buf.substr(5);
+	for (int i = 0; i < jsonStr.size(); i++)
 	{
 		buffer.data.push_back(jsonStr[i]);
 	}
@@ -136,12 +137,19 @@ Requestinfo Communicator::breakDownStr(std::string buf)
 	info.id = getIdFromStr(buf);
 
 	info.time = clock();
-	return info;
 }
 
 RequestId Communicator::getIdFromStr(std::string str)
 {
-	return RequestId(str[0]);
+	switch (str[0])
+	{
+	case '0':
+		return Login;
+	case '1':
+		return SignUp;
+	default:
+		break;
+	}
 }
 
 void Communicator::acceptClient()

@@ -28,7 +28,7 @@ public:
 private:
 	void bindAndListen();
 	void handleNewClient(const SOCKET client_socket);
-	Requestinfo breakDownStr(std::string buf);
+	void breakDownStr(Requestinfo& info, std::string buf);
 	RequestId getIdFromStr(std::string str);
 
 	JsonResponsePacketSerializer m_serializer;
