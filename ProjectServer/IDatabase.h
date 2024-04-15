@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <map>
+
+#define FILENAME "database.sql"
+
 class IDatabase
 {
 public:

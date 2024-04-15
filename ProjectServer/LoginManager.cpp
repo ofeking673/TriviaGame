@@ -2,7 +2,7 @@
 
 LoginManager::LoginManager(std::string fileName)
 {
-    m_database = new DatabaseAccess(fileName);
+    m_database = new DatabaseAccess();
 }
 
 bool LoginManager::login(std::string name, std::string pass)
