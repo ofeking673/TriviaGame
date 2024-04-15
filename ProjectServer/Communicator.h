@@ -19,7 +19,7 @@
 class Communicator
 {
 public:
-	Communicator();
+	Communicator(RequestHandlerFactory handlerFactory);
 	~Communicator();
 	//void serve();
 	
