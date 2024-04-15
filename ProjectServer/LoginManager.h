@@ -6,7 +6,8 @@
 class LoginManager
 {
 public:
-	LoginManager(std::string fileName);
+	LoginManager(IDatabase* database);
+	~LoginManager();
 
 	bool signup(std::string username, std::string password, std::string email);
 	bool login(std::string username, std::string password);

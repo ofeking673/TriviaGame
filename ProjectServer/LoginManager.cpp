@@ -1,9 +1,19 @@
 #include "LoginManager.h"
 
-LoginManager::LoginManager(std::string fileName)
+LoginManager::LoginManager(IDatabase* database)
+    : m_database(database)
 {
-    m_database = new DatabaseAccess(fileName);
+    if (m_database == nullptr)
+    {
+        throw std::invalid_argument("Invalid Database pointer");
+    }
 }
+
+LoginManager::~LoginManager()
+{
+    m_loggedUsers.clear();
+}
+
 
 bool LoginManager::login(std::string name, std::string pass)
 {
@@ -18,6 +28,7 @@ bool LoginManager::login(std::string name, std::string pass)
     }
     return false;
 }
+
 
 bool LoginManager::signup(std::string name, std::string pass, std::string email)
 {
