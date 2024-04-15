@@ -18,6 +18,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& erro
 
     // Serialize the JSON object to a string
     std::string serializedString = j.dump();
+    serializedString = encodeBinary(serializedString);
 
     // Convert the string to Buffer
     for (auto& ch : serializedString)
@@ -43,6 +44,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& logi
 
     // Serialize the JSON object to a string
     std::string serializedString = j.dump();
+    serializedString = encodeBinary(serializedString);
 
     // Convert the string to Buffer
     for (auto& ch : serializedString)
@@ -60,7 +62,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LoginResponse& logi
 /// <returns>Buffer contains binary format of JSON signup response</returns>
 Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& signupResponse)
 {
-    Buffer buffer;
+    Buffer buffer; //type / size / json
 
     // Convert SignupResponse to JSON
     json j;
@@ -69,6 +71,8 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& sig
     // Serialize the JSON object to a string
     std::string serializedString = j.dump();
     std::cout << serializedString;
+
+    serializedString = encodeBinary(serializedString);
     // Convert the string to Buffer
     for (auto& ch : serializedString)
     {
@@ -76,4 +80,15 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SignupResponse& sig
     }
 
     return buffer;
+}
+
+std::string JsonResponsePacketSerializer::encodeBinary(std::string encodeStr)
+{
+    std::string encodedStr;
+
+    for (int i = 0; i < encodeStr.size(); i++)
+    {
+        encodedStr.append(std::bitset<8>(encodeStr.c_str()[i]).to_string());
+    }
+    return encodedStr;
 }
