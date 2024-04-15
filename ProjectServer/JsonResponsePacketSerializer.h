@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <bitset>
 #include "Buffer.h"
 
 
@@ -33,4 +34,6 @@ public:
 	static Buffer serializeResponse(const ErrorResponse& errorResponse);
 	static Buffer serializeResponse(const LoginResponse& loginResponse);
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
+
+	static std::string encodeBinary(std::string encodeStr);
 };
