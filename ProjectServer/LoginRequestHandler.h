@@ -7,7 +7,7 @@
 class LoginRequestHandler : public IRequestHandler
 {
 public:
-	LoginRequestHandler(RequestHandlerFactory handlerFactory) :m_handlerFactory(handlerFactory) {}
+	LoginRequestHandler(RequestHandlerFactory& handlerFactory) :m_handlerFactory(handlerFactory) {}
 	virtual ~LoginRequestHandler() = default;
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo);
