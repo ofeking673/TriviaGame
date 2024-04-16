@@ -9,12 +9,12 @@ public:
 	~RoomManager();
 
 	void createRoom(LoggedUser user, RoomData roomData);
-	void deleteRoom(int ID);
-	unsigned int getRoomState(int ID);
+	void deleteRoom(unsigned int ID);
+	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms();
-	Room& getRoom(int ID);
+	Room& getRoom(unsigned int ID);
 
 private:
 	// RoomId -> Room
-	std::map<int, Room> m_rooms;
+	std::map<unsigned int, Room> m_rooms;
 };

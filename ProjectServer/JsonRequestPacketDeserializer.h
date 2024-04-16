@@ -15,29 +15,7 @@ enum statusValues
 	BAD = 999
 };
 
-
-/*
-struct ErrorResponse
-{
-	// error messasge
-	std::string message;
-};
-
-// Struct of login response
-struct LoginResponse
-{
-	// login status
-	unsigned int status;
-};
-
-// Struct of signup response
-struct SignupResponse
-{
-	// signup status
-	unsigned int status;
-};
-*/
-
+// Login and signup requests related
 struct LoginRequest
 {
 	std::string username;
@@ -51,6 +29,29 @@ struct SignupRequest
 	std::string email;
 };
 
+
+
+// Rooms requests realted
+struct CreateRoomRequest
+{
+	std::string roomName;
+	unsigned int maxUsers;
+	unsigned int questionsCount;
+	unsigned int answerTimeout;
+};
+
+struct JoinRoomRequest
+{
+	unsigned int roomId;
+};
+
+struct GetPlayersInRoomRequest
+{
+	unsigned int roomId;
+};
+
+
+
 class JsonRequestPacketDeserializer
 {
 public:
@@ -62,4 +63,10 @@ public:
 	static SignupRequest deserializeSignupRequest(const Buffer bufSignupRequest);
 
 	static std::string binaryDecoder(std::string buf);
+
+
+	// Room requests related
+	GetPlayersInRoomRequest deserializeGetPlayersRequest(Buffer bufGetPlayersRequest);
+	JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
+	CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreaterRoomRequest);
 };
