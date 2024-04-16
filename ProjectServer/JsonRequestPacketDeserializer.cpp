@@ -49,4 +49,3 @@ std::string JsonRequestPacketDeserializer::binaryDecoder(std::string buf)
 
     return output;
 }
-

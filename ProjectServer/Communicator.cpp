@@ -117,7 +117,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	}
 	catch (const std::exception& e)
 	{
-		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
+		TRACE("Something went wrong in __FUNCTION__, what=%s", e.what());
 	}
 
 	closesocket(client_socket);

@@ -1,6 +1,5 @@
 #pragma once
 #include "LoginManager.h"
-#include "IDatabase.h"
 
 class LoginRequestHandler;
 

@@ -11,22 +11,24 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Check if request relevant
-	isRequestRelevant(requestInfo);
-
-	if (requestInfo.id == Login)
+	
+	if (isRequestRelevant(requestInfo))
 	{
-		// Login
-		requestResult = login(requestInfo);
-	}
-	else if (requestInfo.id == SignUp)
-	{
-		// Signup
-		requestResult = signup(requestInfo);
-	}
-	else
-	{
-		// Error
-		requestResult = error(requestInfo);
+		if (requestInfo.id == Login)
+		{
+			// Login
+			requestResult = login(requestInfo);
+		}
+		else if (requestInfo.id == SignUp)
+		{
+			// Signup
+			requestResult = signup(requestInfo);
+		}
+		else
+		{
+			// Error
+			requestResult = error(requestInfo);
+		}
 	}
 
 
