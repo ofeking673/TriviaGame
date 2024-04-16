@@ -3,7 +3,7 @@
 #include <iostream>
 #include <bitset>
 #include "Buffer.h"
-
+#include "Room.h"
 
 // Struct of error response
 struct ErrorResponse
@@ -12,6 +12,8 @@ struct ErrorResponse
 	std::string message;
 };
 
+// Login and Signup responses related
+ 
 // Struct of login response
 struct LoginResponse
 {
@@ -26,14 +28,66 @@ struct SignupResponse
 	unsigned int status;
 };
 
+// Rooms responses realted
+struct LogoutResponse
+{
+	unsigned int status;
+};
+
+struct GetRoomsResponse
+{
+	unsigned int status;
+	std::vector<RoomData> rooms;
+};
+
+struct GetPlayersInRoomResponse
+{
+	std::vector<std::string> players;
+};
+
+struct GetHighScoreResponse
+{
+	unsigned int status;
+	std::vector<std::string> statistics;
+};
+
+struct GetPersonalStatsResponse
+{
+	unsigned int status;
+	std::vector<std::string> statistics;
+};
+
+struct JoinRoomResponse
+{
+	unsigned int status;
+};
+
+struct CreateRoomResponse
+{
+	unsigned int status;
+};
+
 
 // Static class to serialize json response packets
 class JsonResponsePacketSerializer
 {
 public:
+	// Error
 	static Buffer serializeResponse(const ErrorResponse& errorResponse);
+
+	// Login and Signup responses related
 	static Buffer serializeResponse(const LoginResponse& loginResponse);
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
 
 	static std::string encodeBinary(std::string encodeStr);
+
+
+	// Room responses related
+	static Buffer serializeResponse(const LogoutResponse& logoutResponse);
+	static Buffer serializeResponse(const GetRoomsResponse& getRoomsResponse);
+	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
+	static Buffer serializeResponse(const JoinRoomResponse& joinRoomResponse);
+	static Buffer serializeResponse(const CreateRoomResponse& createRoomResponse);
+	static Buffer serializeResponse(const GetHighScoreResponse& getHighScoreResponseResponse);
+	static Buffer serializeResponse(const GetPersonalStatsResponse& getPersonalStatsResponse);
 };
