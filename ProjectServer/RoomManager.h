@@ -5,13 +5,13 @@
 class RoomManager
 {
 public:
-	RoomManager();
-	~RoomManager();
+	RoomManager() = default;
+	~RoomManager() = default;
 
 	void createRoom(LoggedUser user, RoomData roomData);
 	void deleteRoom(unsigned int ID);
 	unsigned int getRoomState(unsigned int ID);
-	std::vector<RoomData> getRooms();
+	std::vector<RoomData> getRooms() const;
 	Room& getRoom(unsigned int ID);
 
 private:

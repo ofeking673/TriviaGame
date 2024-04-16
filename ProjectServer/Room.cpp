@@ -30,4 +30,9 @@ std::vector<std::string> Room::getAllUsers() const
     return usernames;
 }
 
+RoomData Room::getRoomData() const
+{
+    return m_metadata;
+}
+
 
