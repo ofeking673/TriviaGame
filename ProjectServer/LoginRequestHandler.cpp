@@ -11,22 +11,25 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Check if request relevant
-	isRequestRelevant(requestInfo);
+	if (isRequestRelevant(requestInfo))
+	{
 
-	if (requestInfo.id == Login)
-	{
-		// Login
-		requestResult = login(requestInfo);
-	}
-	else if (requestInfo.id == SignUp)
-	{
-		// Signup
-		requestResult = signup(requestInfo);
-	}
-	else
-	{
-		// Error
-		requestResult = error(requestInfo);
+		if (requestInfo.id == Login)
+		{
+			// Login
+			requestResult = login(requestInfo);
+		}
+		else if (requestInfo.id == SignUp)
+		{
+			// Signup
+			requestResult = signup(requestInfo);
+		}
+		else
+		{
+			// Error
+			requestResult = error(requestInfo);
+		}
+
 	}
 
 
@@ -48,7 +51,7 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
 
 	// Login the user through login manager who uses the Database
-	if (m_handlerFactory.getLoginManager().login(loginRequest.username, loginRequest.password))
+	if (m_loginManager.login(loginRequest.username, loginRequest.password))
 	{	// Succeful Login
 
 		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
@@ -87,7 +90,7 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buf);
 
 	// Signup the user through login manager who uses the Database
-	if (m_handlerFactory.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email))
+	if (m_loginManager.signup(signupRequest.username, signupRequest.password, signupRequest.email))
 	{	// Succeful Signup
 
 		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
