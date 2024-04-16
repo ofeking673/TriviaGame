@@ -43,6 +43,15 @@ public:
 	static int checkPass(void* data, int argc, char** argv, char** azColName);
 	static int getData(void* data, int argc, char** argv, char** azColName);
 
+	// Room & statistics related
+	virtual std::list<Question> getQuestions(int roomId /*?*/);
+	virtual float getPlayerAverageAnswerTime(std::string username);
+	virtual int getNumOfCorrectAnswers(std::string username);
+	virtual int getNumOfTotalAnswers(std::string username);
+	virtual int getNumOfPlayerGames(std::string username);
+	virtual int getPlayerScore(std::string username);
+	virtual std::vector<std::string> getHighScores();
+
 private:
 	sqlite3* db;
 };
