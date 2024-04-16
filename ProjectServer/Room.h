@@ -17,12 +17,12 @@ struct RoomData
 class Room
 {
 public:
-	Room();
-	~Room();
+	Room(RoomData& roomData) : m_metadata(roomData) {}
+	~Room() = default;
 
-	void addUser(LoggedUser user);
-	void removeUser(LoggedUser user);
-	std::vector<std::string> getAllUsers();
+	void addUser(const LoggedUser& user);
+	void removeUser(const LoggedUser& user);
+	std::vector<std::string> getAllUsers() const;
 
 private:
 	RoomData m_metadata;
