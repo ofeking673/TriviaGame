@@ -15,7 +15,7 @@ enum statusValues
 	BAD = 999
 };
 
-// Login and signup requests related
+// Login & Signup related
 struct LoginRequest
 {
 	std::string username;
@@ -31,7 +31,7 @@ struct SignupRequest
 
 
 
-// Rooms requests realted
+// Room & statistics related
 struct CreateRoomRequest
 {
 	std::string roomName;
@@ -55,6 +55,8 @@ struct GetPlayersInRoomRequest
 class JsonRequestPacketDeserializer
 {
 public:
+	// Login & Signup related
+
 	// NOTE:
 	// The following 2 functions, gets the buffer of the DATA ONLY (the Json)
 	// Without the message code and length.
@@ -65,7 +67,7 @@ public:
 	static std::string binaryDecoder(std::string buf);
 
 
-	// Room requests related
+	// Room & statistics related
 	GetPlayersInRoomRequest deserializeGetPlayersRequest(Buffer bufGetPlayersRequest);
 	JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
 	CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreaterRoomRequest);

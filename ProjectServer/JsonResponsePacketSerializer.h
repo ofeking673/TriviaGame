@@ -12,7 +12,7 @@ struct ErrorResponse
 	std::string message;
 };
 
-// Login and Signup responses related
+// Login & Signup related
  
 // Struct of login response
 struct LoginResponse
@@ -28,7 +28,7 @@ struct SignupResponse
 	unsigned int status;
 };
 
-// Rooms responses realted
+// Room & statistics related
 struct LogoutResponse
 {
 	unsigned int status;
@@ -75,14 +75,14 @@ public:
 	// Error
 	static Buffer serializeResponse(const ErrorResponse& errorResponse);
 
-	// Login and Signup responses related
+	// Login & Signup related
 	static Buffer serializeResponse(const LoginResponse& loginResponse);
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
 
 	static std::string encodeBinary(std::string encodeStr);
 
 
-	// Room responses related
+	// Room & statistics related
 	static Buffer serializeResponse(const LogoutResponse& logoutResponse);
 	static Buffer serializeResponse(const GetRoomsResponse& getRoomsResponse);
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
