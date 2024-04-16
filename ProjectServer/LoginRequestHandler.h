@@ -1,8 +1,23 @@
 #pragma once
 #include "IRequestHandler.h"
+#include <iostream>
+#include "MenuRequestHandler.h"
+
+class RequestHandlerFactory;
 
 class LoginRequestHandler : public IRequestHandler
 {
+public:
+	LoginRequestHandler(RequestHandlerFactory& handlerFactory) :m_handlerFactory(handlerFactory) {}
+	virtual ~LoginRequestHandler() = default;
 
+	virtual bool isRequestRelevant(Requestinfo requestInfo);
+	virtual RequestResult HandleRequest(Requestinfo requestInfo);
+
+private:
+	RequestHandlerFactory& m_handlerFactory;
+
+	RequestResult login(Requestinfo requestInfo);
+	RequestResult signup(Requestinfo requestInfo);
+	RequestResult error(Requestinfo requestInfo);
 };
-
