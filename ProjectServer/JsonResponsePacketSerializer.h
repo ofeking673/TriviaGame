@@ -83,11 +83,14 @@ public:
 
 
 	// Room & statistics related
-	static Buffer serializeResponse(const LogoutResponse& logoutResponse);
+	static Buffer serializeResponse(const LogoutResponse& logoutResponse); //________
 	static Buffer serializeResponse(const GetRoomsResponse& getRoomsResponse);
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
-	static Buffer serializeResponse(const JoinRoomResponse& joinRoomResponse);
-	static Buffer serializeResponse(const CreateRoomResponse& createRoomResponse);
+	static Buffer serializeResponse(const JoinRoomResponse& joinRoomResponse); //_____
+	static Buffer serializeResponse(const CreateRoomResponse& createRoomResponse); //_____
 	static Buffer serializeResponse(const GetHighScoreResponse& getHighScoreResponseResponse);
 	static Buffer serializeResponse(const GetPersonalStatsResponse& getPersonalStatsResponse);
+
+private:
+	static Buffer statusOnlySerializeResponse(const unsigned int status);
 };
