@@ -1,11 +1,12 @@
 #pragma once
 #include "IDatabase.h"
+#include <iostream>
 #include <vector>
 
 class StatisticsManager
 {
 public:
-	StatisticsManager();
+	StatisticsManager(IDatabase* database);
 	~StatisticsManager();
 
 	std::vector<std::string> getHighScore();
