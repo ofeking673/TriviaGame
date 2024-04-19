@@ -1,3 +1,4 @@
+using frontend.utils;
 using System.Net.Sockets;
 
 namespace frontend
@@ -21,5 +22,6 @@ namespace frontend
 
         public static TcpClient Client = new TcpClient();
         public static NetworkStream networkStream;
+        public static LoginUser loginUser;
     }
 }
