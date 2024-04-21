@@ -108,6 +108,80 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LogoutResponse& log
 }
 
 /// <summary>
+/// Serialize Get rooms response from JSON format to binary
+/// </summary>
+/// <param name="signupResponse">Get rooms response object</param>
+/// <returns>Buffer contains binary format of JSON get rooms response</returns>
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomsResponse& getRoomsResponse)
+{
+    Buffer buffer;
+
+    // Convert GetRoomsResponse to JSON
+    json j;
+    std::string roomsList;
+    
+    // Get roomList in the format: "room1, room2, ..., roomN"
+    for (const auto& room : getRoomsResponse.rooms) 
+    {
+        if (!roomsList.empty()) 
+        {
+            roomsList += ", ";
+        }
+        roomsList += room.name;
+    }
+    j["Rooms"] = roomsList;
+
+    // Serialize the JSON to a string
+    std::string serializedString = j.dump();
+    serializedString = encodeBinary(serializedString);
+
+    // Convert the string to Buffer
+    for (auto& ch : serializedString)
+    {
+        buffer.data.push_back(static_cast<unsigned char>(ch));
+    }
+
+    return buffer;
+}
+
+/// <summary>
+/// Serialize Get players in room response from JSON format to binary
+/// </summary>
+/// <param name="signupResponse">Get players in room response object</param>
+/// <returns>Buffer contains binary format of JSON get players in room response</returns>
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse)
+{
+    Buffer buffer;
+
+    // Convert GetPlayersInRoomResponse to JSON
+    nlohmann::json j;
+    std::string playersList;
+
+    // Get playersList in the format: "user1, user2, ..., userN"
+    for (const auto& player : getPlayersInRoomResponse.players) 
+    {
+        if (!playersList.empty())
+        {
+            playersList += ", ";
+        }
+        playersList += player;
+    }
+    j["PlayersInRoom"] = playersList;
+
+    // Serialize the JSON object to a string
+    std::string serializedString = j.dump();
+    serializedString = encodeBinary(serializedString);
+
+    // Convert the string to Buffer
+    for (auto& ch : serializedString)
+    {
+        buffer.data.push_back(static_cast<unsigned char>(ch));
+    }
+
+    return buffer;
+}
+
+/// <summary>
 /// Serialize Join Room response from JSON format to binary
 /// </summary>
 /// <param name="signupResponse">Join Room response object</param>
