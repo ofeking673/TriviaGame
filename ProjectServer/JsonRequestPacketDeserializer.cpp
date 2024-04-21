@@ -50,3 +50,51 @@ std::string JsonRequestPacketDeserializer::binaryDecoder(std::string buf)
     return output;
 }
 
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest)
+{
+    // Convert Buffer to std::string
+    std::string jsonStr(bufGetPlayersRequest.data.begin(), bufGetPlayersRequest.data.end());
+
+    // Parse the JSON string into a json object
+    json j = json::parse(jsonStr);
+
+    // Extract values and initialize GetPlayersInRoomRequest
+    GetPlayersInRoomRequest request;
+    request.roomId = j.at("roomId").get<unsigned int>();
+
+    return request;
+}
+
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer bufJoinRoomRequest)
+{
+    // Convert Buffer to std::string
+    std::string jsonStr(bufJoinRoomRequest.data.begin(), bufJoinRoomRequest.data.end());
+
+    // Parse the JSON string into a json object
+    json j = json::parse(jsonStr);
+
+    // Extract values and initialize JoinRoomRequest
+    JoinRoomRequest request;
+    request.roomId = j.at("roomId").get<unsigned int>();
+
+    return request;
+}
+
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Buffer bufCreateRoomRequest)
+{
+    // Convert Buffer to std::string
+    std::string jsonStr(bufCreateRoomRequest.data.begin(), bufCreateRoomRequest.data.end());
+
+    // Parse the JSON string into a json object
+    json j = json::parse(jsonStr);
+
+    // Extract values and initialize CreateRoomRequest
+    CreateRoomRequest request;
+    request.roomName = j.at("roomName").get<std::string>();
+    request.maxUsers = j.at("maxUsers").get<unsigned int>();
+    request.questionsCount = j.at("questionsCount").get<unsigned int>();
+    request.answerTimeout = j.at("answerTimeout").get<unsigned int>();
+
+    return request;
+}
+
