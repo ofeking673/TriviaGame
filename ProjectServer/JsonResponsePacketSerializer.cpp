@@ -1,7 +1,5 @@
 #include "JsonResponsePacketSerializer.h"
-#include "json.hpp"
 
-using json = nlohmann::json;
 
 /// <summary>
 /// Serialize Error response from JSON format to binary
@@ -16,17 +14,18 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const ErrorResponse& erro
     json j;
     j["message"] = errorResponse.message;
 
-    // Serialize the JSON object to a string
-    std::string serializedString = j.dump();
-    serializedString = encodeBinary(serializedString);
+    //// Serialize the JSON object to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
 
-    // Convert the string to Buffer
-    for (auto& ch : serializedString)
-    {
-        buffer.data.push_back(static_cast<unsigned char>(ch));
-    }
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString)
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
 
-    return buffer;
+    //return buffer;
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>
@@ -131,17 +130,18 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomsResponse& g
     }
     j["Rooms"] = roomsList;
 
-    // Serialize the JSON to a string
-    std::string serializedString = j.dump();
-    serializedString = encodeBinary(serializedString);
+    //// Serialize the JSON to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
 
-    // Convert the string to Buffer
-    for (auto& ch : serializedString)
-    {
-        buffer.data.push_back(static_cast<unsigned char>(ch));
-    }
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString)
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
 
-    return buffer;
+    //return buffer;
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>
@@ -154,7 +154,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomRes
     Buffer buffer;
 
     // Convert GetPlayersInRoomResponse to JSON
-    nlohmann::json j;
+    json j;
     std::string playersList;
 
     // Get playersList in the format: "user1, user2, ..., userN"
@@ -168,17 +168,18 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomRes
     }
     j["PlayersInRoom"] = playersList;
 
-    // Serialize the JSON object to a string
-    std::string serializedString = j.dump();
-    serializedString = encodeBinary(serializedString);
+    //// Serialize the JSON object to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
 
-    // Convert the string to Buffer
-    for (auto& ch : serializedString)
-    {
-        buffer.data.push_back(static_cast<unsigned char>(ch));
-    }
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString)
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
 
-    return buffer;
+    //return buffer;
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>
@@ -203,6 +204,100 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const CreateRoomResponse&
 }
 
 /// <summary>
+/// Serialize Get high scores response from JSON format to binary
+/// 
+/// IMPORTANT!!
+/// The format of JSON will be:
+/// 
+/// {HighScores: "username1 | score, username2 | score, ..., userN | score"}
+/// </summary>
+/// <param name="signupResponse">Get high scores response object</param>
+/// <returns>Buffer contains binary format of JSON get high scores response</returns>
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoreResponse& getHighScoreResponse)
+{
+    Buffer buffer;
+
+    // Convert GetHighScoreResponse to JSON
+    json j;
+    std::string highScores;
+    // Get high scores in the format of:
+    // ""username1 | score, username2 | score, ..."
+    for (int i = 0; i < getHighScoreResponse.statistics.size(); i++)
+    {
+        if (i > 0)
+        {
+            highScores += ", ";
+        }
+        highScores += getHighScoreResponse.statistics[i];
+    }
+    j["HighScores"] = highScores;
+
+    //// Serialize the JSON object to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
+
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString) 
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
+
+    //return buffer;
+    return jsonObjectSerializer(j);
+}
+
+/// <summary>
+/// Serialize Get personal stats response from JSON format to binary
+/// 
+/// IMPORTANT!!
+/// The format of JSON will be:
+/// 
+/// {UserStatistics: "playerScore, numOfPlayerGames,numOfTotalAnswers,
+/// numOfCorrectAnswers, playerAverageAnswerTime"}
+/// </summary>
+/// <param name="signupResponse">Get personal stats response object</param>
+/// <returns>Buffer contains binary format of JSON get personal stats response</returns>
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetPersonalStatsResponse& getPersonalStatsResponse)
+{
+    Buffer buffer;
+
+    // Check if statistics vector contains all elements
+    if (getPersonalStatsResponse.statistics.size() != 5)
+    {
+        throw std::runtime_error("Invalid statistics data");
+    }
+
+    // Convert GetPersonalStatsResponse to JSON
+    json j;
+    std::string statisticsString;
+    // Get statistics string in the following format.
+    // "playerScore, numOfPlayerGames,numOfTotalAnswers,
+    // numOfCorrectAnswers, playerAverageAnswerTime"
+    for (int i = 0; i < getPersonalStatsResponse.statistics.size(); i++)
+    {
+        if (i > 0) 
+        {
+            statisticsString += ", ";
+        }
+        statisticsString += getPersonalStatsResponse.statistics[i];
+    }
+    j["UserStatistics"] = statisticsString;
+
+    //// Serialize the JSON object to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
+
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString)
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
+
+    //return buffer;
+    return jsonObjectSerializer(j);
+}
+
+/// <summary>
 /// Serialize response that contains status only from JSON to binary buffer
 /// </summary>
 /// <param name="status">Status of response</param>
@@ -214,6 +309,29 @@ Buffer JsonResponsePacketSerializer::statusOnlySerializeResponse(const unsigned 
     // Convert Response to JSON
     json j;
     j["status"] = status;
+
+    //// Serialize the JSON object to a string
+    //std::string serializedString = j.dump();
+    //serializedString = encodeBinary(serializedString);
+
+    //// Convert the string to Buffer
+    //for (auto& ch : serializedString)
+    //{
+    //    buffer.data.push_back(static_cast<unsigned char>(ch));
+    //}
+
+    //return buffer;
+    return jsonObjectSerializer(j);
+}
+
+/// <summary>
+/// Serialize a JSON object to Buffer (binary)
+/// </summary>
+/// <param name="j">JSON object</param>
+/// <returns>Buffer contains binary encoded JSON</returns>
+Buffer JsonResponsePacketSerializer::jsonObjectSerializer(nlohmann::json j)
+{
+    Buffer buffer;
 
     // Serialize the JSON object to a string
     std::string serializedString = j.dump();

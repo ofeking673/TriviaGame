@@ -4,6 +4,9 @@
 #include <bitset>
 #include "Buffer.h"
 #include "Room.h"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 // Struct of error response
 struct ErrorResponse
@@ -88,9 +91,10 @@ public:
 	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
 	static Buffer serializeResponse(const JoinRoomResponse& joinRoomResponse); 
 	static Buffer serializeResponse(const CreateRoomResponse& createRoomResponse); 
-	static Buffer serializeResponse(const GetHighScoreResponse& getHighScoreResponseResponse);
+	static Buffer serializeResponse(const GetHighScoreResponse& getHighScoreResponse);
 	static Buffer serializeResponse(const GetPersonalStatsResponse& getPersonalStatsResponse);
 
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
+	static Buffer jsonObjectSerializer(json j);
 };

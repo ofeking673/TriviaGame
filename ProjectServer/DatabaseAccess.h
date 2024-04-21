@@ -50,6 +50,8 @@ public:
 	virtual int getNumOfTotalAnswers(std::string username);
 	virtual int getNumOfPlayerGames(std::string username);
 	virtual int getPlayerScore(std::string username);
+	// PLEASE RETURN IN FOLLOWING FORMAT:
+	// username1 | score, username2 | score, ... 
 	virtual std::vector<std::string> getHighScores();
 
 private:
