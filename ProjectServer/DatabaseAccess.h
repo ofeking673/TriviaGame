@@ -44,7 +44,7 @@ public:
 	static int getData(void* data, int argc, char** argv, char** azColName);
 
 	// Room & statistics related
-	virtual std::list<Question> getQuestions(int roomId /*?*/);
+	virtual std::list<Question> getQuestions(int amt /*?*/);
 	virtual float getPlayerAverageAnswerTime(std::string username);
 	virtual int getNumOfCorrectAnswers(std::string username);
 	virtual int getNumOfTotalAnswers(std::string username);
@@ -53,6 +53,9 @@ public:
 	// PLEASE RETURN IN FOLLOWING FORMAT:
 	// username1 | score, username2 | score, ... 
 	virtual std::vector<std::string> getHighScores();
+
+	//Room & Statistics related callbacks
+	static int getQuestionData(void* data, int argc, char** argv, char** azColName);
 
 private:
 	sqlite3* db;

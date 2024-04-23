@@ -23,7 +23,7 @@ public:
 	virtual std::map<std::string, std::string> getAccountData(std::string name) = 0;
 
 	// Room & statistics related
-	virtual std::list<Question> getQuestions(int roomId /*?*/) = 0;
+	virtual std::list<Question> getQuestions(int amt /*?*/) = 0;
 	virtual float getPlayerAverageAnswerTime(std::string username) = 0;
 	virtual int getNumOfCorrectAnswers(std::string username) = 0;
 	virtual int getNumOfTotalAnswers(std::string username) = 0;

@@ -5,7 +5,7 @@
 class Question
 {
 public:
-	Question();
+	Question(std::string question, std::vector<std::string> answers, std::string correctAnswer) : m_question(question), m_possibleAnswers(answers), correctAnswer(correctAnswer) {};
 	~Question();
 
 	std::string getQuestion();
@@ -14,4 +14,5 @@ public:
 private:
 	std::string m_question;
 	std::vector<std::string> m_possibleAnswers;
+	std::string correctAnswer;
 };
