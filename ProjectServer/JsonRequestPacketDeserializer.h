@@ -68,7 +68,7 @@ public:
 
 
 	// Room & statistics related
-	GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
-	JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
-	CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
+	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
+	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
+	static CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
 };

@@ -9,6 +9,12 @@
 enum RequestId {
 	Login,
 	SignUp,
+	CreateRoom,
+	GetRooms,
+	GetPlayersInRoom,
+	JoinRoom,
+	GetStatistics,
+	Logout
 };
 
 class IRequestHandler;
