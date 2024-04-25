@@ -31,7 +31,11 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 		}
 
 	}
-
+	else
+	{
+		// Error
+		requestResult = error(requestInfo);
+	}
 
 	return requestResult;
 }
@@ -113,6 +117,7 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 
 	return requestResult;
 }
+
 
 /// <summary>
 /// Error in login request handler

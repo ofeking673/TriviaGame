@@ -1,8 +1,14 @@
 #include "RoomManager.h"
 
 // Creates a new room and add it to the rooms map
-void RoomManager::createRoom(LoggedUser user, RoomData roomData)
+bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
 {
+    // If the given room ID is 0 -> generate a unique id
+    if (roomData.id == 0)
+    {
+        RandomRoomId randomRoomId = RandomRoomId(m_rooms);
+        roomData.id = randomRoomId.generateUniqueRoomId();
+    }
     // Check if a Room with the given ID already exists
     if (m_rooms.find(roomData.id) == m_rooms.end()) 
     {
@@ -10,7 +16,11 @@ void RoomManager::createRoom(LoggedUser user, RoomData roomData)
 
         // Add the user to the room
         m_rooms[roomData.id].addUser(user);
+
+        return true;
     }
+    // Unable to create room
+    return false;
 }
 
 // Remove the room from the map
