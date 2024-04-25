@@ -19,7 +19,7 @@ public:
 	LoginManager& getLoginManager();
 
 	// Room & statistics related
-	MenuRequestHandler* createMenuRequestHandler(LoggedUser);
+	MenuRequestHandler* createMenuRequestHandler(LoggedUser user);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
 
