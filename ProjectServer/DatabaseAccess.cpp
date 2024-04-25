@@ -7,6 +7,8 @@ void DatabaseAccess::InitDb()
 
     msg = "CREATE TABLE QUESTIONS(QUESTION TEXT NOT NULL PRIMARY KEY, CORRECT TEXT NOT NULL, INCORRECT1 TEXT NOT NULL, INCORRECT2 TEXT NOT NULL, INCORRECT3 TEXT NOT NULL)";
     sqlite3_exec(db, msg.c_str(), nullptr, nullptr, nullptr);
+
+    msg = "CREATE TABLE STATISTICS(USERNAME TEXT NOT NULL PRIMARY KEY, AVERAGEANSWERTIME REAL NOT NULL, CORRECTANSWERS INTEGER NOT NULL, TOTALANSWERS INTEGER NOT NULL, PLAYEDGAMES INTEGER NOT NULL, PLAYERSCORE INTEGER NOT NULL)";
 }
 
 bool DatabaseAccess::doesUserExist(std::string name)
@@ -17,9 +19,6 @@ bool DatabaseAccess::doesUserExist(std::string name)
 
     return Exists;
 }
-
-
-
 
 void DatabaseAccess::addUser(std::string name, std::string pass, std::string email)
 {
@@ -90,31 +89,53 @@ int DatabaseAccess::getQuestionData(void* data, int argc, char** argv, char** az
     return 0;
 }
 
+int DatabaseAccess::intStatisticCallback(void* data, int argc, char** argv, char** azColName)
+{
+    *(int*)data = std::atoi(argv[0]);
+    return 0;
+}
+
+int DatabaseAccess::floatStatisticCallback(void* data, int argc, char** argv, char** azColName)
+{
+    *(float*)data = std::atof(argv[0]);
+    return 0;
+}
 
 
 float DatabaseAccess::getPlayerAverageAnswerTime(std::string username)
 {
-    return 0.0f;
+    float answerTime;
+    std::string msg = "SELECT AVERAGEANSWERTIME FROM STATISTICS WHERE NAME = '" + username + "'";
+    sqlite3_exec(db, msg.c_str(), floatStatisticCallback, &answerTime, nullptr);
+    return answerTime;
 }
 
 int DatabaseAccess::getNumOfCorrectAnswers(std::string username)
 {
-    return 0;
+    return getIntScore(username, "CORRECTANSWERS");
 }
 
 int DatabaseAccess::getNumOfTotalAnswers(std::string username)
 {
-    return 0;
+    return getIntScore(username, "TOTALANSWERS");
 }
 
 int DatabaseAccess::getNumOfPlayerGames(std::string username)
 {
-    return 0;
+    return getIntScore(username, "PLAYEDGAMES");
 }
 
 int DatabaseAccess::getPlayerScore(std::string username)
 {
-    return 0;
+    return getIntScore(username, "PLAYERSCORE");
+}
+
+int DatabaseAccess::getIntScore(std::string username, std::string dataType)
+{
+    int answer;
+    std::string msg = "SELECT "+ dataType +" FROM STATISTICS WHERE NAME = '" + username + "'";
+    sqlite3_exec(db, msg.c_str(), intStatisticCallback, &answer, nullptr);
+    return answer;
 }
 
 std::vector<std::string> DatabaseAccess::getHighScores()

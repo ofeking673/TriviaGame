@@ -50,12 +50,15 @@ public:
 	virtual int getNumOfTotalAnswers(std::string username);
 	virtual int getNumOfPlayerGames(std::string username);
 	virtual int getPlayerScore(std::string username);
+	int getIntScore(std::string username, std::string dataType);
 	// PLEASE RETURN IN FOLLOWING FORMAT:
 	// username1 | score, username2 | score, ... 
 	virtual std::vector<std::string> getHighScores();
 
 	//Room & Statistics related callbacks
 	static int getQuestionData(void* data, int argc, char** argv, char** azColName);
+	static int intStatisticCallback(void* data, int argc, char** argv, char** azColName);
+	static int floatStatisticCallback(void* data, int argc, char** argv, char** azColName);
 
 private:
 	sqlite3* db;
