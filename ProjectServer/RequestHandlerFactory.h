@@ -10,7 +10,7 @@ class MenuRequestHandler;
 class RequestHandlerFactory
 {
 public:
-	// TO-DO: Need to change - added room and statistics
+	// TO-DO: Need to change - when adding new managers
 	RequestHandlerFactory(IDatabase* database);
 	~RequestHandlerFactory();
 

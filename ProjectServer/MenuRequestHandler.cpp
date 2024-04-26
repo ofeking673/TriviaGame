@@ -167,6 +167,64 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 }
 
 /// <summary>
+/// Gets all the statistics of current user
+/// Gets Request info, parse its' data. 
+/// Sends the data to statisticsManager who works on DB
+/// </summary>
+/// <param name="requestInfo">Request info contains (id, time, buffer)</param>
+/// <returns>RequestResult contains(buffer [to send back], newHandler)</returns>
+RequestResult MenuRequestHandler::getPersonalStats(Requestinfo requestInfo)
+{
+	RequestResult requestResult;
+
+	// Get the statistics of user
+	std::vector<std::string> personalStats = m_handlerFactory.getStatisticsManager().getUserStatistics(m_user.getUsername());
+
+	// Stay in menu request handler
+	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
+	requestResult.newHandler = menuRequestHandler;
+
+	// Create response
+	GetPersonalStatsResponse getPersonalStatsResponse;
+	getPersonalStatsResponse.statistics = personalStats;
+	getPersonalStatsResponse.status = /*TO-DO : INSERT - PERSONAL_STATS_STATUS*/;
+
+	//Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getPersonalStatsResponse);
+
+	return requestResult;
+}
+
+/// <summary>
+/// Gets the high score
+/// Gets Request info, parse its' data. 
+/// Sends the data to statisticsManager who works on DB
+/// </summary>
+/// <param name="requestInfo">Request info contains (id, time, buffer)</param>
+/// <returns>RequestResult contains(buffer [to send back], newHandler)</returns>
+RequestResult MenuRequestHandler::getHighScore(Requestinfo requestInfo)
+{
+	RequestResult requestResult;
+
+	// Get the high score
+	std::vector<std::string> highScore = m_handlerFactory.getStatisticsManager().getHighScore();
+
+	// Stay in menu request handler
+	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
+	requestResult.newHandler = menuRequestHandler;
+
+	// Create response
+	GetHighScoreResponse getHighScoreResponse;
+	getHighScoreResponse.statistics = highScore;
+	getHighScoreResponse.status = /*TO-DO : INSERT - HIGH_SCORE_STATUS*/;
+
+	//Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getHighScoreResponse);
+
+	return requestResult;
+}
+
+/// <summary>
 /// Join a user to a specific room
 /// Gets Request info, parse its' data. 
 /// Sends the data to RoomManager who works on DB
