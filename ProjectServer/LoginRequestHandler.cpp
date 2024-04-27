@@ -58,8 +58,9 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 	if (m_loginManager.login(loginRequest.username, loginRequest.password))
 	{	// Succeful Login
 
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
+		// Change to menu request handler with current user
+		LoggedUser curUser(loginRequest.username);
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
 	}
 	else
@@ -97,8 +98,9 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 	if (m_loginManager.signup(signupRequest.username, signupRequest.password, signupRequest.email))
 	{	// Succeful Signup
 
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
+		// Change to menu request handler with current user
+		LoggedUser curUser(signupRequest.username);
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
 	}
 	else 

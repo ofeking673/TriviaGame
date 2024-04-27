@@ -1,5 +1,12 @@
 #include "MenuRequestHandler.h"
 
+#define TEMP_LOGOUT_RESPONSE_STATUS 501
+#define TEMP_GET_ROOMS_RESPONSE_STATUS 210
+#define TEMP_GET_PERSONAL_STATS_RESPONSE_STATUS 220
+#define TEMP_GET_HIGH_SCORE_RESPONSE_STATUS 230
+#define TEMP_JOIN_ROOM_RESPONSE_STATUS 310
+#define TEMP_CREATE_ROOM_RESPONSE_STATUS 300
+
 // Check if request is relevant to menu request handler
 bool MenuRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
@@ -94,7 +101,7 @@ RequestResult MenuRequestHandler::signout(Requestinfo requestInfo)
 
 	// Create response
 	LogoutResponse logoutResponse;
-	logoutResponse.status = /*TO-DO : INSERT - LOGOUT_STATUS*/;
+	logoutResponse.status = TEMP_LOGOUT_RESPONSE_STATUS;
 	
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(logoutResponse);
@@ -125,7 +132,7 @@ RequestResult MenuRequestHandler::getRooms(Requestinfo requestInfo)
 
 	// Create response
 	GetRoomsResponse getRoomsResponse;
-	getRoomsResponse.status = /*TO-DO : INSERT - GET_ROOMS_STATUS*/;
+	getRoomsResponse.status = TEMP_GET_ROOMS_RESPONSE_STATUS;
 	getRoomsResponse.rooms = rooms;
 
 	//Serialize response
@@ -187,7 +194,7 @@ RequestResult MenuRequestHandler::getPersonalStats(Requestinfo requestInfo)
 	// Create response
 	GetPersonalStatsResponse getPersonalStatsResponse;
 	getPersonalStatsResponse.statistics = personalStats;
-	getPersonalStatsResponse.status = /*TO-DO : INSERT - PERSONAL_STATS_STATUS*/;
+	getPersonalStatsResponse.status = TEMP_GET_PERSONAL_STATS_RESPONSE_STATUS;
 
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getPersonalStatsResponse);
@@ -216,7 +223,7 @@ RequestResult MenuRequestHandler::getHighScore(Requestinfo requestInfo)
 	// Create response
 	GetHighScoreResponse getHighScoreResponse;
 	getHighScoreResponse.statistics = highScore;
-	getHighScoreResponse.status = /*TO-DO : INSERT - HIGH_SCORE_STATUS*/;
+	getHighScoreResponse.status = TEMP_GET_HIGH_SCORE_RESPONSE_STATUS;
 
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getHighScoreResponse);
@@ -247,7 +254,7 @@ RequestResult MenuRequestHandler::joinRoom(Requestinfo requestInfo)
 
 	// Create response
 	JoinRoomResponse joinRoomResponse;
-	joinRoomResponse.status = /*TO-DO : INSERT - JOIN_ROOM_STATUS*/;
+	joinRoomResponse.status = TEMP_JOIN_ROOM_RESPONSE_STATUS;
 
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(joinRoomResponse);
@@ -287,7 +294,7 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 
 		// Create response
 		CreateRoomResponse createRoomResponse;
-		createRoomResponse.status = /*TO-DO : INSERT - CREATE_ROOM_STATUS*/;
+		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
 
 
 		//Serialize response

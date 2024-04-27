@@ -12,7 +12,9 @@ bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
     // Check if a Room with the given ID already exists
     if (m_rooms.find(roomData.id) == m_rooms.end()) 
     {
-        m_rooms.emplace(roomData.id, Room(roomData));
+        Room curRoom(roomData);
+        m_rooms[roomData.id] = curRoom;
+        //m_rooms.emplace(roomData.id, Room(roomData));
 
         // Add the user to the room
         m_rooms[roomData.id].addUser(user);
