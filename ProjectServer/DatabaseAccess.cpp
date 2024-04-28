@@ -152,7 +152,7 @@ std::vector<std::string> DatabaseAccess::getHighScores()
     highScores.push_back(getMaxStat("TOTALANSWERS"));
     highScores.push_back(getMaxStat("PLAYEDGAMED"));
     highScores.push_back(getMaxStat("PLAYERSCORE"));
-    highScores.push_back(getMaxStat("AVERAGEANSWERTIME"));    
+    highScores.push_back(getMaxStat("AVERAGEANSWERTIME"));
 
     return highScores;
 }

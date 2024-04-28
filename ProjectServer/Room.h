@@ -18,6 +18,7 @@ class Room
 {
 public:
 	Room(const RoomData& roomData) : m_metadata(roomData) {};
+	Room() = default;
 	~Room() = default;
 
 	void addUser(const LoggedUser& user);
