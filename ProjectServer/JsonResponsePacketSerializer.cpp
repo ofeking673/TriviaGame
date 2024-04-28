@@ -124,9 +124,9 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomsResponse& g
     {
         if (!roomsList.empty()) 
         {
-            roomsList += ", ";
+            roomsList += ",";
         }
-        roomsList += room.name;
+        roomsList += room.name; //name,name2,name3
     }
     j["Rooms"] = roomsList;
 
@@ -162,7 +162,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPlayersInRoomRes
     {
         if (!playersList.empty())
         {
-            playersList += ", ";
+            playersList += ",";
         }
         playersList += player;
     }

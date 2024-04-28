@@ -50,7 +50,7 @@ std::string JsonRequestPacketDeserializer::binaryDecoder(std::string buf)
     return output;
 }
 
-GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest)
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest,  std::vector<RoomData> Rooms)
 {
     // Convert Buffer to std::string
     std::string jsonStr(bufGetPlayersRequest.data.begin(), bufGetPlayersRequest.data.end());
@@ -60,12 +60,19 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRo
 
     // Extract values and initialize GetPlayersInRoomRequest
     GetPlayersInRoomRequest request;
-    request.roomId = j.at("roomId").get<unsigned int>();
-
+    std::string roomName = j.at("room").get<std::string>();
+    for (RoomData room : Rooms)
+    {
+        if (room.name == roomName)
+        {
+            request.roomId = room.id;
+            break;
+        }
+    }
     return request;
 }
 
-JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer bufJoinRoomRequest)
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer bufJoinRoomRequest, std::vector<RoomData> Rooms)
 {
     // Convert Buffer to std::string
     std::string jsonStr(bufJoinRoomRequest.data.begin(), bufJoinRoomRequest.data.end());
@@ -75,7 +82,15 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer
 
     // Extract values and initialize JoinRoomRequest
     JoinRoomRequest request;
-    request.roomId = j.at("roomId").get<unsigned int>();
+    std::string roomName = j.at("room").get<std::string>();
+    for (RoomData room : Rooms)
+    {
+        if (room.name == roomName)
+        {
+            request.roomId = room.id;
+            break;
+        }
+    }
 
     return request;
 }
