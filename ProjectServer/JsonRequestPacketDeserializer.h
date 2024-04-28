@@ -5,6 +5,8 @@
 #include "json.hpp"
 #include <bitset>
 #include <iostream>
+#include "RequestHandlerFactory.h"
+
 
 
 using json = nlohmann::json;
@@ -68,7 +70,7 @@ public:
 
 
 	// Room & statistics related
-	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
-	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
+	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest, std::vector<RoomData> Rooms);
+	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest, std::vector<RoomData> Rooms);
 	static CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
 };

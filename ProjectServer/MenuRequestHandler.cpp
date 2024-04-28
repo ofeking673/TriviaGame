@@ -149,7 +149,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Deserialize request
-	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
+	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf, m_handlerFactory.getRoomManager().getRooms());
 
 	// Get all the players in a desired room through room manager
 	std::vector<std::string> players = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId).getAllUsers();
@@ -240,6 +240,7 @@ RequestResult MenuRequestHandler::joinRoom(Requestinfo requestInfo)
 	JoinRoomResponse joinRoomResponse;
 
 	// Deserialize request
+	std::vector<RoomData> rooms = m_handlerFactory.getRoomManager().getRooms();
 	JoinRoomRequest joinRoomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(requestInfo.buf);
 
 	// Stay in menu request handler
