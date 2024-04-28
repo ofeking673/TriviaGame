@@ -69,6 +69,7 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
+		// TO-DO add fail code status
 	}
 
 	// Create response
@@ -109,6 +110,7 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
+		// TO-DO add fail code status
 	}
 
 	// Create response

@@ -15,6 +15,8 @@ StatisticsManager::~StatisticsManager()
 // Gets a vector of 5 best scores through database
 std::vector<std::string> StatisticsManager::getHighScore()
 {
+    /*TO-DO change to 10*/
+    /*TO-DO MANAGE HIGH SCORE IN DB*/
     return m_database->getHighScores();
 }
 

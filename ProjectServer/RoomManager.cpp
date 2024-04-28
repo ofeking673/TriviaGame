@@ -28,6 +28,7 @@ bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
 // Remove the room from the map
 void RoomManager::deleteRoom(unsigned int ID)
 {
+    /*TO-DO delete from DB*/
     m_rooms.erase(ID);
 }
 
