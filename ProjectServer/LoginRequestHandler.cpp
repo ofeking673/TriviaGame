@@ -65,7 +65,7 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		requestResult.newHandler = menu;
 
 		// Status of succeful login
-		loginResponse.status = TEMP_LOGIN_STATUS;
+		loginResponse.status = TEMP_LOGIN_RESPONSE_STATUS;
 	}
 	else
 	{	//Failed to Login
@@ -75,7 +75,7 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		requestResult.newHandler = loginRequestHandler;
 
 		// Fail code status
-		loginResponse.status = TEMP_FAIL_LOGIN_STATUS;
+		loginResponse.status = TEMP_FAIL_LOGIN_RESPONSE_STATUS;
 	}
 
 
@@ -111,7 +111,7 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		requestResult.newHandler = menu;
 
 		// Status of succeful signup
-		signupResponse.status = TEMP_SIGNUP_STATUS;
+		signupResponse.status = TEMP_SIGNUP_RESPONSE_STATUS;
 	}
 	else 
 	{	//Faied to Signup
@@ -121,7 +121,7 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		requestResult.newHandler = loginRequestHandler;
 
 		// Fail code status
-		signupResponse.status = TEMP_FAIL_SIGNUP_STATUS;
+		signupResponse.status = TEMP_FAIL_SIGNUP_RESPONSE_STATUS;
 	}
 
 	//Serialize response

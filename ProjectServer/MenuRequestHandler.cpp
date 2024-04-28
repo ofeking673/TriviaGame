@@ -1,18 +1,12 @@
 #include "MenuRequestHandler.h"
 
-#define TEMP_LOGOUT_RESPONSE_STATUS 501
-#define TEMP_GET_ROOMS_RESPONSE_STATUS 210
-#define TEMP_GET_PERSONAL_STATS_RESPONSE_STATUS 220
-#define TEMP_GET_HIGH_SCORE_RESPONSE_STATUS 230
-#define TEMP_JOIN_ROOM_RESPONSE_STATUS 310
-#define TEMP_CREATE_ROOM_RESPONSE_STATUS 300
-
 // Check if request is relevant to menu request handler
 bool MenuRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
     return (requestInfo.id == CreateRoom || requestInfo.id == GetRooms ||
             requestInfo.id == GetPlayersInRoom || requestInfo.id == JoinRoom ||
-            requestInfo.id == GetStatistics || requestInfo.id == Logout);
+            requestInfo.id == GetPersonalStats || requestInfo.id == GetHighScores ||
+			requestInfo.id == Logout);
 }
 
 RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -43,11 +37,15 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 			// JoinRoom
 			requestResult = joinRoom(requestInfo);
 		}
-		else if (requestInfo.id == GetStatistics)
+		else if (requestInfo.id == GetPersonalStats)
 		{
-			// GetStatistics
-			// TO-DO think about how to receive statistics
-			// requestResult = getStatistics(requestInfo);
+			// Get personal statistics
+			requestResult = getPersonalStats(requestInfo);
+		}
+		else if (requestInfo.id == GetHighScores)
+		{
+			// Get high score list
+			requestResult = getHighScore(requestInfo);
 		}
 		else if (requestInfo.id == Logout)
 		{
@@ -80,9 +78,7 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 RequestResult MenuRequestHandler::signout(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
-
-	// Deserialize login
-	//LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
+	LogoutResponse logoutResponse;
 
 	// Logout the user through login manager who uses the Database
 	if(m_handlerFactory.getLoginManager().logout(m_user.getUsername()))
@@ -90,6 +86,10 @@ RequestResult MenuRequestHandler::signout(Requestinfo requestInfo)
 
 		// TO-DO think about handler after logout. should be nullptr or something else?
 		requestResult.newHandler = nullptr;
+
+		// Succeful Logout status
+		logoutResponse.status = TEMP_LOGOUT_RESPONSE_STATUS;
+
 	}
 	else
 	{	//Failed to Logout
@@ -97,12 +97,11 @@ RequestResult MenuRequestHandler::signout(Requestinfo requestInfo)
 		// Stay in menu request handler
 		MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 		requestResult.newHandler = menuRequestHandler;
+
+		// Failed Logout status
+		logoutResponse.status = TEMP_FAIL_LOGOUT_RESPONSE_STATUS;
 	}
 
-	// Create response
-	LogoutResponse logoutResponse;
-	logoutResponse.status = TEMP_LOGOUT_RESPONSE_STATUS;
-	
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(logoutResponse);
 
@@ -119,9 +118,6 @@ RequestResult MenuRequestHandler::signout(Requestinfo requestInfo)
 RequestResult MenuRequestHandler::getRooms(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
-
-	// Deserialize login
-	//LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
 
 	// Get all rooms through room manager
 	std::vector<RoomData> rooms = m_handlerFactory.getRoomManager().getRooms();
@@ -241,20 +237,24 @@ RequestResult MenuRequestHandler::getHighScore(Requestinfo requestInfo)
 RequestResult MenuRequestHandler::joinRoom(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	JoinRoomResponse joinRoomResponse;
 
 	// Deserialize request
 	JoinRoomRequest joinRoomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(requestInfo.buf);
-
-	// Add the user to the desired room
-	m_handlerFactory.getRoomManager().getRoom(joinRoomRequest.roomId).addUser(m_user);
 
 	// Stay in menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	requestResult.newHandler = menuRequestHandler;
 
-	// Create response
-	JoinRoomResponse joinRoomResponse;
-	joinRoomResponse.status = TEMP_JOIN_ROOM_RESPONSE_STATUS;
+	// Add the user to the desired room
+	if (m_handlerFactory.getRoomManager().getRoom(joinRoomRequest.roomId).addUser(m_user))
+	{
+		joinRoomResponse.status = TEMP_JOIN_ROOM_RESPONSE_STATUS;
+	}
+	else
+	{
+		joinRoomResponse.status = TEMP_FAIL_JOIN_ROOM_RESPONSE_STATUS;
+	}
 
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(joinRoomResponse);
@@ -272,6 +272,7 @@ RequestResult MenuRequestHandler::joinRoom(Requestinfo requestInfo)
 RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	CreateRoomResponse createRoomResponse;
 
 	// Deserialize request
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buf);
@@ -285,26 +286,23 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	roomData.numOfQuestionsInGame = createRoomRequest.questionsCount;
 	roomData.timePerQuestion = createRoomRequest.answerTimeout;
 
+	// Stay in menu request handler
+	// TO-DO may need to change handler...
+	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
+	requestResult.newHandler = menuRequestHandler;
+
 	// Create the desired room
 	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{
-		// Stay in menu request handler
-		MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
-		requestResult.newHandler = menuRequestHandler;
-
-		// Create response
-		CreateRoomResponse createRoomResponse;
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
-
-
-		//Serialize response
-		requestResult.response = JsonResponsePacketSerializer::serializeResponse(createRoomResponse);
 	}
 	else
 	{
-		requestResult = error(requestInfo);
+		createRoomResponse.status = TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS;
 	}
 
+	//Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(createRoomResponse);
 
 	return requestResult;
 }

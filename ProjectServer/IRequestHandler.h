@@ -3,10 +3,30 @@
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
 
-#define TEMP_LOGIN_STATUS 10
-#define TEMP_FAIL_LOGIN_STATUS 18
-#define TEMP_SIGNUP_STATUS 20
-#define TEMP_FAIL_SIGNUP_STATUS 28
+// Login
+#define TEMP_LOGIN_RESPONSE_STATUS 100
+#define TEMP_FAIL_LOGIN_RESPONSE_STATUS 108
+
+// Signup
+#define TEMP_SIGNUP_RESPONSE_STATUS 110
+#define TEMP_FAIL_SIGNUP_RESPONSE_STATUS 118
+
+// Logout
+#define TEMP_LOGOUT_RESPONSE_STATUS 500
+#define TEMP_FAIL_LOGOUT_RESPONSE_STATUS 508
+
+// Getters
+#define TEMP_GET_ROOMS_RESPONSE_STATUS 210
+
+#define TEMP_GET_PERSONAL_STATS_RESPONSE_STATUS 220
+#define TEMP_GET_HIGH_SCORE_RESPONSE_STATUS 230
+
+// Rooms
+#define TEMP_CREATE_ROOM_RESPONSE_STATUS 300
+#define TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS 308
+
+#define TEMP_JOIN_ROOM_RESPONSE_STATUS 310
+#define TEMP_FAIL_JOIN_ROOM_RESPONSE_STATUS 318
 
 
 enum RequestId {
@@ -16,7 +36,8 @@ enum RequestId {
 	GetRooms,
 	GetPlayersInRoom,
 	JoinRoom,
-	GetStatistics,
+	GetPersonalStats,
+	GetHighScores,
 	Logout
 };
 

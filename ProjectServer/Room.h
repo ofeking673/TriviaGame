@@ -21,7 +21,7 @@ public:
 	Room() = default;
 	~Room() = default;
 
-	void addUser(const LoggedUser& user);
+	bool addUser(const LoggedUser& user);
 	void removeUser(const LoggedUser& user);
 	std::vector<std::string> getAllUsers() const;
 

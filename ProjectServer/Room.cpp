@@ -1,9 +1,15 @@
 #include "Room.h"
 
 // Adds user to room
-void Room::addUser(const LoggedUser& user)
+bool Room::addUser(const LoggedUser& user)
 {
-	m_users.push_back(user);
+    if (m_metadata.maxPlayers < m_users.size())
+    {
+        m_users.push_back(user);
+        return true;
+    }
+    return false;
+
 }
 
 // Removes a user from the room
