@@ -4,7 +4,10 @@
 #include "JsonResponsePacketSerializer.h"
 
 #define TEMP_LOGIN_STATUS 10
+#define TEMP_FAIL_LOGIN_STATUS 18
 #define TEMP_SIGNUP_STATUS 20
+#define TEMP_FAIL_SIGNUP_STATUS 28
+
 
 enum RequestId {
 	Login,

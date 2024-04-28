@@ -50,6 +50,7 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	LoginResponse loginResponse;
 
 	// Deserialize login
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
@@ -62,6 +63,9 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		LoggedUser curUser(loginRequest.username);
 		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
+
+		// Status of succeful login
+		loginResponse.status = TEMP_LOGIN_STATUS;
 	}
 	else
 	{	//Failed to Login
@@ -69,12 +73,13 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
-		// TO-DO add fail code status
+
+		// Fail code status
+		loginResponse.status = TEMP_FAIL_LOGIN_STATUS;
 	}
 
-	// Create response
-	LoginResponse loginResponse;
-	loginResponse.status = TEMP_LOGIN_STATUS;
+
+
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(loginResponse);
 
@@ -91,6 +96,7 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	SignupResponse signupResponse;
 
 	// Deserialize signup
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buf);
@@ -103,6 +109,9 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		LoggedUser curUser(signupRequest.username);
 		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
+
+		// Status of succeful signup
+		signupResponse.status = TEMP_SIGNUP_STATUS;
 	}
 	else 
 	{	//Faied to Signup
@@ -110,12 +119,11 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
-		// TO-DO add fail code status
+
+		// Fail code status
+		signupResponse.status = TEMP_FAIL_SIGNUP_STATUS;
 	}
 
-	// Create response
-	SignupResponse signupResponse;
-	signupResponse.status = TEMP_SIGNUP_STATUS;
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
 
