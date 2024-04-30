@@ -107,5 +107,35 @@ GetPersonalStats:
 		
 		If succeful:
 			status = 220
-			vector<string> personalStats (TO-DO)
+			vector<string> personalStats [in the following format: (playerScore, numOfPlayerGames, numOfTotalAnswers, numOfCorrectAnswers, playerAverageAnswerTime)]
 			new handler = menu request handler
+
+GetHighScores:
+	Request:
+		RequestId = 7
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 230
+			vector<string> highScores [in the following format: (TO-DO! still need to think about in code. probably: username|score, username|score, ...)]
+			new handler = menu request handler
+
+Logout:
+	Request:
+		RequestId = 8
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 500
+			new handler = nullptr (TO-DO maybe change in future to login request handler)
+		if failed:
+			status = 508
+			new handler = menu request handler 
