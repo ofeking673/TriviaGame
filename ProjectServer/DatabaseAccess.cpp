@@ -144,6 +144,11 @@ int DatabaseAccess::getIntScore(std::string username, std::string dataType)
     return answer;
 }
 
+// TO-DO
+// VERY IMPORTANT!!
+// CHANGE to get the 10 BEST SCORES
+// in the following FORMAT:
+// username1|score, username2|score, username3|score, ..., username10|score
 std::vector<std::string> DatabaseAccess::getHighScores()
 {
     std::vector<std::string> highScores;
