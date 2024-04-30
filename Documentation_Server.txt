@@ -64,7 +64,7 @@ GetRooms:
 		
 		If succeful:
 			status = 210
-			vector<RoomData> rooms 
+			vector<RoomData> rooms (eventually a string containing: "id|name|maxPlayers|numOfQuestionsInGame|timePerQuestion|isActive,...") 
 			new handler = menu request handler
 GetPlayersInRoom:
 	Request:

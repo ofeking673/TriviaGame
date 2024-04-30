@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <bitset>
 #include "Buffer.h"

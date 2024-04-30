@@ -117,17 +117,28 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomsResponse& g
 
     // Convert GetRoomsResponse to JSON
     json j;
-    std::string roomsList;
     
-    // Get roomList in the format: "room1, room2, ..., roomN"
+    std::ostringstream ss;
+
+    // Get roomList in the format: 
+    // "id|name|maxPlayers|numOfQuestionsInGame|timePerQuestion|isActive,..."
     for (const auto& room : getRoomsResponse.rooms) 
     {
-        if (!roomsList.empty()) 
-        {
-            roomsList += ",";
-        }
-        roomsList += room.name; //name,name2,name3
+        ss << room.id << "|"
+            << room.name << "|"
+            << room.maxPlayers << "|"
+            << room.numOfQuestionsInGame << "|"
+            << room.timePerQuestion << "|"
+            << room.isActive << ",";
     }
+    std::string roomsList = ss.str();
+
+    // Remove the last comma
+    if (!roomsList.empty())
+    {
+        roomsList.pop_back();
+    }
+
     j["Rooms"] = roomsList;
 
     //// Serialize the JSON to a string
