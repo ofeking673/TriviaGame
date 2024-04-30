@@ -160,6 +160,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 
 	// Create response
 	GetPlayersInRoomResponse getPlayersInRoomResponse;
+	getPlayersInRoomResponse.status = TEMP_GET_PLAYERS_IN_ROOM_RESPONSE_STATUS;
 	getPlayersInRoomResponse.players = players;
 
 
