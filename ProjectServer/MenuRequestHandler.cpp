@@ -149,7 +149,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Deserialize request
-	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf, m_handlerFactory.getRoomManager().getRooms());
+	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
 
 	// Get all the players in a desired room through room manager
 	std::vector<std::string> players = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId).getAllUsers();
@@ -275,7 +275,6 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
 	CreateRoomResponse createRoomResponse;
-
 	// Deserialize request
 	CreateRoomRequest createRoomRequest = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(requestInfo.buf);
 
@@ -292,7 +291,7 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	// TO-DO may need to change handler...
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	requestResult.newHandler = menuRequestHandler;
-
+	std::cout << "Trying ot ccreate rom\n";
 	// Create the desired room
 	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{

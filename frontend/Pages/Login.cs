@@ -28,7 +28,6 @@ namespace frontend.Pages
             string finalJson = $"0{json.Length.ToString().PadLeft(4, '0')}{json}";
             Console.WriteLine(finalJson);
             string binary = Utils.StringToBinary(finalJson);
-            Console.WriteLine(binary);
             byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
             Program.networkStream.Write(bytes, 0, bytes.Length);
@@ -36,7 +35,8 @@ namespace frontend.Pages
             byte[] bytes1 = new byte[1024];
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-            if (!string.IsNullOrEmpty(answer)) { this.Close(); }
+            Console.WriteLine(answer);
+            if (answer.Contains("100")) { this.Close(); }
         }
 
         private void button2_Click(object sender, EventArgs e)

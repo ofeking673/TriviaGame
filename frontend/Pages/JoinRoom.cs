@@ -26,11 +26,10 @@ namespace frontend.Pages
         {
             InitializeComponent();
 
-            listBox1.Items.Add(1);
-            listBox1.Items.Add(2);
-            listBox1.Items.Add(3);
-
             listBox1.DrawItem += ListBox1_DrawItem;
+
+            Thread thread = new Thread(new ThreadStart(threadCall));
+            thread.Start();
         }
 
         private void ListBox1_DrawItem(object sender, DrawItemEventArgs e)
@@ -52,7 +51,7 @@ namespace frontend.Pages
             while (true)
             {
                 listBox1.Items.Clear();
-                string message = "3";
+                string message = "300000";
                 string binary = Utils.StringToBinary(message);
                 byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
@@ -61,7 +60,7 @@ namespace frontend.Pages
                 byte[] bytes1 = new byte[1024];
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-
+                Console.WriteLine(answer);
                 string[] roomData = answer.Split(',');
                 foreach (var word in roomData)
                 {

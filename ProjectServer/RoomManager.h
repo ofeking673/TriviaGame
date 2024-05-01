@@ -1,8 +1,11 @@
 #pragma once
 #include "Room.h"
+#include <time.h>
+#include <cstdlib>
 #include <map>
 #include <random>
 #include <chrono>
+#include <iostream>
 
 
 class RoomManager
@@ -17,35 +20,21 @@ public:
 	std::vector<RoomData> getRooms() const;
 	Room& getRoom(unsigned int ID);
 
-private:
-	// RoomId -> Room
-	std::map<unsigned int, Room> m_rooms;
-};
-
-class RandomRoomId
-{
-public:
-	RandomRoomId(std::map<unsigned int, Room> rooms) : m_rooms(rooms), 
-		gen(std::chrono::system_clock::now().time_since_epoch().count()), 
-		dist(1, 10000) {}
-
-	unsigned int generateUniqueRoomId() 
+	unsigned int generateUniqueRoomId()
 	{
-		while (true) 
+		std::srand(static_cast<unsigned int>(std::time(nullptr)));
+		while (true)
 		{
-			unsigned int newId = dist(gen);  // Generate a random ID
-			if (m_rooms.find(newId) == m_rooms.end()) 
+			int newRandom = std::rand() % 10001 + 1; //1-10000
+			if (m_rooms.empty() || m_rooms.find(newRandom) == m_rooms.end())
 			{
-				return newId;  // Return the new ID if it's not already used
+				std::cout << newRandom << std::endl;
+				return newRandom;
 			}
-			// Generate a new ID if the ID already in use
 		}
 	}
+
 private:
 	// RoomId -> Room
-	std::map<unsigned int, Room> m_rooms;
-
-	std::mt19937 gen;
-	std::uniform_int_distribution<unsigned int> dist;
-
+	std::map<unsigned int, Room*> m_rooms;
 };

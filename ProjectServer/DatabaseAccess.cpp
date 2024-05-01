@@ -29,7 +29,7 @@ void DatabaseAccess::addUser(std::string name, std::string pass, std::string ema
 bool DatabaseAccess::isPassCorrect(std::string name, std::string pass)
 {
     std::string password;
-    std::string msg = "SELECT PASS FROM USERS WHERE NAME = '" + name + "'";
+    std::string msg = "SELECT PASSWORD FROM USERS WHERE NAME = '" + name + "'";
     sqlite3_exec(db, msg.c_str(), checkPass, &password, nullptr);
     return (pass == password);
 }

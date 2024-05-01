@@ -70,7 +70,7 @@ public:
 
 
 	// Room & statistics related
-	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest, std::vector<RoomData> Rooms);
-	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest, std::vector<RoomData> Rooms);
+	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
+	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
 	static CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
 };

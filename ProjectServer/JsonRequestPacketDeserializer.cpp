@@ -50,7 +50,7 @@ std::string JsonRequestPacketDeserializer::binaryDecoder(std::string buf)
     return output;
 }
 
-GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest,  std::vector<RoomData> Rooms)
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest)
 {
     // Convert Buffer to std::string
     std::string jsonStr(bufGetPlayersRequest.data.begin(), bufGetPlayersRequest.data.end());
@@ -65,7 +65,7 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRo
     return request;
 }
 
-JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer bufJoinRoomRequest, std::vector<RoomData> Rooms)
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer bufJoinRoomRequest)
 {
     // Convert Buffer to std::string
     std::string jsonStr(bufJoinRoomRequest.data.begin(), bufJoinRoomRequest.data.end());
@@ -84,7 +84,6 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 {
     // Convert Buffer to std::string
     std::string jsonStr(bufCreateRoomRequest.data.begin(), bufCreateRoomRequest.data.end());
-
     // Parse the JSON string into a json object
     json j = json::parse(jsonStr);
 

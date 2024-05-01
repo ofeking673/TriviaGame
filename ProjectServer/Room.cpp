@@ -3,8 +3,9 @@
 // Adds user to room
 bool Room::addUser(const LoggedUser& user)
 {
-    if (m_metadata.maxPlayers < m_users.size())
+    if (m_metadata.maxPlayers > m_users.size())
     {
+        std::cout << "trying ot add" << std::endl;
         m_users.push_back(user);
         return true;
     }

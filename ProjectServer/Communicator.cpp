@@ -129,9 +129,6 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			default:
 				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
 			}
-			
-			break;
-
 		}
 		TRACE("Client sent EXIT and quit.");
 	}
@@ -146,7 +143,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 {
 	Buffer buffer;
-	
+
 	std::string jsonStr = buf.substr(5);
 	for (int i = 0; i < jsonStr.size(); i++)
 	{

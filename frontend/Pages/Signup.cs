@@ -45,7 +45,8 @@ namespace frontend.Pages
             byte[] bytes1 = new byte[1024];
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-            if (!string.IsNullOrEmpty(answer)) { this.Close(); }
+            Console.WriteLine(answer);
+            if (answer.Contains("110")) { this.Close(); }
         }
     }
 }

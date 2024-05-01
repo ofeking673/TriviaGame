@@ -14,7 +14,7 @@ namespace frontend.utils
             this.roomName = roomName;
             this.maxUsers = int.Parse(maxUsers);
             this.questionsCount = int.Parse(questionsCount);
-            this.answersTimeout = int.Parse(answersTimeout);
+            this.answerTimeout = int.Parse(answersTimeout);
         }
 
         /*
@@ -26,6 +26,6 @@ namespace frontend.utils
         public string roomName { get; set; }
         public int maxUsers { get; set; }
         public int questionsCount { get; set; }
-        public int answersTimeout { get; set; }
+        public int answerTimeout { get; set; }
     }
 }

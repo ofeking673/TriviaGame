@@ -1,5 +1,6 @@
 #pragma once
 #include "LoggedUser.h"
+#include <iostream>
 #include <vector>
 
 // Struct to represent data of room
@@ -17,7 +18,7 @@ struct RoomData
 class Room
 {
 public:
-	Room(const RoomData& roomData) : m_metadata(roomData) {};
+	Room(RoomData& roomData) : m_metadata(roomData) {};
 	Room() = default;
 	~Room() = default;
 

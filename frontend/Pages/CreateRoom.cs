@@ -38,7 +38,9 @@ namespace frontend.Pages
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
-            if (!string.IsNullOrEmpty(answer))
+            Console.WriteLine(answer);
+
+            if (answer.Contains("300"))
             {
                 this.Close();
                 ManageRoom manageRoom = new ManageRoom();
