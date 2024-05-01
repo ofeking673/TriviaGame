@@ -8,7 +8,7 @@ namespace frontend.utils
 {
     internal class RoomJoin
     {
-        public RoomJoin(string name) { this.room = name; }
-        public string room {  get; set; }
+        public RoomJoin(int id) { this.roomId = id; }
+        public int roomId {  get; set; }
     }
 }

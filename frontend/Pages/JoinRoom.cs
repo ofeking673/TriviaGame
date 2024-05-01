@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -14,6 +15,13 @@ namespace frontend.Pages
 {
     public partial class JoinRoom : Form
     {
+        public const int id = 0;
+        public const int name = 1;
+        public const int maxPlayers = 2;
+        public const int numOfQuestionsInGame = 3;
+        public const int timePerQuestion = 4;
+        public const int isActive = 5;
+
         public JoinRoom()
         {
             InitializeComponent();
@@ -37,12 +45,14 @@ namespace frontend.Pages
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
-                string[] rooms = answer.Split(',');
-
-                foreach (var word in rooms)
+                string[] roomData = answer.Split(',');
+                foreach (var word in roomData)
                 {
+                    string[] strings = word.Split("|");
+                    string text = $"{name} [{id}]";
+
                     Label lbl = new Label();
-                    lbl.Text = word;
+                    lbl.Text = text;
                     listBox1.Items.Add(lbl);
                 }
                 Thread.Sleep(3000);
@@ -54,8 +64,9 @@ namespace frontend.Pages
             string message = "5";
             var obj = listBox1.SelectedItem;
             string value = listBox1.GetItemText(obj);
+            value = value.Substring(value.IndexOf("["), value.IndexOf("]") - value.IndexOf("["));
 
-            RoomJoin room = new RoomJoin(value);
+            RoomJoin room = new RoomJoin(int.Parse(value));
 
             string json = JsonConvert.SerializeObject(room);
             string finalMsg = $"{message}{json.Length}{json}";
@@ -68,15 +79,26 @@ namespace frontend.Pages
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
-            if (!string.IsNullOrEmpty(answer))
+            if (answer.StartsWith("310"))
             {
                 this.Close();
                 InRoom inRoom = new InRoom(answer, value);
                 inRoom.ShowDialog();
             }
+            else
+            {
+                ErrorJoin(sender, e);
+            }
 
         }
 
+        private void ErrorJoin(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex < 0) return;
+            Label lbl = new Label();
+            lbl.Text = "Error joining selected room. Please try again later!";
+            listBox1.Items[listBox1.SelectedIndex] = lbl;
+        }
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             this.Close();
