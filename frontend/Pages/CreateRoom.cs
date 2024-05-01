@@ -27,6 +27,7 @@ namespace frontend.Pages
 
             string json = JsonConvert.SerializeObject(room);
             string finalJson = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
+            Console.WriteLine(finalJson);
             string binary = Utils.StringToBinary(finalJson);
 
             byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);

@@ -103,27 +103,34 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 				LoginRequestHandler* login = m_handlerFactory.createLoginRequestHandler();
 				m_clients[client_socket] = login;
 
-				//RequestResult result = login->HandleRequest(info);
-				//
-				//sendBuf = std::string(result.response.data.begin(), result.response.data.end());
-				//send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+				RequestResult result = login->HandleRequest(info);
+				
+				m_clients[client_socket] = result.newHandler;
+				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
 			}
 			case CreateRoom:
+				goto end;
 			case GetRooms:
 			{
 				// TO-DO think about a way to get username
-				MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(LoggedUser("s"));
-				m_clients[client_socket] = menu;
+				/*MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(LoggedUser("s"));
+				m_clients[client_socket] = menu;*/
+				break;
+			}
+			end:
+			{
+				RequestResult result = m_clients[client_socket]/*The current handler*/->HandleRequest(info);
+
+				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
 			}
 			default:
 				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
 			}
-			RequestResult result = m_clients[client_socket]/*The current handler*/->HandleRequest(info);
-
-			sendBuf = std::string(result.response.data.begin(), result.response.data.end());
-			send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+			
 			break;
 
 		}

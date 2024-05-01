@@ -26,8 +26,25 @@ namespace frontend.Pages
         {
             InitializeComponent();
 
-            Thread thread = new Thread(new ThreadStart(threadCall));
-            thread.Start();
+            listBox1.Items.Add(1);
+            listBox1.Items.Add(2);
+            listBox1.Items.Add(3);
+
+            listBox1.DrawItem += ListBox1_DrawItem;
+        }
+
+        private void ListBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            Brush brush = new SolidBrush(Color.FromArgb(20, 20, 44));
+
+            if((e.State & DrawItemState.Selected)== DrawItemState.Selected) {
+                brush = new SolidBrush(Color.FromArgb(50, 50, 97));
+            }
+
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, brush, e.Bounds, StringFormat.GenericDefault);
+
+            e.DrawFocusRectangle();
         }
 
         private void threadCall()

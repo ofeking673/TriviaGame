@@ -1,4 +1,5 @@
-﻿using System;
+﻿using frontend.utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,22 +20,21 @@ namespace frontend.Pages
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             CreateRoom createRoom = new CreateRoom();
             createRoom.ShowDialog();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             JoinRoom joinRoom = new JoinRoom();
             joinRoom.ShowDialog();
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             Statistics stats = new Statistics();
             stats.ShowDialog();
         }
@@ -42,9 +42,15 @@ namespace frontend.Pages
         private void button3_Click(object sender, EventArgs e)
         {
             button3.Text = "Logging out...";
-            Thread.Sleep(300);
+            Thread.Sleep(1000);
             this.Close();
             //handle log out here
+
+            string msg = "1";
+            msg = Utils.StringToBinary(msg);
+            Program.networkStream.Write(Encoding.ASCII.GetBytes(msg));
+
+            Program.networkStream.Read(null);
         }
     }
 }

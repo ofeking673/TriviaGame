@@ -103,7 +103,9 @@ int DatabaseAccess::floatStatisticCallback(void* data, int argc, char** argv, ch
 
 int DatabaseAccess::highScoreCallback(void* data, int argc, char** argv, char** azColName)
 {
-    *(std::string*)data = argv[0];
+    std::string* dataString = (std::string*)data;
+    dataString->append(argv[0] + '|');
+    dataString->append(argv[1]);
     return 0;
 }
 
@@ -153,11 +155,7 @@ std::vector<std::string> DatabaseAccess::getHighScores()
 {
     std::vector<std::string> highScores;
     //order is going to be Correct answers -> Total answers -> Played games -> Player score -> Average answer time
-    highScores.push_back(getMaxStat("CORRECTANSWERS"));
-    highScores.push_back(getMaxStat("TOTALANSWERS"));
-    highScores.push_back(getMaxStat("PLAYEDGAMED"));
     highScores.push_back(getMaxStat("PLAYERSCORE"));
-    highScores.push_back(getMaxStat("AVERAGEANSWERTIME"));
 
     return highScores;
 }
@@ -165,7 +163,7 @@ std::vector<std::string> DatabaseAccess::getHighScores()
 std::string DatabaseAccess::getMaxStat(std::string type)
 {
     std::string value;
-    std::string msg = "SELECT MAX(" + type + ") LIMIT 1";
+    std::string msg = "SELECT NAME, MAX(" + type + ") LIMIT 10";
     sqlite3_exec(db, msg.c_str(), highScoreCallback, &value, nullptr);
     return value;
 }

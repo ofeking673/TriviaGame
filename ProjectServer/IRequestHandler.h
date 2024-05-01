@@ -40,7 +40,8 @@ enum RequestId {
 	JoinRoom,
 	GetPersonalStats,
 	GetHighScores,
-	Logout
+	Logout,
+	end
 };
 
 class IRequestHandler;
