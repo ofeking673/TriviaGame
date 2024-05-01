@@ -60,15 +60,8 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersInRo
 
     // Extract values and initialize GetPlayersInRoomRequest
     GetPlayersInRoomRequest request;
-    std::string roomName = j.at("room").get<std::string>();
-    for (RoomData room : Rooms)
-    {
-        if (room.name == roomName)
-        {
-            request.roomId = room.id;
-            break;
-        }
-    }
+    request.roomId = j.at("roomId").get<unsigned int>();
+
     return request;
 }
 
@@ -82,15 +75,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer
 
     // Extract values and initialize JoinRoomRequest
     JoinRoomRequest request;
-    std::string roomName = j.at("room").get<std::string>();
-    for (RoomData room : Rooms)
-    {
-        if (room.name == roomName)
-        {
-            request.roomId = room.id;
-            break;
-        }
-    }
+    request.roomId = j.at("roomId").get<unsigned int>();
 
     return request;
 }

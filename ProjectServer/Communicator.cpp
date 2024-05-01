@@ -103,25 +103,24 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 				LoginRequestHandler* login = m_handlerFactory.createLoginRequestHandler();
 				m_clients[client_socket] = login;
 
-				RequestResult result = login->HandleRequest(info);
-				
-				m_clients[client_socket] = result.newHandler;
-				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
-				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
-				break;
+				goto HandleRequestAndSendResult;
 			}
 			case CreateRoom:
-				goto end;
 			case GetRooms:
+			case GetPlayersInRoom:
+			case JoinRoom:
+			case GetPersonalStats:
+			case GetHighScores:
+			case Logout:
 			{
-				// TO-DO think about a way to get username
-				/*MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(LoggedUser("s"));
-				m_clients[client_socket] = menu;*/
-				break;
+				goto HandleRequestAndSendResult;
 			}
-			end:
+			HandleRequestAndSendResult:
 			{
-				RequestResult result = m_clients[client_socket]/*The current handler*/->HandleRequest(info);
+				RequestResult result = m_clients[client_socket]->HandleRequest(info);
+
+				// Set current handler as new handler came back from handler request
+				m_clients[client_socket] = result.newHandler;
 
 				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
 				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
