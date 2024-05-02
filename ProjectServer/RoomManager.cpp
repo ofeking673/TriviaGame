@@ -5,6 +5,9 @@ bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
 {
     // Hopefuly will work :)
 
+    // Generate unique room id
+    roomData.id = generateUniqueRoomId();
+
     // Check if a room with the same ID already exists
     if (m_rooms.find(roomData.id) != m_rooms.end())
     {

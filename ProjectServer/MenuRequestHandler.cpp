@@ -289,16 +289,17 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 
 	// Stay in menu request handler
 	// TO-DO may need to change handler...
+	std::cout << "Trying to new handler\n";
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	requestResult.newHandler = menuRequestHandler;
-	std::cout << "Trying ot ccreate rom\n";
+	std::cout << "Trying to create room\n";
 	// Create the desired room
-	auto roommng = m_handlerFactory.getRoomManager();
-	Room room = Room(roomData);
-	roommng.test(&room);
+	//auto roommng = m_handlerFactory.getRoomManager();
+	//Room room = Room(roomData);
+	//roommng.test(&room);
 
-	system("pause");
-
+	//system("pause");
+	std::cout << "Trying to room manager create room\n";
 	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
@@ -308,9 +309,10 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 		createRoomResponse.status = TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS;
 	}
 
+	std::cout << "Trying to serialize\n";
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(createRoomResponse);
-
+	std::cout << "Trying to return\n";
 	return requestResult;
 }
 
