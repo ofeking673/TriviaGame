@@ -6,7 +6,7 @@
 #include <random>
 #include <chrono>
 #include <iostream>
-
+#include <memory>
 
 class RoomManager
 {
@@ -20,23 +20,11 @@ public:
 	std::vector<RoomData> getRooms() const;
 	Room& getRoom(unsigned int ID);
 
-	unsigned int generateUniqueRoomId()
-	{
-		std::srand(static_cast<unsigned int>(std::time(nullptr)));
-		while (true)
-		{
-			int newRandom = std::rand() % 10001 + 1; //1-10000
-			if (m_rooms.empty() || m_rooms.find(newRandom) == m_rooms.end())
-			{
-				std::cout << newRandom << std::endl;
-				return newRandom;
-			}
-		}
-	}
+	unsigned int generateUniqueRoomId();
 
-	void test(Room* room) { m_rooms.insert({ 0, room }); }
+	//void test(Room* room) { m_rooms.insert({ 0, room }); }
 
 private:
 	// RoomId -> Room
-	std::map<unsigned int, Room*> m_rooms;
+	std::map<unsigned int, std::shared_ptr<Room>> m_rooms;
 };

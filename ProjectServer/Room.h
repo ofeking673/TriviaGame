@@ -18,8 +18,7 @@ struct RoomData
 class Room
 {
 public:
-	Room(RoomData& roomData) : m_metadata(roomData) {};
-	Room() = default;
+	Room(const RoomData& roomData) : m_metadata(roomData) {};
 	~Room() = default;
 
 	bool addUser(const LoggedUser& user);

@@ -3,49 +3,40 @@
 // Creates a new room and add it to the rooms map
 bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
 {
-    std::cout << roomData.id << std::endl;
-    // If the given room ID is 0 -> generate a unique id
-    if (roomData.id == 0)
-    {
-        roomData.id = generateUniqueRoomId();
-    }
-    
-    Room* curRoom = new Room(roomData);
-    try
-    {
-        m_rooms.insert({ roomData.id, curRoom }); //crash here
-    }
-    catch (const std::exception&)
-    {
-        std::cout << std::endl <<"what the fuck is this";
-        exit(1);
-    }
-    std::cout << "NOT HASAMA";
-    //m_rooms.emplace(roomData.id, Room(roomData));
+    // Hopefuly will work :)
 
-    // Add the user to the room
-    m_rooms[roomData.id]->addUser(user);
+    // Check if a room with the same ID already exists
+    if (m_rooms.find(roomData.id) != m_rooms.end())
+    {
+        return false; // Room already exists
+    }
 
+    // Create a new room with the given data 
+    std::shared_ptr<Room> newRoom = std::make_shared<Room>(roomData);
+    // Add the first user to the room
+    newRoom->addUser(user);
+
+    // Insert the new room into the map 
+    m_rooms[roomData.id] = newRoom;
     return true;
 }
 
 // Remove the room from the map
 void RoomManager::deleteRoom(unsigned int ID)
 {
-    /*TO-DO delete from DB*/
     m_rooms.erase(ID);
 }
 
 // Gets room state (isActive).
 unsigned int RoomManager::getRoomState(unsigned int ID)
 {
-    if (m_rooms.find(ID) != m_rooms.end())
+    auto it = m_rooms.find(ID);
+    if (it != m_rooms.end())
     {
-        return m_rooms[ID]->getRoomData().isActive;
+        return it->second->getRoomData().isActive;
     }
-    
-    // Room Not found
-    return 0; 
+    // Room not found
+    return 0;
 }
 
 // Gets a vector of all rooms data
@@ -63,4 +54,18 @@ std::vector<RoomData> RoomManager::getRooms() const
 Room& RoomManager::getRoom(unsigned int ID)
 {
     return *(m_rooms[ID]);
+}
+
+// Generate a unique room id
+unsigned int RoomManager::generateUniqueRoomId()
+{
+    srand(time(NULL));
+
+    unsigned int newId;
+    do 
+    {
+        newId = rand() % 10000 + 1;  // 1-10000
+    } while (m_rooms.find(newId) != m_rooms.end());  // Check if the ID is already used
+
+    return newId; 
 }

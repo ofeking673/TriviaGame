@@ -2,7 +2,7 @@
 #include "LoginRequestHandler.h"
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
-    : m_database(database), m_loginManager(database), m_roomManager(), m_statisticsManager(database)
+    : m_database(database), m_loginManager(database), m_statisticsManager(database)
 {
     if (m_database == nullptr) 
     {
