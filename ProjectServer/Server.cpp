@@ -1,11 +1,9 @@
 #include "Server.h"
 
 
-Server::Server()
+Server::Server() : m_database(new DatabaseAccess()), m_handlerFactory(RequestHandlerFactory(m_database))
 {
-	m_database = new DatabaseAccess();
-	m_handlerFactory = new RequestHandlerFactory(m_database);
-	m_communicator = new Communicator(*m_handlerFactory);
+	m_communicator = new Communicator(m_handlerFactory);
 }
 
 Server::~Server()

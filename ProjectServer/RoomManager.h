@@ -34,6 +34,8 @@ public:
 		}
 	}
 
+	void test(Room* room) { m_rooms.insert({ 0, room }); }
+
 private:
 	// RoomId -> Room
 	std::map<unsigned int, Room*> m_rooms;

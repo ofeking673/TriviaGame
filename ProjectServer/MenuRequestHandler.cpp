@@ -293,6 +293,12 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	requestResult.newHandler = menuRequestHandler;
 	std::cout << "Trying ot ccreate rom\n";
 	// Create the desired room
+	auto roommng = m_handlerFactory.getRoomManager();
+	Room room = Room(roomData);
+	roommng.test(&room);
+
+	system("pause");
+
 	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;

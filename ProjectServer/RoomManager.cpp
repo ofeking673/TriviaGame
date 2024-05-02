@@ -9,22 +9,24 @@ bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
     {
         roomData.id = generateUniqueRoomId();
     }
-    // Check if a Room with the given ID doesnt exist
-    if (m_rooms.empty() || m_rooms.find(roomData.id) == m_rooms.end())
+    
+    Room* curRoom = new Room(roomData);
+    try
     {
-        Room* curRoom = new Room(roomData);
-        std::cout << "HASAMA";
-        m_rooms[roomData.id] = curRoom;
-        std::cout << "NOT HASAMA";
-        //m_rooms.emplace(roomData.id, Room(roomData));
-
-        // Add the user to the room
-        m_rooms[roomData.id]->addUser(user);
-
-        return true;
+        m_rooms.insert({ roomData.id, curRoom }); //crash here
     }
-    // Unable to create room
-    return false;
+    catch (const std::exception&)
+    {
+        std::cout << std::endl <<"what the fuck is this";
+        exit(1);
+    }
+    std::cout << "NOT HASAMA";
+    //m_rooms.emplace(roomData.id, Room(roomData));
+
+    // Add the user to the room
+    m_rooms[roomData.id]->addUser(user);
+
+    return true;
 }
 
 // Remove the room from the map
