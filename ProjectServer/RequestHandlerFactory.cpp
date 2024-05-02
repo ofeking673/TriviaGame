@@ -4,7 +4,7 @@
 
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
-    : m_database(database), m_loginManager(database), m_statisticsManager(database)
+    : m_database(database), m_loginManager(database), m_statisticsManager(database), m_roomManager()
 {
     if (m_database == nullptr) 
     {

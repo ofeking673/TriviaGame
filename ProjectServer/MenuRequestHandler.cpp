@@ -293,14 +293,11 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	requestResult.newHandler = menuRequestHandler;
 	std::cout << "Trying to create room\n";
-	// Create the desired room
-	//auto roommng = m_handlerFactory.getRoomManager();
-	//Room room = Room(roomData);
-	//roommng.test(&room);
-
-	//system("pause");
+	//create room manager
 	std::cout << "Trying to room manager create room\n";
-	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
+	auto roomManager = m_handlerFactory.getRoomManager();
+
+	if (roomManager.createRoom(m_user, roomData))
 	{
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
 	}

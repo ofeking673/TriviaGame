@@ -10,6 +10,6 @@ public:
 	void run();
 private:
 	Communicator* m_communicator;
-	IDatabase* m_database;
+	DatabaseAccess m_database;
 	RequestHandlerFactory m_handlerFactory;
 };
