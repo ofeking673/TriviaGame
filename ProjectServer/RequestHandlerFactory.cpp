@@ -1,5 +1,7 @@
 #include "RequestHandlerFactory.h"
+#include "MenuRequestHandler.h"
 #include "LoginRequestHandler.h"
+
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
     : m_database(database), m_loginManager(database), m_statisticsManager(database)

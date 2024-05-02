@@ -1,9 +1,8 @@
 #pragma once
 #include "IRequestHandler.h"
-#include "LoggedUser.h"
 #include "RequestHandlerFactory.h"
 
-class RequestHandlerFactory;
+//class RequestHandlerFactory;
 
 class MenuRequestHandler : public IRequestHandler
 {
@@ -11,8 +10,8 @@ public:
 	MenuRequestHandler(LoggedUser user, RequestHandlerFactory& handlerFactory) : m_user(user), m_handlerFactory(handlerFactory) {};
 	virtual ~MenuRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo requestInfo);
-	virtual RequestResult HandleRequest(Requestinfo requestInfo);
+	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
+	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
 
 	RequestResult signout(Requestinfo requestInfo);
 	RequestResult getRooms(Requestinfo requestInfo);
