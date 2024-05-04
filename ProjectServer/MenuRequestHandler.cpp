@@ -120,8 +120,9 @@ RequestResult MenuRequestHandler::getRooms(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Get all rooms through room manager
-	std::vector<RoomData> rooms = m_handlerFactory.getRoomManager().getRooms();
-
+	auto roomManager = m_handlerFactory.getRoomManager();
+	std::vector<RoomData> rooms = roomManager.getRooms();
+	std::cout << rooms.size() << " rooms"<< std::endl;
 	// Stay in menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	requestResult.newHandler = menuRequestHandler;
@@ -295,9 +296,8 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	std::cout << "Trying to create room\n";
 	//create room manager
 	std::cout << "Trying to room manager create room\n";
-	auto roomManager = m_handlerFactory.getRoomManager();
 
-	if (roomManager.createRoom(m_user, roomData))
+	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
 	}

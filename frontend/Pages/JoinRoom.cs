@@ -50,8 +50,9 @@ namespace frontend.Pages
         {
             while (true)
             {
+                int index = listBox1.SelectedIndex;
                 listBox1.Items.Clear();
-                string message = "300000";
+                string message = "30000";
                 string binary = Utils.StringToBinary(message);
                 byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
@@ -61,16 +62,18 @@ namespace frontend.Pages
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
                 Console.WriteLine(answer);
-                string[] roomData = answer.Split(',');
-                foreach (var word in roomData)
-                {
-                    string[] strings = word.Split("|");
-                    string text = $"{name} [{id}]";
+                //"Rooms":{ "RoomData, RoomData"}
+                RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
 
-                    Label lbl = new Label();
-                    lbl.Text = text;
-                    listBox1.Items.Add(lbl);
+                foreach (var word in roomData.Rooms.Split(","))
+                {
+                    Console.WriteLine(word);
+                    string[] strings = word.Split("|");
+                    string text = $"{strings[name]} [{strings[id]}]";
+
+                    listBox1.Items.Add(text);
                 }
+                listBox1.SelectedIndex = index;
                 Thread.Sleep(3000);
             }
         }
@@ -80,15 +83,18 @@ namespace frontend.Pages
             string message = "5";
             var obj = listBox1.SelectedItem;
             string value = listBox1.GetItemText(obj);
-            value = value.Substring(value.IndexOf("["), value.IndexOf("]") - value.IndexOf("["));
-
-            RoomJoin room = new RoomJoin(int.Parse(value));
+            value = value.Substring(value.IndexOf("[") + 1, value.IndexOf("]") - value.IndexOf("[")-1);
+            Console.WriteLine(value);
+            RoomJoin room = new RoomJoin();
+            room.roomId = int.Parse(value);
 
             string json = JsonConvert.SerializeObject(room);
+            Console.WriteLine(json);
             string finalMsg = $"{message}{json.Length}{json}";
             string binary = Utils.StringToBinary(finalMsg);
             byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
+            Thread.Sleep(100000);
             Program.networkStream.Write(bytes, 0, bytes.Length);
 
             byte[] bytes1 = new byte[1024];
@@ -97,7 +103,7 @@ namespace frontend.Pages
 
             if (answer.StartsWith("310"))
             {
-                this.Close();
+                this.Hide();
                 InRoom inRoom = new InRoom(answer, value);
                 inRoom.ShowDialog();
             }
@@ -110,14 +116,12 @@ namespace frontend.Pages
 
         private void ErrorJoin(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0) return;
-            Label lbl = new Label();
-            lbl.Text = "Error joining selected room. Please try again later!";
-            listBox1.Items[listBox1.SelectedIndex] = lbl;
+            if (listBox1.SelectedIndex >= 0)
+                listBox1.Items[listBox1.SelectedIndex] = "Error joining selected room. Please try again later!";
         }
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             mainMenu mm = new mainMenu();
             mm.ShowDialog();
         }

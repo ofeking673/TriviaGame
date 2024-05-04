@@ -4,12 +4,14 @@
 
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
-    : m_database(database), m_loginManager(database), m_statisticsManager(database), m_roomManager()
+    : m_database(database), m_loginManager(LoginManager(database)), m_statisticsManager(StatisticsManager(database))
 {
     if (m_database == nullptr) 
     {
         throw std::invalid_argument("Invalid Database pointer");
     }
+    //: m_database(database), m_loginManager(database), m_statisticsManager(database), m_roomManager()
+    m_roomManager = new RoomManager();
 }
 
 RequestHandlerFactory::~RequestHandlerFactory()
@@ -43,5 +45,5 @@ StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 // Return the room manager
 RoomManager& RequestHandlerFactory::getRoomManager()
 {
-    return m_roomManager;
+    return *m_roomManager;
 }

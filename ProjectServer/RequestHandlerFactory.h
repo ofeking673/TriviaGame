@@ -31,7 +31,7 @@ private:
 	LoginManager m_loginManager;
 
 	// Room & statistics related
-	RoomManager m_roomManager;
+	RoomManager* m_roomManager;
 	StatisticsManager m_statisticsManager;
 
 };

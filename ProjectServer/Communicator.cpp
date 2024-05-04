@@ -99,12 +99,6 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			{
 			case SignUp:
 			case Login:
-			{
-				LoginRequestHandler* login = m_handlerFactory.createLoginRequestHandler();
-				m_clients[client_socket] = login;
-
-				goto HandleRequestAndSendResult;
-			}
 			case CreateRoom:
 			case GetRooms:
 			case GetPlayersInRoom:
@@ -135,6 +129,9 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	catch (const std::exception& e)
 	{
 		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
+		Requestinfo req;
+		req.id = Logout;
+		m_clients[client_socket]->HandleRequest(req);
 	}
 
 	closesocket(client_socket);

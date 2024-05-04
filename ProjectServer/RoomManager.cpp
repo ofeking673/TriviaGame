@@ -1,7 +1,12 @@
 #include "RoomManager.h"
 
+RoomManager::RoomManager(const RoomManager& other)
+{
+    m_rooms.insert(other.m_rooms.begin(), other.m_rooms.end());
+}
+
 // Creates a new room and add it to the rooms map
-bool RoomManager::createRoom(LoggedUser user, RoomData roomData)
+bool RoomManager::createRoom(LoggedUser user, RoomData& roomData)
 {
     // Hopefuly will work :)
 

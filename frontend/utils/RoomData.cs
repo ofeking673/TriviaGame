@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace frontend.utils
 {
-    internal class RoomJoin
+    internal class RoomData
     {
-        public int roomId {  get; set; }
+        public string Rooms { get; set; }
     }
 }
