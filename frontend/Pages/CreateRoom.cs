@@ -44,11 +44,13 @@ namespace frontend.Pages
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
             Console.WriteLine(answer);
+            
+            CreateRoomResponse response = JsonConvert.DeserializeObject<CreateRoomResponse>(answer);
 
             if (answer.Contains("300"))
             {
                 this.Hide();
-                ManageRoom manageRoom = new ManageRoom();
+                ManageRoom manageRoom = new ManageRoom(response.roomId);
                 manageRoom.ShowDialog();
             }
             //send server message to start room, whenever you do it (AHEM AHEM NESLI I HOPE YOU SEE THIS)

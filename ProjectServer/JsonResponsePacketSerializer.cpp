@@ -211,7 +211,11 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const JoinRoomResponse& j
 /// <returns>Buffer contains binary format of JSON Create Room response</returns>
 Buffer JsonResponsePacketSerializer::serializeResponse(const CreateRoomResponse& createRoomResponse)
 {
-    return statusOnlySerializeResponse(createRoomResponse.status);
+    json j;
+    j["status"] = createRoomResponse.status;
+    j["roomId"] = createRoomResponse.id;
+
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>

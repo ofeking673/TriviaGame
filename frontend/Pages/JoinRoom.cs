@@ -21,30 +21,15 @@ namespace frontend.Pages
         public const int numOfQuestionsInGame = 3;
         public const int timePerQuestion = 4;
         public const int isActive = 5;
+
         private bool stopThread = false;
         private Thread thread;
         public JoinRoom()
         {
             InitializeComponent();
 
-            listBox1.DrawItem += ListBox1_DrawItem;
-
             this.thread = new Thread(new ThreadStart(threadCall));
             this.thread.Start();
-        }
-
-        private void ListBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            Brush brush = new SolidBrush(Color.FromArgb(20, 20, 44));
-
-            if((e.State & DrawItemState.Selected)== DrawItemState.Selected) {
-                brush = new SolidBrush(Color.FromArgb(50, 50, 97));
-            }
-
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, brush, e.Bounds, StringFormat.GenericDefault);
-
-            e.DrawFocusRectangle();
         }
 
         private void threadCall()
@@ -106,7 +91,7 @@ namespace frontend.Pages
                 stopThread = true;
                 thread.Join();
                 this.Hide();
-                InRoom inRoom = new InRoom(answer, value);
+                InRoom inRoom = new InRoom(int.Parse(value));
                 inRoom.ShowDialog();
             }
             else

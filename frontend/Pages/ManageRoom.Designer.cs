@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManageRoom));
             button1 = new Button();
             pictureBox1 = new PictureBox();
+            listBox1 = new ListBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -42,6 +43,7 @@
             button1.TabIndex = 0;
             button1.Text = "Start game";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // pictureBox1
             // 
@@ -54,6 +56,15 @@
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
+            // listBox1
+            // 
+            listBox1.FormattingEnabled = true;
+            listBox1.ItemHeight = 15;
+            listBox1.Location = new Point(346, 241);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(316, 274);
+            listBox1.TabIndex = 2;
+            // 
             // ManageRoom
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -61,6 +72,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1009, 623);
+            Controls.Add(listBox1);
             Controls.Add(pictureBox1);
             Controls.Add(button1);
             DoubleBuffered = true;
@@ -74,5 +86,6 @@
 
         private Button button1;
         private PictureBox pictureBox1;
+        private ListBox listBox1;
     }
 }
