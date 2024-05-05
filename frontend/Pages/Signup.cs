@@ -33,6 +33,11 @@ namespace frontend.Pages
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (!(Program.Valid(textBox1) && Program.Valid(textBox2) && Program.Valid(textBox4)))
+            {
+                MessageBox.Show("Invalid input", "Please try again.", MessageBoxButtons.OK);
+                return;
+            }
             Console.WriteLine(this.textBox1.Text + this.textBox2.Text + this.textBox4.Text);
             SignupUser user = new SignupUser(this.textBox1.Text, this.textBox2.Text, this.textBox4.Text);
             string json = JsonConvert.SerializeObject(user);
@@ -46,7 +51,16 @@ namespace frontend.Pages
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
             Console.WriteLine(answer);
-            if (answer.Contains("110")) { this.Close(); }
+            if (answer.Contains("110"))
+            {
+                this.Hide();
+                mainMenu mm = new mainMenu();
+                mm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Signup failed", "User already exists!", MessageBoxButtons.OK);
+            }
         }
     }
 }

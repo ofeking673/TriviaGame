@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace frontend.Pages
 {
@@ -19,13 +20,23 @@ namespace frontend.Pages
         public Login()
         {
             InitializeComponent();
+
+            IPEndPoint iPEnd = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8826);
+            Program.Client.Connect(iPEnd);
+
+            Program.networkStream = Program.Client.GetStream();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //sign in
         {
+            if (!(Program.Valid(textBox1) && Program.Valid(textBox2))) {
+                MessageBox.Show("Invalid input", "Please try again.", MessageBoxButtons.OK);
+                return;
+            }
             LoginUser user = new LoginUser(this.textBox1.Text, this.textBox2.Text);
-            string json = JsonConvert.SerializeObject(user);
-            string finalJson = $"0{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string json = JsonConvert.SerializeObject(user); //"{"username": "username", "password":"password"}"
+            string finalJson = $"0{json.Length.ToString().PadLeft(4, '0')}{json}"; //code | json len | json
+            //5 -> 0005
             Console.WriteLine(finalJson);
             string binary = Utils.StringToBinary(finalJson);
             byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
@@ -36,10 +47,19 @@ namespace frontend.Pages
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
             Console.WriteLine(answer);
-            if (answer.Contains("100")) { this.Close(); }
+            if (answer.Contains("100")) 
+            { 
+                this.Hide();
+                mainMenu mm = new mainMenu();
+                mm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Incorrect password.", "Login failed", MessageBoxButtons.OK);
+            }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //go to signup
         {
             this.Hide();
             Signup signup = new Signup();

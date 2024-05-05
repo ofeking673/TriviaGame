@@ -41,16 +41,13 @@ namespace frontend.Pages
 
         private void button3_Click(object sender, EventArgs e)
         {
-            button3.Text = "Logging out...";
             Thread.Sleep(1000);
             this.Close();
             //handle log out here
 
-            string msg = "1";
+            string msg = "80000";
             msg = Utils.StringToBinary(msg);
             Program.networkStream.Write(Encoding.ASCII.GetBytes(msg));
-
-            Program.networkStream.Read(null);
         }
     }
 }

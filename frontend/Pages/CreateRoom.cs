@@ -21,6 +21,11 @@ namespace frontend.Pages
 
         private void button1_Click(object sender, EventArgs e) //create room
         {
+            if (!(Program.Valid(textBox1) && Program.Valid(textBox2) && Program.Valid(textBox3) && Program.Valid(textBox4)))
+            {
+                MessageBox.Show("Invalid input", "Please try again.", MessageBoxButtons.OK);
+                return;
+            }
             string message = "2";
 
             Room room = new Room(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
@@ -42,7 +47,7 @@ namespace frontend.Pages
 
             if (answer.Contains("300"))
             {
-                this.Close();
+                this.Hide();
                 ManageRoom manageRoom = new ManageRoom();
                 manageRoom.ShowDialog();
             }
@@ -51,7 +56,7 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             mainMenu mainMenu = new mainMenu();
             mainMenu.ShowDialog();
         }

@@ -4,7 +4,7 @@
 
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
-    : m_database(database), m_loginManager(LoginManager(database)), m_statisticsManager(StatisticsManager(database))
+    : m_database(database), m_loginManager(new LoginManager(database)), m_statisticsManager(new StatisticsManager(database))
 {
     if (m_database == nullptr) 
     {
@@ -27,7 +27,7 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 // Return the login manager
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
-    return m_loginManager;
+    return *m_loginManager;
 }
 
 // Creates menu request handler
@@ -39,7 +39,7 @@ MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser u
 // Return the statistics manager
 StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 {
-    return m_statisticsManager;
+    return *m_statisticsManager;
 }
 
 // Return the room manager

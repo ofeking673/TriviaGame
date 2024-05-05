@@ -28,10 +28,10 @@ private:
 	IDatabase* m_database;
 
 	// Login & Signup related
-	LoginManager m_loginManager;
+	LoginManager* m_loginManager;
 
 	// Room & statistics related
 	RoomManager* m_roomManager;
-	StatisticsManager m_statisticsManager;
+	StatisticsManager* m_statisticsManager;
 
 };

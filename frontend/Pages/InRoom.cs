@@ -19,8 +19,7 @@ namespace frontend.Pages
             this.roomName = name;
             InitializeComponent();
 
-            Thread thread = new Thread(new ThreadStart(threadCall));
-            thread.Start();
+            
         }
 
         public void threadCall()
