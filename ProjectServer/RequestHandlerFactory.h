@@ -3,7 +3,10 @@
 #include "IDatabase.h"
 #include "RoomManager.h"
 #include "StatisticsManager.h"
+#include "RoomAdminRequestHandler.h"
+#include "RoomMemberRequestHandler.h"
 
+// TO-DO circular dependencies V3
 class MenuRequestHandler;
 class LoginRequestHandler;
 
@@ -23,6 +26,10 @@ public:
 	MenuRequestHandler* createMenuRequestHandler(LoggedUser user);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
+
+	// Inside Room related
+	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room room);
+	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room room);
 
 private:
 	IDatabase* m_database;

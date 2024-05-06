@@ -1,11 +1,11 @@
 #pragma once
 #include "IRequestHandler.h"
 
-class RoomAdminRequestHandler : public IRequestHandler
+class RoomMemberRequestHandler : public IRequestHandler
 {
 public:
-	RoomAdminRequestHandler();
-	virtual ~RoomAdminRequestHandler();
+	RoomMemberRequestHandler();
+	virtual ~RoomMemberRequestHandler();
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
