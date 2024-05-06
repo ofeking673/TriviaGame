@@ -41,6 +41,10 @@ enum RequestId {
 	GetPersonalStats,
 	GetHighScores,
 	Logout,
+	CloseRoom,
+	StartGame,
+	GetRoomState,
+	LeaveRoom,
 	end
 };
 
