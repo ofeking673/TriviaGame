@@ -14,6 +14,8 @@ using std::mutex;
 using std::unique_lock;
 using std::vector;
 
+mutex mtx;
+
 Communicator::Communicator(RequestHandlerFactory handlerFactory):m_handlerFactory(handlerFactory)
 {
 	// notice that we step out to the global namespace
@@ -89,7 +91,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			Buffer deserialize;
 			
 			std::string decodedstr = JsonRequestPacketDeserializer::binaryDecoder(str);
-			std::string jsonStr = decodedstr.substr(5);
+			std::string jsonStr = decodedstr.substr(decodedstr.find('{'));
 
 			Requestinfo info; 
 			breakDownStr(info, decodedstr);
@@ -108,11 +110,11 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			case Logout:
 			HandleRequestAndSendResult:
 			{
+				mtx.lock();
 				RequestResult result = m_clients[client_socket]->HandleRequest(info);
-
+				mtx.unlock();
 				// Set current handler as new handler came back from handler request
 				m_clients[client_socket] = result.newHandler;
-
 				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
 				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
