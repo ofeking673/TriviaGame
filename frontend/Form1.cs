@@ -2,6 +2,7 @@ namespace frontend
 {
     using Pages;
     using System.Net;
+    using System.Text;
 
     public partial class Form1 : Form
     {

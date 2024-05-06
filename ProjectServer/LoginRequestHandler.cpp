@@ -4,7 +4,7 @@
 
 bool LoginRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
-	return  (requestInfo.id == Login || requestInfo.id == SignUp);
+	return  (requestInfo.id == Login || requestInfo.id == SignUp || requestInfo.id == Logout);
 }
 
 RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -24,6 +24,10 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 		{
 			// Signup
 			requestResult = signup(requestInfo);
+		}
+		else if (requestInfo.id == Logout)
+		{
+			return requestResult;
 		}
 		else
 		{

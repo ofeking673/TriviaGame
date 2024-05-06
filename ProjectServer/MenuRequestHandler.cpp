@@ -153,7 +153,8 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
 
 	// Get all the players in a desired room through room manager
-	std::vector<std::string> players = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId).getAllUsers();
+	auto room = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId);
+	std::vector<std::string> players = room.getAllUsers();
 	
 	// Stay in menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
@@ -305,6 +306,7 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	{
 		createRoomResponse.status = TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS;
 	}
+	createRoomResponse.id = roomData.id;
 
 	std::cout << "Trying to serialize\n";
 	//Serialize response

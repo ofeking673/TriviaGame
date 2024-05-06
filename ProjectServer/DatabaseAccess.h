@@ -7,7 +7,7 @@
 class DatabaseAccess : public IDatabase
 {
 public:
-	DatabaseAccess() 
+	DatabaseAccess()
 	{
 		open(FILENAME);
 	};

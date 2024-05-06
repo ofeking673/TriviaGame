@@ -106,9 +106,6 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			case GetPersonalStats:
 			case GetHighScores:
 			case Logout:
-			{
-				goto HandleRequestAndSendResult;
-			}
 			HandleRequestAndSendResult:
 			{
 				RequestResult result = m_clients[client_socket]->HandleRequest(info);

@@ -1,4 +1,5 @@
 ﻿using frontend.utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,22 +14,28 @@ namespace frontend.Pages
 {
     public partial class InRoom : Form
     {
-        public InRoom(string roomJoinData, string name)
+        public bool stopThread = false;
+        public Thread thread;
+
+        public InRoom(int id)
         {
-            this.roomJoinData = roomJoinData;
-            this.roomName = name;
+            this.roomId = id;
             InitializeComponent();
 
-            Thread thread = new Thread(new ThreadStart(threadCall));
+            thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
         }
 
         public void threadCall()
         {
-            while (true)
+            while (true && !stopThread)
             {
                 listBox1.Items.Clear();
-                string message = "4";
+                RoomId roomId = new RoomId();
+                roomId.roomId = this.roomId;
+
+                string json = JsonConvert.SerializeObject(roomId);
+                string message = $"4{json.Length.ToString().PadLeft(4, '0')}{json}";
                 string binary = Utils.StringToBinary(message);
                 byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
@@ -38,14 +45,18 @@ namespace frontend.Pages
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
-                string[] players = answer.Split(',');
+                RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
+
+                if (string.IsNullOrEmpty(roomPlayers.playersInRoom)) { Thread.Sleep(3000); continue; }
+
+                string[] players = roomPlayers.playersInRoom.Split(',');
 
                 foreach (var word in players)
                 {
-                    Label lbl = new Label();
-                    lbl.Text = word;
-                    listBox1.Items.Add(lbl);
+                    listBox1.Items.Add(word);
                 }
+
+                listBox1.Items[0] += " - Room owner";
 
                 Thread.Sleep(3000);
             }
@@ -53,11 +64,13 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
+            stopThread = true;
+            thread.Join();
             JoinRoom joinRoom = new JoinRoom();
             joinRoom.ShowDialog();
         }
-        private string roomJoinData { get; set; }
-        private string roomName { get; set; }
+
+        private int roomId;
     }
 }

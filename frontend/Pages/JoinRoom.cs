@@ -22,33 +22,19 @@ namespace frontend.Pages
         public const int timePerQuestion = 4;
         public const int isActive = 5;
 
+        private bool stopThread = false;
+        private Thread thread;
         public JoinRoom()
         {
             InitializeComponent();
 
-            listBox1.DrawItem += ListBox1_DrawItem;
-
-            Thread thread = new Thread(new ThreadStart(threadCall));
-            thread.Start();
-        }
-
-        private void ListBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            Brush brush = new SolidBrush(Color.FromArgb(20, 20, 44));
-
-            if((e.State & DrawItemState.Selected)== DrawItemState.Selected) {
-                brush = new SolidBrush(Color.FromArgb(50, 50, 97));
-            }
-
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, brush, e.Bounds, StringFormat.GenericDefault);
-
-            e.DrawFocusRectangle();
+            this.thread = new Thread(new ThreadStart(threadCall));
+            this.thread.Start();
         }
 
         private void threadCall()
         {
-            while (true)
+            while (true && !stopThread)
             {
                 int index = listBox1.SelectedIndex;
                 listBox1.Items.Clear();
@@ -90,21 +76,22 @@ namespace frontend.Pages
 
             string json = JsonConvert.SerializeObject(room);
             Console.WriteLine(json);
-            string finalMsg = $"{message}{json.Length}{json}";
+            string finalMsg = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
             string binary = Utils.StringToBinary(finalMsg);
             byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
-            Thread.Sleep(100000);
             Program.networkStream.Write(bytes, 0, bytes.Length);
 
             byte[] bytes1 = new byte[1024];
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
 
-            if (answer.StartsWith("310"))
+            if (answer.Contains("310"))
             {
+                stopThread = true;
+                thread.Join();
                 this.Hide();
-                InRoom inRoom = new InRoom(answer, value);
+                InRoom inRoom = new InRoom(int.Parse(value));
                 inRoom.ShowDialog();
             }
             else
@@ -121,6 +108,8 @@ namespace frontend.Pages
         }
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            stopThread = true;
+            thread.Join();
             this.Hide();
             mainMenu mm = new mainMenu();
             mm.ShowDialog();
