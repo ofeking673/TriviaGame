@@ -70,6 +70,7 @@ struct JoinRoomResponse
 struct CreateRoomResponse
 {
 	unsigned int status;
+	unsigned int id;
 };
 
 // V3
@@ -125,7 +126,6 @@ public:
 	static Buffer serializeResponse(const StartGameResponse& startGameResponse);
 	static Buffer serializeResponse(const GetRoomStateResponse& getRoomStateResponse);
 	static Buffer serializeResponse(const LeaveRoomResponse& leaveRoomResponse);
-
 
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
