@@ -1,9 +1,13 @@
 #pragma once
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <bitset>
 #include "Buffer.h"
+#include "Room.h"
+#include "json.hpp"
 
+using json = nlohmann::json;
 
 // Struct of error response
 struct ErrorResponse
@@ -12,6 +16,8 @@ struct ErrorResponse
 	std::string message;
 };
 
+// Login & Signup related
+ 
 // Struct of login response
 struct LoginResponse
 {
@@ -26,14 +32,72 @@ struct SignupResponse
 	unsigned int status;
 };
 
+// Room & statistics related
+struct LogoutResponse
+{
+	unsigned int status;
+};
+
+struct GetRoomsResponse
+{
+	unsigned int status;
+	std::vector<RoomData> rooms;
+};
+
+struct GetPlayersInRoomResponse
+{
+	unsigned int status;
+	std::vector<std::string> players;
+};
+
+struct GetHighScoreResponse
+{
+	unsigned int status;
+	std::vector<std::string> statistics;
+};
+
+struct GetPersonalStatsResponse
+{
+	unsigned int status;
+	std::vector<std::string> statistics;
+};
+
+struct JoinRoomResponse
+{
+	unsigned int status;
+};
+
+struct CreateRoomResponse
+{
+	unsigned int status;
+	unsigned int id;
+};
+
 
 // Static class to serialize json response packets
 class JsonResponsePacketSerializer
 {
 public:
+	// Error
 	static Buffer serializeResponse(const ErrorResponse& errorResponse);
+
+	// Login & Signup related
 	static Buffer serializeResponse(const LoginResponse& loginResponse);
 	static Buffer serializeResponse(const SignupResponse& signupResponse);
 
 	static std::string encodeBinary(std::string encodeStr);
+
+
+	// Room & statistics related
+	static Buffer serializeResponse(const LogoutResponse& logoutResponse); 
+	static Buffer serializeResponse(const GetRoomsResponse& getRoomsResponse);
+	static Buffer serializeResponse(const GetPlayersInRoomResponse& getPlayersInRoomResponse);
+	static Buffer serializeResponse(const JoinRoomResponse& joinRoomResponse); 
+	static Buffer serializeResponse(const CreateRoomResponse& createRoomResponse); 
+	static Buffer serializeResponse(const GetHighScoreResponse& getHighScoreResponse);
+	static Buffer serializeResponse(const GetPersonalStatsResponse& getPersonalStatsResponse);
+
+private:
+	static Buffer statusOnlySerializeResponse(const unsigned int status);
+	static Buffer jsonObjectSerializer(json j);
 };

@@ -1,0 +1,141 @@
+Documentation of Trivia Server:
+
+Login:
+	Request:
+		RequestId = 0
+	
+		client sends: 
+			string username
+			string password
+	Response:
+		
+		If succeful:
+			status = 100
+			new handler = menu request handler
+		if failed:
+			status = 108
+			new handler = login request handler
+
+Signup:
+	Request:
+		RequestId = 1
+	
+		client sends: 
+			string username
+			string password
+			string email
+	Response:
+		
+		If succeful:
+			status = 110
+			new handler = menu request handler
+		if failed:
+			status = 118
+			new handler = login request handler
+
+
+
+CreateRoom:
+	Request:
+		RequestId = 2
+	
+		client sends: 
+			string roomName
+			unsigned int maxUsers;
+			unsigned int questionsCount;
+			unsigned int answerTimeout;
+	Response:
+		
+		If succeful:
+			status = 300
+			new handler = menu request handler (maybe will be changed later)
+		if failed:
+			status = 308
+			new handler = menu request handler 
+
+
+GetRooms:
+	Request:
+		RequestId = 3
+	
+		client sends: 
+			(only requestId)
+	Response:
+		
+		If succeful:
+			status = 210
+			vector<RoomData> rooms (eventually a string containing: "id|name|maxPlayers|numOfQuestionsInGame|timePerQuestion|isActive,...") 
+			new handler = menu request handler
+GetPlayersInRoom:
+	Request:
+		RequestId = 4
+	
+		client sends: 
+			unsigned int roomId
+
+	Response:
+		
+		If succeful:
+			status = 240
+			vector<string> players    --(usernames)
+			new handler = menu request handler
+
+JoinRoom:
+	Request:
+		RequestId = 5
+	
+		client sends: 
+			unsigned int roomId
+
+	Response:
+		
+		If succeful:
+			status = 310
+			new handler = menu request handler
+		if failed:
+			status = 318
+			new handler = menu request handler 
+
+GetPersonalStats:
+	Request:
+		RequestId = 6
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 220
+			vector<string> personalStats [in the following format: (playerScore, numOfPlayerGames, numOfTotalAnswers, numOfCorrectAnswers, playerAverageAnswerTime)]
+			new handler = menu request handler
+
+GetHighScores:
+	Request:
+		RequestId = 7
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 230
+			vector<string> highScores [in the following format: (TO-DO! still need to think about in code. probably: username|score, username|score, ...)]
+			new handler = menu request handler
+
+Logout:
+	Request:
+		RequestId = 8
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 500
+			new handler = nullptr (TO-DO maybe change in future to login request handler)
+		if failed:
+			status = 508
+			new handler = menu request handler 

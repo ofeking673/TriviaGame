@@ -43,6 +43,25 @@ public:
 	static int checkPass(void* data, int argc, char** argv, char** azColName);
 	static int getData(void* data, int argc, char** argv, char** azColName);
 
+	// Room & statistics related
+	virtual std::list<Question> getQuestions(int amt /*?*/);
+	virtual float getPlayerAverageAnswerTime(std::string username);
+	virtual int getNumOfCorrectAnswers(std::string username);
+	virtual int getNumOfTotalAnswers(std::string username);
+	virtual int getNumOfPlayerGames(std::string username);
+	virtual int getPlayerScore(std::string username);
+	int getIntScore(std::string username, std::string dataType);
+	// PLEASE RETURN IN FOLLOWING FORMAT:
+	// username1 | score, username2 | score, ... 
+	virtual std::vector<std::string> getHighScores();
+	std::string getMaxStat(std::string type);
+	//Room & Statistics related callbacks
+	static int getQuestionData(void* data, int argc, char** argv, char** azColName);
+	static int intStatisticCallback(void* data, int argc, char** argv, char** azColName);
+	static int floatStatisticCallback(void* data, int argc, char** argv, char** azColName);
+
+	static int highScoreCallback(void* data, int argc, char** argv, char** azColName);
+
 private:
 	sqlite3* db;
 };

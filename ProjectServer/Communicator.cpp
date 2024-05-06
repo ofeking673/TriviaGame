@@ -95,16 +95,24 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			breakDownStr(info, decodedstr);
 
 			std::cout << "'" << info.id << "'";
-			switch (info.id) //TODO: add more types
+			switch (info.id) //TO-DO: add more types
 			{
 			case SignUp:
 			case Login:
+			case CreateRoom:
+			case GetRooms:
+			case GetPlayersInRoom:
+			case JoinRoom:
+			case GetPersonalStats:
+			case GetHighScores:
+			case Logout:
+			HandleRequestAndSendResult:
 			{
-				LoginRequestHandler* login = new LoginRequestHandler(m_handlerFactory);
-				m_clients[client_socket] = login;
+				RequestResult result = m_clients[client_socket]->HandleRequest(info);
 
-				RequestResult result = login->HandleRequest(info);
-				
+				// Set current handler as new handler came back from handler request
+				m_clients[client_socket] = result.newHandler;
+
 				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
 				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
@@ -117,7 +125,10 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	}
 	catch (const std::exception& e)
 	{
-		TRACE("Something went wrong in __FUNCTION__, what=%s", e.what());
+		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
+		Requestinfo req;
+		req.id = Logout;
+		m_clients[client_socket]->HandleRequest(req);
 	}
 
 	closesocket(client_socket);
@@ -126,7 +137,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 {
 	Buffer buffer;
-	
+
 	std::string jsonStr = buf.substr(5);
 	for (int i = 0; i < jsonStr.size(); i++)
 	{
@@ -147,6 +158,20 @@ RequestId Communicator::getIdFromStr(std::string str)
 		return Login;
 	case '1':
 		return SignUp;
+	case '2':
+		return CreateRoom;
+	case '3':
+		return GetRooms;
+	case '4':
+		return GetPlayersInRoom;
+	case '5':
+		return JoinRoom;
+	case '6':
+		return GetPersonalStats;
+	case '7':
+		return GetHighScores;
+	case '8':
+		return Logout;
 	default:
 		break;
 	}

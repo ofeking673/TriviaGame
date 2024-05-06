@@ -1,9 +1,10 @@
 #include "LoginRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "MenuRequestHandler.h"
 
 bool LoginRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
-	return  (requestInfo.id == Login || requestInfo.id == SignUp);
+	return  (requestInfo.id == Login || requestInfo.id == SignUp || requestInfo.id == Logout);
 }
 
 RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -11,9 +12,9 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Check if request relevant
-	
 	if (isRequestRelevant(requestInfo))
 	{
+
 		if (requestInfo.id == Login)
 		{
 			// Login
@@ -24,13 +25,22 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 			// Signup
 			requestResult = signup(requestInfo);
 		}
+		else if (requestInfo.id == Logout)
+		{
+			return requestResult;
+		}
 		else
 		{
 			// Error
 			requestResult = error(requestInfo);
 		}
-	}
 
+	}
+	else
+	{
+		// Error
+		requestResult = error(requestInfo);
+	}
 
 	return requestResult;
 }
@@ -45,17 +55,22 @@ RequestResult LoginRequestHandler::HandleRequest(Requestinfo requestInfo)
 RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	LoginResponse loginResponse;
 
 	// Deserialize login
 	LoginRequest loginRequest = JsonRequestPacketDeserializer::deserializeLoginRequest(requestInfo.buf);
 
 	// Login the user through login manager who uses the Database
-	if (m_handlerFactory.getLoginManager().login(loginRequest.username, loginRequest.password))
+	if (m_loginManager.login(loginRequest.username, loginRequest.password))
 	{	// Succeful Login
 
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
+		// Change to menu request handler with current user
+		LoggedUser curUser(loginRequest.username);
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
+
+		// Status of succeful login
+		loginResponse.status = TEMP_LOGIN_RESPONSE_STATUS;
 	}
 	else
 	{	//Failed to Login
@@ -63,11 +78,13 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
+
+		// Fail code status
+		loginResponse.status = TEMP_FAIL_LOGIN_RESPONSE_STATUS;
 	}
 
-	// Create response
-	LoginResponse loginResponse;
-	loginResponse.status = TEMP_LOGIN_STATUS;
+
+
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(loginResponse);
 
@@ -84,17 +101,22 @@ RequestResult LoginRequestHandler::login(Requestinfo requestInfo)
 RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
+	SignupResponse signupResponse;
 
 	// Deserialize signup
 	SignupRequest signupRequest = JsonRequestPacketDeserializer::deserializeSignupRequest(requestInfo.buf);
 
 	// Signup the user through login manager who uses the Database
-	if (m_handlerFactory.getLoginManager().signup(signupRequest.username, signupRequest.password, signupRequest.email))
+	if (m_loginManager.signup(signupRequest.username, signupRequest.password, signupRequest.email))
 	{	// Succeful Signup
 
-		// Currently empty. In v2.0.0 will be needed to change to 'createMenuRequestHandler'
-		MenuRequestHandler* menu = new MenuRequestHandler;
+		// Change to menu request handler with current user
+		LoggedUser curUser(signupRequest.username);
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(curUser);
 		requestResult.newHandler = menu;
+
+		// Status of succeful signup
+		signupResponse.status = TEMP_SIGNUP_RESPONSE_STATUS;
 	}
 	else 
 	{	//Faied to Signup
@@ -102,16 +124,17 @@ RequestResult LoginRequestHandler::signup(Requestinfo requestInfo)
 		// Stay in login request handler
 		LoginRequestHandler* loginRequestHandler = m_handlerFactory.createLoginRequestHandler();
 		requestResult.newHandler = loginRequestHandler;
+
+		// Fail code status
+		signupResponse.status = TEMP_FAIL_SIGNUP_RESPONSE_STATUS;
 	}
 
-	// Create response
-	SignupResponse signupResponse;
-	signupResponse.status = TEMP_SIGNUP_STATUS;
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
 
 	return requestResult;
 }
+
 
 /// <summary>
 /// Error in login request handler

@@ -5,6 +5,8 @@
 #include "json.hpp"
 #include <bitset>
 #include <iostream>
+#include "RequestHandlerFactory.h"
+
 
 
 using json = nlohmann::json;
@@ -15,29 +17,7 @@ enum statusValues
 	BAD = 999
 };
 
-
-/*
-struct ErrorResponse
-{
-	// error messasge
-	std::string message;
-};
-
-// Struct of login response
-struct LoginResponse
-{
-	// login status
-	unsigned int status;
-};
-
-// Struct of signup response
-struct SignupResponse
-{
-	// signup status
-	unsigned int status;
-};
-*/
-
+// Login & Signup related
 struct LoginRequest
 {
 	std::string username;
@@ -51,9 +31,34 @@ struct SignupRequest
 	std::string email;
 };
 
+
+
+// Room & statistics related
+struct CreateRoomRequest
+{
+	std::string roomName;
+	unsigned int maxUsers;
+	unsigned int questionsCount;
+	unsigned int answerTimeout;
+};
+
+struct JoinRoomRequest
+{
+	unsigned int roomId;
+};
+
+struct GetPlayersInRoomRequest
+{
+	unsigned int roomId;
+};
+
+
+
 class JsonRequestPacketDeserializer
 {
 public:
+	// Login & Signup related
+
 	// NOTE:
 	// The following 2 functions, gets the buffer of the DATA ONLY (the Json)
 	// Without the message code and length.
@@ -62,4 +67,10 @@ public:
 	static SignupRequest deserializeSignupRequest(const Buffer bufSignupRequest);
 
 	static std::string binaryDecoder(std::string buf);
+
+
+	// Room & statistics related
+	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
+	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
+	static CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
 };

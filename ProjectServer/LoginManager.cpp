@@ -15,18 +15,30 @@ LoginManager::~LoginManager()
 }
 
 
-bool LoginManager::login(std::string name, std::string pass)
+bool LoginManager::login(std::string name,std::string pass)
 {
-    if (m_database->doesUserExist(name))
+    // Check if the user exists
+    if (!m_database->doesUserExist(name))
     {
-        if (m_database->isPassCorrect(name, pass))
-        {
-            LoggedUser logged = LoggedUser(name);
-            m_loggedUsers.push_back(logged);
-            return true;
-        }
+        return false; // User does not exist
     }
-    return false;
+
+    // Check if the password is correct
+    if (!m_database->isPassCorrect(name, pass))
+    {
+        return false; 
+    }
+
+    if (std::find_if(m_loggedUsers.begin(), m_loggedUsers.end(), [&name](const LoggedUser& user) {
+        return user.getUsername() == name;
+        }) != m_loggedUsers.end())
+    {
+        return false; // User is already logged in
+    }
+
+    // User authentication successful and not already logged in
+    m_loggedUsers.push_back(LoggedUser(name));
+    return true;
 }
 
 
@@ -46,7 +58,7 @@ bool LoginManager::logout(std::string name)
 {
     for (auto it = m_loggedUsers.begin(); it != m_loggedUsers.end(); it++)
     {
-        if ((*it).getUsername() == name)
+        if (it->getUsername() == name)
         {
             m_loggedUsers.erase(it);
             return true;
