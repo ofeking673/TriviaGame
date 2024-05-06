@@ -15,6 +15,7 @@ private:
 	RequestResult closeRoom(Requestinfo requestInfo);
 	RequestResult startGame(Requestinfo requestInfo);
 	RequestResult getRoomState(Requestinfo requestInfo);
+	RequestResult error(Requestinfo requestInfo);
 
 
 	Room m_room;
