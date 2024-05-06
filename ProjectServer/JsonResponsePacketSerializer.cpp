@@ -269,7 +269,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
     j["questionCount"] = getRoomStateResponse.questionCount;
     j["answerTimeOut"] = getRoomStateResponse.answerTimeOut;
 
-    return jsonObjectSerializer(j)
+    return jsonObjectSerializer(j);
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveRoomResponse& leaveRoomResponse)
