@@ -1,3 +1,5 @@
+class RequestHandlerFactory;
+
 #pragma once
 #include "IRequestHandler.h"
 
@@ -18,6 +20,8 @@ private:
 	RequestResult getRoomState(Requestinfo requestInfo);
 	// -- Inherited form IRequestHandler -- in order to not copy code twice
 	RequestResult error(Requestinfo requestInfo);
+
+	RequestResult roomUpdate(Requestinfo Requestinfo);
 
 
 	Room m_room;

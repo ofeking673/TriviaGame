@@ -3,7 +3,7 @@
 // Checks if request relevant for handler
 bool RoomMemberRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
-    return (requestInfo.id == LeaveRoom || requestInfo.id == GetRoomState);
+	return (requestInfo.id == LeaveRoom || requestInfo.id == GetRoomState || requestInfo.id == StartGame);
 }
 
 // Handles Request based on request status
@@ -14,23 +14,15 @@ RequestResult RoomMemberRequestHandler::HandleRequest(Requestinfo requestInfo)
 	// Check if request relevant
 	if (isRequestRelevant(requestInfo))
 	{
-
-		if (requestInfo.id == LeaveRoom)
+		switch (requestInfo.id)
 		{
-			// LeaveRoom
-			requestResult = leaveRoom(requestInfo);
+		case LeaveRoom:
+			return leaveRoom(requestInfo);
+		case GetRoomState:
+			return getRoomState(requestInfo);
+		case Update:
+			return roomUpdate(requestInfo);
 		}
-		else if (requestInfo.id == GetRoomState)
-		{
-			// GetRoomState
-			requestResult = getRoomState(requestInfo);
-		}
-		else
-		{
-			// Error
-			requestResult = error(requestInfo);
-		}
-
 	}
 	else
 	{
@@ -51,13 +43,13 @@ RequestResult RoomMemberRequestHandler::leaveRoom(Requestinfo requestInfo)
 	
 	// Go to menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
-	requestResult.newHandler = menuRequestHandler;
+	requestResult.newHandler = (IRequestHandler*)menuRequestHandler;
 
 	// Succeful leave room status
-	leaveRoomResponse.status = TEMP_LEAVE_ROOM_RESPONSE_STATUS;
+	leaveRoomResponse.status = TEMP_LEAVE_ROOM_STATUS;
 
 	//Serialize response
-	requestResult.response = JsonResponsePacketSerializer::serializeResponse(logoutResponse);
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(leaveRoomResponse);
 
 	return requestResult;
 }
@@ -86,5 +78,16 @@ RequestResult RoomMemberRequestHandler::error(Requestinfo requestInfo)
 
 	// New handler is nullptr - indicates Error
 	requestResult.newHandler = nullptr;
+	return requestResult;
+}
+
+RequestResult RoomMemberRequestHandler::roomUpdate(Requestinfo Requestinfo)
+{
+	RoomUpdateResponse upd;
+	upd.status = m_room.status;
+
+	RequestResult requestResult;
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(upd);
+	requestResult.newHandler = (upd.status == 2) ? (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user) : (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
 	return requestResult;
 }

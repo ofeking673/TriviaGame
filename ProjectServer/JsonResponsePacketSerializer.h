@@ -98,6 +98,10 @@ struct LeaveRoomResponse
 	unsigned int status;
 };
 
+struct RoomUpdateResponse {
+	unsigned int status;
+};
+
 // Static class to serialize json response packets
 class JsonResponsePacketSerializer
 {
@@ -126,7 +130,7 @@ public:
 	static Buffer serializeResponse(const StartGameResponse& startGameResponse);
 	static Buffer serializeResponse(const GetRoomStateResponse& getRoomStateResponse);
 	static Buffer serializeResponse(const LeaveRoomResponse& leaveRoomResponse);
-
+	static Buffer serializeResponse(const RoomUpdateResponse& roomUpdateResponse);
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
 	static Buffer jsonObjectSerializer(json j);

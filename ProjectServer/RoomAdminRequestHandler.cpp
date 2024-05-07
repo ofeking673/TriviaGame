@@ -28,12 +28,26 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 {
-    //TO-DO find a way to notify all members
+    m_room.removeUser(m_user);
+    CloseRoomResponse resp;
+    resp.status = TEMP_ROOM_CLOSE_STATUS;
+    m_room.status = 2;
+    RequestResult requestResult = JsonResponsePacketSerializer::serializeResponse(resp);
+    requestResult.newHandler = m_handlerFactory.createMenuRequestHandler(m_user);
+    return requestResult;
+
 }
 
 RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
 {
-    //TO-DO find a way to notify all members
+    m_room.status = 1;
+    m_room.startGame(m_user);
+    StartGameResponse start;
+    start.status = TEMP_ROOM_START_STATUS;
+
+    RequestResult requestResult;
+    requestResult.response = JsonResponsePacketSerializer::serializeResponse(start);
+    //need to make game handler
 }
 
 RequestResult RoomAdminRequestHandler::getRoomState(Requestinfo requestInfo)

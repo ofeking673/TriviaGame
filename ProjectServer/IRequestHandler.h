@@ -33,7 +33,9 @@
 #define TEMP_FAIL_JOIN_ROOM_RESPONSE_STATUS 318
 
 // Room user request handlers
-
+#define TEMP_LEAVE_ROOM_STATUS 400
+#define TEMP_ROOM_CLOSE_STATUS 410
+#define TEMP_ROOM_START_STATUS 420
 
 enum RequestId {
 	Login,
@@ -49,7 +51,7 @@ enum RequestId {
 	StartGame,
 	GetRoomState,
 	LeaveRoom,
-	end
+	Update
 };
 
 class IRequestHandler;

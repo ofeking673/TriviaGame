@@ -277,6 +277,11 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveRoomResponse& 
     return statusOnlySerializeResponse(leaveRoomResponse.status);
 }
 
+Buffer JsonResponsePacketSerializer::serializeResponse(const RoomUpdateResponse& roomUpdateResponse)
+{
+    return statusOnlySerializeResponse(roomUpdateResponse.status);
+}
+
 /// <summary>
 /// Serialize response that contains status only from JSON to binary buffer
 /// </summary>
