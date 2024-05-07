@@ -69,7 +69,17 @@ answerTimeOut
 
 RequestResult RoomAdminRequestHandler::error(Requestinfo requestInfo)
 {
-    RequestResult rr;
+    RequestResult requestResult;
+
+    // Create response
+    ErrorResponse errorResponse;
+    errorResponse.message = "Error in Room Admin Request Handler.";
+    //Serialize response
+    requestResult.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
+
+    // New handler is nullptr - indicates Error
+    requestResult.newHandler = nullptr;
+    return requestResult;
 }
 
 /*
