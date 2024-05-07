@@ -39,9 +39,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(370, 287);
+            button1.Location = new Point(423, 383);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(126, 26);
+            button1.Size = new Size(144, 35);
             button1.TabIndex = 0;
             button1.Text = "Create Room";
             button1.UseVisualStyleBackColor = true;
@@ -49,9 +50,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(370, 439);
+            button2.Location = new Point(423, 585);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(126, 26);
+            button2.Size = new Size(144, 35);
             button2.TabIndex = 1;
             button2.Text = "Statistics";
             button2.UseVisualStyleBackColor = true;
@@ -59,9 +61,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(370, 515);
+            button3.Location = new Point(423, 687);
+            button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
-            button3.Size = new Size(126, 26);
+            button3.Size = new Size(144, 35);
             button3.TabIndex = 2;
             button3.Text = "Exit";
             button3.UseVisualStyleBackColor = true;
@@ -69,9 +72,10 @@
             // 
             // button4
             // 
-            button4.Location = new Point(370, 363);
+            button4.Location = new Point(423, 484);
+            button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
-            button4.Size = new Size(126, 26);
+            button4.Size = new Size(144, 35);
             button4.TabIndex = 3;
             button4.Text = "Join Room";
             button4.UseVisualStyleBackColor = true;
@@ -82,25 +86,27 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
             pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox1.Location = new Point(121, -2);
+            pictureBox1.Location = new Point(138, -3);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(620, 273);
+            pictureBox1.Size = new Size(709, 364);
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             // 
             // mainMenu
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(873, 573);
+            ClientSize = new Size(998, 764);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(pictureBox1);
             DoubleBuffered = true;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "mainMenu";
             Text = "mainMenu";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

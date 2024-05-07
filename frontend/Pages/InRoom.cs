@@ -16,7 +16,7 @@ namespace frontend.Pages
     {
         public bool stopThread = false;
         public Thread thread;
-
+        public Thread updateThread;
         public InRoom(int id)
         {
             this.roomId = id;
@@ -24,12 +24,46 @@ namespace frontend.Pages
 
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
+
+            updateThread = new Thread(new ThreadStart(Update));
+            thread.Start();
+        }
+
+        public void Update()
+        {
+            while(true && !stopThread)
+            {
+                mutex.WaitOne();
+                string message = "130000";
+                string binary = Utils.StringToBinary(message);
+                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
+
+                Program.networkStream.Write(bytes, 0, bytes.Length);
+
+                byte[] bytes1 = new byte[1024];
+                Program.networkStream.Read(bytes1, 0, bytes1.Length);
+
+                StatusOnly status = JsonConvert.DeserializeObject<StatusOnly>(ASCIIEncoding.ASCII.GetString(bytes1));
+
+                switch (status.status)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        //handle game start here!!!
+                        break;
+                    case 2:
+                        leaveRoom();
+                        break;
+                }
+            }
         }
 
         public void threadCall()
         {
             while (true && !stopThread)
             {
+                mutex.WaitOne();
                 listBox1.Items.Clear();
                 RoomId roomId = new RoomId();
                 roomId.roomId = this.roomId;
@@ -44,7 +78,7 @@ namespace frontend.Pages
                 byte[] bytes1 = new byte[1024];
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-
+                mutex.ReleaseMutex();
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 
                 if (string.IsNullOrEmpty(roomPlayers.playersInRoom)) { Thread.Sleep(3000); continue; }
@@ -64,13 +98,32 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            leaveRoom();
+        }
+
+        private void leaveRoom()
+        {
             this.Hide();
             stopThread = true;
             thread.Join();
-            JoinRoom joinRoom = new JoinRoom();
-            joinRoom.ShowDialog();
+
+            string message = "120000";
+            string binary = Utils.StringToBinary(message);
+            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
+
+            Program.networkStream.Write(bytes, 0, bytes.Length);
+
+            byte[] bytes1 = new byte[1024];
+            Program.networkStream.Read(bytes1, 0, bytes1.Length);
+            string answer = ASCIIEncoding.ASCII.GetString(bytes1);
+            if (answer.Contains("400"))
+            {
+                JoinRoom joinRoom = new JoinRoom();
+                joinRoom.ShowDialog();
+            }
         }
 
         private int roomId;
+        public static Mutex mutex = new Mutex();
     }
 }
