@@ -158,7 +158,13 @@ LeaveRoom:
 
 	Response:
 		status = 400
-		
+
+UpdateRoom:
+	requestId = 13
+
+	Response:
+		status = 
+		0 = ok , 1 = start, 2 = leave
 Logout:
 	Request:
 		RequestId = 8
