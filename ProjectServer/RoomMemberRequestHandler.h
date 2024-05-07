@@ -4,8 +4,10 @@
 class RoomMemberRequestHandler : public IRequestHandler
 {
 public:
-	RoomMemberRequestHandler();
-	virtual ~RoomMemberRequestHandler();
+	RoomMemberRequestHandler(Room room, LoggedUser user, RequestHandlerFactory handlerFactory) :
+		m_handlerFactory(handlerFactory), m_room(room), m_user(user), m_roomManager(handlerFactory.getRoomManager()) {};
+	
+	virtual ~RoomMemberRequestHandler() = default;
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
@@ -14,6 +16,8 @@ public:
 private:
 	RequestResult leaveRoom(Requestinfo requestInfo);
 	RequestResult getRoomState(Requestinfo requestInfo);
+	// -- Inherited form IRequestHandler -- in order to not copy code twice
+	RequestResult error(Requestinfo requestInfo);
 
 
 	Room m_room;
