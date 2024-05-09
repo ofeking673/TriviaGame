@@ -108,6 +108,10 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			case GetPersonalStats:
 			case GetHighScores:
 			case Logout:
+			case CloseRoom:
+			case StartGame:
+			case GetRoomState:
+			case LeaveRoom:
 			HandleRequestAndSendResult:
 			{
 				mtx.lock();

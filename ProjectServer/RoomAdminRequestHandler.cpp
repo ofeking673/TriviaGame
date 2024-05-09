@@ -28,6 +28,9 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 {
+    // TO-DO
+    // IMPORTANT
+    // Send leave messages to other members of room
     m_room.removeUser(m_user);
     CloseRoomResponse closeRoomResponse;
 
@@ -38,7 +41,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(closeRoomResponse);
 
     MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
-    requestResult.newHandler = menu;
+    requestResult.newHandler = (IRequestHandler*)menu;
 
     return requestResult;
 
@@ -53,7 +56,12 @@ RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
 
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(start);
-    //need to make game handler
+    
+    //TO-DO need to make game handler
+    // For now will stay in roomAdminRequestHandler
+    requestResult.newHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_room);
+
+    return requestResult;
 }
 
 RequestResult RoomAdminRequestHandler::getRoomState(Requestinfo requestInfo)

@@ -4,7 +4,7 @@
 #include "RoomManager.h"
 #include "StatisticsManager.h"
 
-// TO-DO circular dependencies V3
+// TO-DO manage circular dependencies when adding handlers
 class RoomAdminRequestHandler;
 class RoomMemberRequestHandler;
 class MenuRequestHandler;
