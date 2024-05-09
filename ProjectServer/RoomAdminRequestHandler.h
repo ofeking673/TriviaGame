@@ -6,8 +6,10 @@ class RequestHandlerFactory;
 class RoomAdminRequestHandler : public IRequestHandler
 {
 public:
-	RoomAdminRequestHandler();
-	virtual ~RoomAdminRequestHandler();
+	RoomAdminRequestHandler(Room room, LoggedUser user, RequestHandlerFactory& handlerFactory) :
+		m_handlerFactory(handlerFactory), m_room(room), m_user(user), m_roomManager(handlerFactory.getRoomManager()) {};
+	
+	virtual ~RoomAdminRequestHandler() = default;
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;

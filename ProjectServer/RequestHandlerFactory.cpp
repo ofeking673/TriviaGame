@@ -1,4 +1,6 @@
 #include "RequestHandlerFactory.h"
+#include "RoomAdminRequestHandler.h"
+#include "RoomMemberRequestHandler.h"
 #include "MenuRequestHandler.h"
 #include "LoginRequestHandler.h"
 
