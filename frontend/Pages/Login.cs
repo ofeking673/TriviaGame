@@ -37,15 +37,8 @@ namespace frontend.Pages
             string json = JsonConvert.SerializeObject(user); //"{"username": "username", "password":"password"}"
             string finalJson = $"0{json.Length.ToString().PadLeft(4, '0')}{json}"; //code | json len | json
             //5 -> 0005
-            Console.WriteLine(finalJson);
-            string binary = Utils.StringToBinary(finalJson);
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
+            string answer = Program.sendAndRecieve(finalJson);
 
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
             Console.WriteLine(answer);
             if (answer.Contains("100")) 
             { 

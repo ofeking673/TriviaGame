@@ -1,3 +1,8 @@
+class RoomAdminRequestHandler;
+class RoomMemberRequestHandler;
+class MenuRequestHandler;
+class LoginRequestHandler;
+
 #pragma once
 #include "LoginManager.h"
 #include "IDatabase.h"
@@ -7,8 +12,7 @@
 #include "RoomMemberRequestHandler.h"
 
 // TO-DO circular dependencies V3
-class MenuRequestHandler;
-class LoginRequestHandler;
+
 
 
 class RequestHandlerFactory

@@ -1,4 +1,5 @@
 class RequestHandlerFactory;
+class IRequestHandler;
 
 #pragma once
 #include "IRequestHandler.h"
@@ -6,12 +7,12 @@ class RequestHandlerFactory;
 class RoomMemberRequestHandler : public IRequestHandler
 {
 public:
-	RoomMemberRequestHandler(Room room, LoggedUser user, RequestHandlerFactory handlerFactory) :
+	RoomMemberRequestHandler(Room room, LoggedUser user, RequestHandlerFactory& handlerFactory) :
 		m_handlerFactory(handlerFactory), m_room(room), m_user(user), m_roomManager(handlerFactory.getRoomManager()) {};
 	
 	virtual ~RoomMemberRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
+	virtual bool isRequestRelevant(Requestinfo requestInfo) override;	
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
 
 

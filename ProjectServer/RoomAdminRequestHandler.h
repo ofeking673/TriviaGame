@@ -1,3 +1,5 @@
+class RequestHandlerFactory;
+
 #pragma once
 #include "IRequestHandler.h"
 

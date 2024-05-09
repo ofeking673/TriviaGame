@@ -43,13 +43,9 @@ namespace frontend.Pages
             string json = JsonConvert.SerializeObject(user);
             Console.WriteLine(json);
             string finalJson = $"1{json.Length.ToString().PadLeft(4, '0')}{json}";
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(Utils.StringToBinary(finalJson));
+            
+            string answer = Program.sendAndRecieve(finalJson);
 
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
             Console.WriteLine(answer);
             if (answer.Contains("110"))
             {

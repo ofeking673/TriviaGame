@@ -39,14 +39,7 @@ namespace frontend.Pages
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string binary = Utils.StringToBinary(message);
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
-
-                Program.networkStream.Write(bytes, 0, bytes.Length);
-
-                byte[] bytes1 = new byte[1024];
-                Program.networkStream.Read(bytes1, 0, bytes1.Length);
-                string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
+                string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
@@ -68,11 +61,21 @@ namespace frontend.Pages
         private void button1_Click(object sender, EventArgs e)
         {
             //go to game page
-            this.Hide();
-            stopThread = true;
-            thread.Join();
-            mainMenu mm = new mainMenu();
-            mm.Show();
+            //this.Hide();
+            //stopThread = true;
+            //thread.Join();
+            //mainMenu mm = new mainMenu();
+            //mm.Show();
+
+            string message = "100000";
+            string answer = Program.sendAndRecieve(message);
+            
+            if (answer.Contains("420")) {
+                MessageBox.Show("ok game started bruh", "Game notification!", MessageBoxButtons.OK);
+            }
+            
+            //waht teh fuck did oyu do
+
         }
     }
 }

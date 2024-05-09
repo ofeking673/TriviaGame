@@ -46,8 +46,8 @@ namespace frontend.Pages
             //handle log out here
 
             string msg = "80000";
-            msg = Utils.StringToBinary(msg);
-            Program.networkStream.Write(Encoding.ASCII.GetBytes(msg));
+            Program.sendAndRecieve(msg);
         }
+
     }
 }

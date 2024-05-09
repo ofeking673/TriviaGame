@@ -39,15 +39,8 @@ namespace frontend.Pages
                 int index = listBox1.SelectedIndex;
                 listBox1.Items.Clear();
                 string message = "30000";
-                string binary = Utils.StringToBinary(message);
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
-                Program.networkStream.Write(bytes, 0, bytes.Length);
-
-                byte[] bytes1 = new byte[1024];
-                Program.networkStream.Read(bytes1, 0, bytes1.Length);
-                string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-                Console.WriteLine(answer);
+                string answer = Program.sendAndRecieve(message);
                 //"Rooms":{ "RoomData, RoomData"}
                 RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
 
@@ -75,16 +68,8 @@ namespace frontend.Pages
             room.roomId = int.Parse(value);
 
             string json = JsonConvert.SerializeObject(room);
-            Console.WriteLine(json);
             string finalMsg = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string binary = Utils.StringToBinary(finalMsg);
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
-
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
+            string answer = Program.sendAndRecieve(finalMsg);
 
             if (answer.Contains("310"))
             {

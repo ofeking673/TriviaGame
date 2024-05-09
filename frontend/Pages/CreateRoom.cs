@@ -32,16 +32,7 @@ namespace frontend.Pages
 
             string json = JsonConvert.SerializeObject(room);
             string finalJson = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
-            Console.WriteLine(finalJson);
-            string binary = Utils.StringToBinary(finalJson);
-
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
-
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
+            string answer = Program.sendAndRecieve(finalJson);
 
             Console.WriteLine(answer);
             
