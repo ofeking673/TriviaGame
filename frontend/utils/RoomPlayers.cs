@@ -8,6 +8,6 @@ namespace frontend.utils
 {
     internal class RoomPlayers
     {
-        public string playersInRoom;
+        public string PlayersInRoom;
     }
 }

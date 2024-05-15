@@ -36,6 +36,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
+
+            this.Load += loadPage;
             // 
             // pictureBox1
             // 

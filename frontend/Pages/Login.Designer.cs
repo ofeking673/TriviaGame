@@ -79,7 +79,6 @@
             // 
             button1.BackColor = Color.Transparent;
             button1.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            button1.Image = (Image)resources.GetObject("button1.Image");
             button1.Location = new Point(270, 482);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
@@ -94,7 +93,6 @@
             button2.BackgroundImageLayout = ImageLayout.Center;
             button2.FlatAppearance.MouseDownBackColor = Color.Transparent;
             button2.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            button2.Image = (Image)resources.GetObject("button2.Image");
             button2.Location = new Point(464, 482);
             button2.Name = "button2";
             button2.Size = new Size(106, 23);

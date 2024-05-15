@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,26 +35,42 @@ namespace frontend.Pages
 
         private void threadCall()
         {
-            while (true && !stopThread)
+            while (!stopThread)
             {
-                int index = listBox1.SelectedIndex;
-                listBox1.Items.Clear();
-                string message = "30000";
-
-                string answer = Program.sendAndRecieve(message);
-                //"Rooms":{ "RoomData, RoomData"}
-                RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
-
-                foreach (var word in roomData.Rooms.Split(","))
+                if(listBox1.InvokeRequired)
                 {
-                    Console.WriteLine(word);
-                    string[] strings = word.Split("|");
-                    string text = $"{strings[name]} [{strings[id]}]";
+                    int index = -1;
+                    MethodInvoker methodInvoker = delegate { index = listBox1.SelectedIndex; };
+                    listBox1.Invoke(methodInvoker);
 
-                    listBox1.Items.Add(text);
+                    methodInvoker = delegate { listBox1.Items.Clear(); };
+                    listBox1.Invoke(methodInvoker);
+                    string message = "3|0000";
+
+                    string answer = Program.sendAndRecieve(message);
+                    //"Rooms":{ "RoomData, RoomData"}
+                    RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
+
+
+                    if (!string.IsNullOrEmpty(roomData.Rooms))
+                    {
+                        foreach (var word in roomData.Rooms.Split(","))
+                        {
+                            Console.WriteLine(word);
+                            string[] strings = word.Split("|");
+                            string text = $"{strings[name]} [{strings[id]}]";
+
+                            MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
+                            listBox1.Invoke(updateUI);
+                        }
+                        methodInvoker = delegate
+                        {
+                            listBox1.SelectedIndex = index;
+                        };
+                        listBox1.Invoke(methodInvoker);
+                    }
+                    Thread.Sleep(3000);
                 }
-                listBox1.SelectedIndex = index;
-                Thread.Sleep(3000);
             }
         }
 
@@ -68,7 +85,7 @@ namespace frontend.Pages
             room.roomId = int.Parse(value);
 
             string json = JsonConvert.SerializeObject(room);
-            string finalMsg = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
             string answer = Program.sendAndRecieve(finalMsg);
 
             if (answer.Contains("310"))

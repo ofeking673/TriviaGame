@@ -19,6 +19,7 @@ public:
 private:
 	RequestResult leaveRoom(Requestinfo requestInfo);
 	RequestResult getRoomState(Requestinfo requestInfo);
+	RequestResult getPlayersInRoom(Requestinfo requestInfo);
 	// -- Inherited form IRequestHandler -- in order to not copy code twice
 	RequestResult error(Requestinfo requestInfo);
 

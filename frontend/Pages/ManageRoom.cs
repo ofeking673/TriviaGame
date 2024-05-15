@@ -21,9 +21,12 @@ namespace frontend.Pages
         public ManageRoom(int id)
         {
             InitializeComponent();
-
+            this.Load += loadForm;
             this.roomId = id;
+        }
 
+        public void loadForm(object sender, EventArgs e)
+        {
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
         }
@@ -33,27 +36,38 @@ namespace frontend.Pages
         {
             while (true && !stopThread)
             {
-                listBox1.Items.Clear();
+                MethodInvoker updateUI = delegate {
+                    listBox1.Items.Clear();
+                };
+                listBox1.Invoke(updateUI);
+
                 RoomId roomId = new RoomId();
                 roomId.roomId = this.roomId;
 
                 string json = JsonConvert.SerializeObject(roomId);
-                string message = $"4{json.Length.ToString().PadLeft(4, '0')}{json}";
+                string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
                 string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 
-                if (string.IsNullOrEmpty(roomPlayers.playersInRoom)) { Thread.Sleep(3000); continue; }
 
-                string[] players = roomPlayers.playersInRoom.Split(',');
+                if (string.IsNullOrEmpty(roomPlayers.PlayersInRoom)) { Thread.Sleep(3000); continue; }
+
+                string[] players = roomPlayers.PlayersInRoom.Split(',');
 
                 foreach (var word in players)
                 {
-                    listBox1.Items.Add(word);
+                    updateUI = delegate {
+                        listBox1.Items.Add(word);
+                    };
+                    listBox1.Invoke(updateUI);
                 }
 
-                listBox1.Items[0] += " - Room owner";
+                updateUI = delegate {
+                    listBox1.Items[0] += " - Room owner";
+                };
+                listBox1.Invoke(updateUI);
                 Thread.Sleep(3000);
             }
         }
@@ -67,7 +81,7 @@ namespace frontend.Pages
             //mainMenu mm = new mainMenu();
             //mm.Show();
 
-            string message = "100000";
+            string message = "10|0000";
             string answer = Program.sendAndRecieve(message);
             
             if (answer.Contains("420")) {

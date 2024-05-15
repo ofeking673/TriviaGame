@@ -91,40 +91,19 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			Buffer deserialize;
 			
 			std::string decodedstr = JsonRequestPacketDeserializer::binaryDecoder(str);
-			std::string jsonStr = decodedstr.substr(decodedstr.find('{'));
-
+			
 			Requestinfo info; 
 			breakDownStr(info, decodedstr);
 
 			std::cout << "'" << info.id << "'";
-			switch (info.id) //TO-DO: add more types
+			RequestResult result = m_clients[client_socket]->HandleRequest(info);
+			// Set current handler as new handler came back from handler request
+			m_clients[client_socket] = result.newHandler;
+			sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+			send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+			if (info.id == Logout)
 			{
-			case SignUp:
-			case Login:
-			case CreateRoom:
-			case GetRooms:
-			case GetPlayersInRoom:
-			case JoinRoom:
-			case GetPersonalStats:
-			case GetHighScores:
-			case Logout:
-			case CloseRoom:
-			case StartGame:
-			case GetRoomState:
-			case LeaveRoom:
-			HandleRequestAndSendResult:
-			{
-				mtx.lock();
-				RequestResult result = m_clients[client_socket]->HandleRequest(info);
-				mtx.unlock();
-				// Set current handler as new handler came back from handler request
-				m_clients[client_socket] = result.newHandler;
-				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
-				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
-			}
-			default:
-				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
 			}
 		}
 		TRACE("Client sent EXIT and quit.");
@@ -146,12 +125,15 @@ void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 {
 	Buffer buffer;
 
-	std::string jsonStr = buf.substr(5);
-	for (int i = 0; i < jsonStr.size(); i++)
-	{
-		buffer.data.push_back(jsonStr[i]);
+	if (buf.find_first_of("{") != std::string::npos)
+	{//{"data":"data"}
+		std::string jsonStr = buf.substr(buf.find_first_of("{"));
+		for (int i = 0; i < jsonStr.size(); i++)
+		{
+			buffer.data.push_back(jsonStr[i]);
+		}
 	}
-
+	
 	info.buf = buffer;
 	info.id = getIdFromStr(buf);
 
@@ -160,25 +142,25 @@ void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 
 RequestId Communicator::getIdFromStr(std::string str)
 {
-	switch (str[0])
+	switch (std::stoi(str.substr(0, str.find_first_of("|"))))
 	{
-	case '0':
+	case 0:
 		return Login;
-	case '1':
+	case 1:
 		return SignUp;
-	case '2':
+	case 2:
 		return CreateRoom;
-	case '3':
+	case 3:
 		return GetRooms;
-	case '4':
+	case 4:
 		return GetPlayersInRoom;
-	case '5':
+	case 5:
 		return JoinRoom;
-	case '6':
+	case 6:
 		return GetPersonalStats;
-	case '7':
+	case 7:
 		return GetHighScores;
-	case '8':
+	case 8:
 		return Logout;
 	default:
 		break;

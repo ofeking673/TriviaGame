@@ -22,6 +22,7 @@ namespace frontend.Pages
             InitializeComponent();
 
             IPEndPoint iPEnd = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8826);
+
             Program.Client.Connect(iPEnd);
 
             Program.networkStream = Program.Client.GetStream();
@@ -29,19 +30,20 @@ namespace frontend.Pages
 
         private void button1_Click(object sender, EventArgs e) //sign in
         {
-            if (!(Program.Valid(textBox1) && Program.Valid(textBox2))) {
+            if (!(Program.Valid(textBox1) && Program.Valid(textBox2)))
+            {
                 MessageBox.Show("Invalid input", "Please try again.", MessageBoxButtons.OK);
                 return;
             }
             LoginUser user = new LoginUser(this.textBox1.Text, this.textBox2.Text);
             string json = JsonConvert.SerializeObject(user); //"{"username": "username", "password":"password"}"
-            string finalJson = $"0{json.Length.ToString().PadLeft(4, '0')}{json}"; //code | json len | json
+            string finalJson = $"0|{json.Length.ToString().PadLeft(4, '0')}{json}"; //code | json len | json
             //5 -> 0005
             string answer = Program.sendAndRecieve(finalJson);
 
             Console.WriteLine(answer);
-            if (answer.Contains("100")) 
-            { 
+            if (answer.Contains("100"))
+            {
                 this.Hide();
                 mainMenu mm = new mainMenu();
                 mm.ShowDialog();

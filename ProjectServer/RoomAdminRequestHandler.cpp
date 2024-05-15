@@ -4,7 +4,8 @@ bool RoomAdminRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
     return (requestInfo.id == CloseRoom ||
         requestInfo.id == StartGame ||
-        requestInfo.id == GetRoomState);
+        requestInfo.id == GetRoomState ||
+        requestInfo.id == GetPlayersInRoom);
 }
 
 RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -18,6 +19,8 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
             return startGame(requestInfo);
         case GetRoomState:
             return getRoomState(requestInfo);
+        case GetPlayersInRoom:
+            return getPlayersInRoom(requestInfo);
         }
     }
     else
@@ -81,6 +84,33 @@ answerTimeOut
     return rr;
 }
 
+RequestResult RoomAdminRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
+{
+    RequestResult requestResult;
+
+    // Deserialize request
+    GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
+
+    // Get all the players in a desired room through room manager
+    auto room = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId);
+    std::vector<std::string> players = room.getAllUsers();
+
+
+    RoomAdminRequestHandler* admin = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_room);
+    requestResult.newHandler = (IRequestHandler*)admin;
+
+    // Create response
+    GetPlayersInRoomResponse getPlayersInRoomResponse;
+    getPlayersInRoomResponse.status = TEMP_GET_PLAYERS_IN_ROOM_RESPONSE_STATUS;
+    getPlayersInRoomResponse.players = players;
+
+
+    //Serialize response
+    requestResult.response = JsonResponsePacketSerializer::serializeResponse(getPlayersInRoomResponse);
+    
+    return requestResult;
+}
+
 RequestResult RoomAdminRequestHandler::error(Requestinfo requestInfo)
 {
     RequestResult requestResult;
@@ -88,6 +118,7 @@ RequestResult RoomAdminRequestHandler::error(Requestinfo requestInfo)
     // Create response
     ErrorResponse errorResponse;
     errorResponse.message = "Error in Room Admin Request Handler.";
+    std::cout << "Error in roomAdminRequestHandler\n";
     //Serialize response
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 

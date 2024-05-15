@@ -31,7 +31,7 @@ namespace frontend.Pages
             Room room = new Room(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
 
             string json = JsonConvert.SerializeObject(room);
-            string finalJson = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string finalJson = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
             string answer = Program.sendAndRecieve(finalJson);
 
             Console.WriteLine(answer);

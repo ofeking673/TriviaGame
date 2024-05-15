@@ -65,6 +65,7 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 		requestResult = error(requestInfo);
 	}
 
+
 	return requestResult;
 }
 
@@ -247,16 +248,19 @@ RequestResult MenuRequestHandler::joinRoom(Requestinfo requestInfo)
 	JoinRoomRequest joinRoomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(requestInfo.buf);
 
 	// Stay in menu request handler
-	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
-	requestResult.newHandler = menuRequestHandler;
+
 
 	// Add the user to the desired room
 	if (m_handlerFactory.getRoomManager().getRoom(joinRoomRequest.roomId).addUser(m_user))
 	{
+		RoomMemberRequestHandler* roomMemberRequestHandler = m_handlerFactory.createRoomMemberRequestHandler(m_user, m_handlerFactory.getRoomManager().getRoom(joinRoomRequest.roomId));
+		requestResult.newHandler = (IRequestHandler*)roomMemberRequestHandler;
 		joinRoomResponse.status = TEMP_JOIN_ROOM_RESPONSE_STATUS;
 	}
 	else
 	{
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
+		requestResult.newHandler = (IRequestHandler*)menu;
 		joinRoomResponse.status = TEMP_FAIL_JOIN_ROOM_RESPONSE_STATUS;
 	}
 
@@ -292,8 +296,7 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	// Stay in menu request handler
 	// TO-DO may need to change handler...
 	std::cout << "Trying to new handler\n";
-	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
-	requestResult.newHandler = menuRequestHandler;
+
 	std::cout << "Trying to create room\n";
 	//create room manager
 	std::cout << "Trying to room manager create room\n";
@@ -301,10 +304,14 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
 	{
 		createRoomResponse.status = TEMP_CREATE_ROOM_RESPONSE_STATUS;
+		RoomAdminRequestHandler* roomAdminRequestHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_handlerFactory.getRoomManager().getRoom(roomData.id));
+		requestResult.newHandler = (IRequestHandler*)roomAdminRequestHandler;
 	}
 	else
 	{
 		createRoomResponse.status = TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS;
+		MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
+		requestResult.newHandler = (IRequestHandler*)menu;
 	}
 	createRoomResponse.id = roomData.id;
 
