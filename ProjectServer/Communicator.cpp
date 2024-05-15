@@ -134,6 +134,8 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
 		Requestinfo req;
 		req.id = Logout;
+		// TO-DO maybe switch to menu request handler. Because only there is the logout.
+		// Otherwise it will be only: isRequestRelavant -> false
 		m_clients[client_socket]->HandleRequest(req);
 	}
 
