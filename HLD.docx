@@ -1,0 +1,27 @@
+client initializes socket connection with server, first message sent is either a login or signup request.
+the server breaks down the message, if the message type is login, it checks the credentials with database, else it sends the new information to it.
+
+all messages are sent in binary, with the format of "{message_code}{json_length}{json with all information}"
+
+after being done with the login part, the server gives the client socket a handler to recieve and handle all other types of messages, this is to not make it handle login twice, which should not happen
+requests the handler can handle are like creating a room, getting a list of all rooms, getting all players inside a room, etc.
+
+all messages are broken down and handled uniquely and return a value depending on what the request is, in a universal type called Buffer.
+
+types of handlers are Login handlers, menu handlers for usual requests, and room admin and member handlers, for different types of room updating such as leave room, and start game.
+
+after a room is created, the room is added to the list of rooms that a user can ask for, and is able to join it where he can see all connected users and get updated about room status, which can mean if the game started or if the room closed.
+
+the game is a basic trivia game, where users get prompted with a question amount specified in the room creation page, with a timeout specified in the room creation page, and scores are saved and players can access the scoreboard and see high scores.
+
+the score is calculated with a specific forumula that has 2 cases.
+correct answer:
+    gets 100 pts for answering, added to the (max time - time taken to answer) * 100/max time
+
+incorrect answer:
+    player does not gain any points
+
+all data including questions, user data, and scores are saved within the database accessed with SQL
+Rooms are saved in memory.
+
+after the connection to the user socket has ended, the server logs the connected user out, and waits for the next user to connect.
