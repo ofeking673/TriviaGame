@@ -58,7 +58,8 @@ namespace frontend.Pages
                         {
                             Console.WriteLine(word);
                             string[] strings = word.Split("|");
-                            string text = $"{strings[name]} [{strings[id]}]";
+                            string joinable = (strings[5] == "0") ? "yes" : "no";
+                            string text = $"{strings[name]} [{strings[id]}] Is joinable: {joinable}";
 
                             MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
                             listBox1.Invoke(updateUI);

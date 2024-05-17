@@ -36,7 +36,8 @@ namespace frontend.Pages
         {
             while (true && !stopThread)
             {
-                MethodInvoker updateUI = delegate {
+                MethodInvoker updateUI = delegate
+                {
                     listBox1.Items.Clear();
                 };
                 listBox1.Invoke(updateUI);
@@ -58,13 +59,15 @@ namespace frontend.Pages
 
                 foreach (var word in players)
                 {
-                    updateUI = delegate {
+                    updateUI = delegate
+                    {
                         listBox1.Items.Add(word);
                     };
                     listBox1.Invoke(updateUI);
                 }
 
-                updateUI = delegate {
+                updateUI = delegate
+                {
                     listBox1.Items[0] += " - Room owner";
                 };
                 listBox1.Invoke(updateUI);
@@ -83,13 +86,32 @@ namespace frontend.Pages
 
             string message = "10|0000";
             string answer = Program.sendAndRecieve(message);
-            
-            if (answer.Contains("420")) {
+
+            if (answer.Contains("420"))
+            {
                 MessageBox.Show("ok game started bruh", "Game notification!", MessageBoxButtons.OK);
             }
-            
+
             //waht teh fuck did oyu do
 
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            string message = "9|0000";
+            string answer = Program.sendAndRecieve(message);
+
+            if (answer.Contains("410"))
+            {
+                MessageBox.Show("Room closed!", "Going back to menu", MessageBoxButtons.OK);
+            }
+
+            stopThread = true;
+            thread.Join();
+
+            this.Hide();
+            mainMenu mm = new mainMenu();
+            mm.ShowDialog();
         }
     }
 }

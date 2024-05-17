@@ -35,11 +35,12 @@ namespace frontend.Pages
 
         public void Update()
         {
-            while(true && !stopThread)
+            while(!stopThread)
             {
                 Console.WriteLine("ITS THE UPDATE FUNCTION");
                 mutex.WaitOne();
                 string message = "13|0000";
+                if(stopThread) { return; }
                 string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
                 StatusOnly status = JsonConvert.DeserializeObject<StatusOnly>(answer);
@@ -50,12 +51,15 @@ namespace frontend.Pages
                         break;
                     case 1:
                         MessageBox.Show("yo game starting");
-                        //handle game start here!!!
-                        break;
+                        //handle game start here
+                        return;
                     case 2:
+                        MessageBox.Show("Room was closed!");
                         leaveRoom();
-                        break;
+                        return;
                 }
+
+                Thread.Sleep(3000);
             }
         }
 
@@ -71,6 +75,7 @@ namespace frontend.Pages
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                if (stopThread) { return; } //incase we close room while this one is running
                 string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
                 mutex.ReleaseMutex();
@@ -103,8 +108,12 @@ namespace frontend.Pages
         private void leaveRoom()
         {
             this.Hide();
+            JoinRoom j = new JoinRoom();
+            j.ShowDialog();
+
             stopThread = true;
             thread.Join();
+            updateThread.Join();
 
             string message = "12|0000";
             string binary = Utils.StringToBinary(message);
@@ -115,11 +124,6 @@ namespace frontend.Pages
             byte[] bytes1 = new byte[1024];
             Program.networkStream.Read(bytes1, 0, bytes1.Length);
             string answer = ASCIIEncoding.ASCII.GetString(bytes1);
-            if (answer.Contains("400"))
-            {
-                JoinRoom joinRoom = new JoinRoom();
-                joinRoom.ShowDialog();
-            }
         }
 
         private int roomId;

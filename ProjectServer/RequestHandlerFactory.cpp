@@ -51,13 +51,13 @@ RoomManager& RequestHandlerFactory::getRoomManager()
 }
 
 // Creates room admin request handler
-RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room room)
+RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
 {
     return new RoomAdminRequestHandler(room, user, *this);
 }
 
 // Creates room member request handler
-RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room room)
+RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
 {
     return new RoomMemberRequestHandler(room, user, *this);
 }

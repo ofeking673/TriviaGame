@@ -42,6 +42,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(closeRoomResponse);
+    m_roomManager.deleteRoom(m_room.getRoomData().id);
 
     MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
     requestResult.newHandler = (IRequestHandler*)menu;

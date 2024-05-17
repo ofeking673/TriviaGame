@@ -128,6 +128,6 @@ RequestResult RoomMemberRequestHandler::roomUpdate(Requestinfo Requestinfo)
 	{
 		requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
 	}
-
+	std::cout << upd.status;
 	return requestResult;
 }

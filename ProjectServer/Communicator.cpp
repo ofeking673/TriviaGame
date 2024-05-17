@@ -162,8 +162,18 @@ RequestId Communicator::getIdFromStr(std::string str)
 		return GetHighScores;
 	case 8:
 		return Logout;
+	case 9:
+		return CloseRoom;
+	case 10:
+		return StartGame;
+	case 11:
+		return GetRoomState;
+	case 12:
+		return LeaveRoom;
+	case 13:
+		return Update;
 	default:
-		break;
+		return Error69; //we love when this happens
 	}
 }
 
@@ -179,28 +189,4 @@ void Communicator::acceptClient()
 	std::thread tr(&Communicator::handleNewClient, this, client_socket);
 	tr.detach();
 	m_clients[client_socket] = m_handlerFactory.createLoginRequestHandler();
-}
-
-void Communicator::sendResponse(Requestinfo* request)
-{
-	//we analyze each request class
-	Buffer buf;
-	switch (request->id)
-	{
-		case Login:
-		{
-			LoginResponse login;
-			login.status = request->id;
-			buf = m_serializer.serializeResponse(login);
-			break;
-		}
-		case SignUp:
-		{
-			SignupResponse signup;
-			signup.status = request->id;
-			buf = m_serializer.serializeResponse(signup);
-			break;
-		}
-	}
-
 }

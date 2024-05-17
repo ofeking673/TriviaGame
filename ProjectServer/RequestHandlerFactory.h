@@ -28,8 +28,8 @@ public:
 	RoomManager& getRoomManager();
 
 	// Inside Room related
-	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room room);
-	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room room);
+	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room& room);
+	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room& room);
 
 private:
 	IDatabase* m_database;

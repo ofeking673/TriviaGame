@@ -7,7 +7,7 @@ class IRequestHandler;
 class RoomMemberRequestHandler : public IRequestHandler
 {
 public:
-	RoomMemberRequestHandler(Room room, LoggedUser user, RequestHandlerFactory& handlerFactory) :
+	RoomMemberRequestHandler(Room& room, LoggedUser user, RequestHandlerFactory& handlerFactory) :
 		m_handlerFactory(handlerFactory), m_room(room), m_user(user), m_roomManager(handlerFactory.getRoomManager()) {};
 	
 	virtual ~RoomMemberRequestHandler() = default;
@@ -26,7 +26,7 @@ private:
 	RequestResult roomUpdate(Requestinfo Requestinfo);
 
 
-	Room m_room;
+	Room& m_room;
 	LoggedUser m_user;
 	RoomManager& m_roomManager;
 	RequestHandlerFactory& m_handlerFactory;
