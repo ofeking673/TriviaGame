@@ -96,7 +96,9 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			breakDownStr(info, decodedstr);
 
 			std::cout << "'" << info.id << "'";
+			mtx.lock();
 			RequestResult result = m_clients[client_socket]->HandleRequest(info);
+			mtx.unlock();
 			// Set current handler as new handler came back from handler request
 			m_clients[client_socket] = result.newHandler;
 			sendBuf = std::string(result.response.data.begin(), result.response.data.end());

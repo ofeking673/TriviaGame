@@ -36,6 +36,7 @@ namespace frontend.Pages
         {
             while (!stopThread)
             {
+                if (!listBox1.IsHandleCreated) continue;
                 MethodInvoker updateUI = delegate
                 {
                     listBox1.Items.Clear();

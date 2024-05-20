@@ -17,7 +17,6 @@ namespace frontend.Pages
     {
         public bool stopThread = false;
         public Thread thread;
-        public Thread updateThread;
         public InRoom(int id)
         {
             this.roomId = id;
@@ -28,64 +27,70 @@ namespace frontend.Pages
         {
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
-
-            updateThread = new Thread(new ThreadStart(update));
-            updateThread.Start();
         }
 
-        public void update()
+        public int update()
         {
-            while(!stopThread)
+            string message = "13|0000";
+            if(stopThread) { return 2; }
+            string answer = Program.sendAndRecieve(message, !stopThread);
+            Console.WriteLine(answer);
+
+            if(!string.IsNullOrEmpty(answer))
             {
-                string message = "13|0000";
-                if(stopThread) { return; }
-                mutex.WaitOne();
-                string answer = Program.sendAndRecieve(message, !stopThread);
-                Console.WriteLine(answer);
+                StatusOnly status = new StatusOnly();
+                status.status = 2;
 
-                if(!string.IsNullOrEmpty(answer))
+                if (JsonConvert.DeserializeObject<Error>(answer).message != "")
+                    status = JsonConvert.DeserializeObject<StatusOnly>(answer);
+
+                switch (status.status)
                 {
-                    StatusOnly status = JsonConvert.DeserializeObject<StatusOnly>(answer);
-                    mutex.ReleaseMutex();
-
-                    switch (status.status)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            MessageBox.Show("yo game starting");
-                            stopThread = true;
-                            //handle game start here
-                            return;
-                        case 2:
-                            MessageBox.Show("Room was closed!");
-                            stopThread = true;
-                            leaveRoom();
-                            return;
-                    }
+                    case 0:
+                        return 0;
+                    case 1:
+                        MessageBox.Show("yo game starting");
+                        stopThread = true;
+                        return 1;
+                    case 2:
+                        MessageBox.Show("Room was closed!");
+                        stopThread = true;
+                        leaveRoom();
+                        return 2;
                 }
-
-                Thread.Sleep(3000);
             }
+            return 2;
         }
 
         public void threadCall()
         {
-            while (true && !stopThread)
+            while (!stopThread)
             {
-                MethodInvoker update = delegate { listBox1.Items.Clear(); };
-                listBox1.Invoke(update);
+ 
                 RoomId roomId = new RoomId();
                 roomId.roomId = this.roomId;
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
                 if (stopThread) { return; } //incase we close room while this one is running
-                mutex.WaitOne();
+                MethodInvoker upd = delegate { listBox1.Items.Clear(); };
+                listBox1.Invoke(upd);
+
+                int what = update();
+                Console.WriteLine(what);
+                switch (what)
+                {
+                    case 0:
+                        break; 
+                    case 1:
+                        return;
+                    case 2:
+                        return;
+                }
+
                 string answer = Program.sendAndRecieve(message, !stopThread);
                 Console.WriteLine(answer);
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
-                mutex.ReleaseMutex();
 
                 if (string.IsNullOrEmpty(roomPlayers.PlayersInRoom)) { Thread.Sleep(3000); continue; }
 
@@ -113,8 +118,8 @@ namespace frontend.Pages
 
         private void leaveRoom()
         {
-            thread.Join();
-            updateThread.Join();
+            Console.WriteLine("Closing");
+            thread.Abort();
 
             this.Hide();
             JoinRoom j = new JoinRoom();

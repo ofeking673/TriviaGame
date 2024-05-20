@@ -52,12 +52,6 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 			// Logout
 			requestResult = signout(requestInfo);
 		}
-		else
-		{
-			// Error
-			requestResult = error(requestInfo);
-		}
-
 	}
 	else
 	{
@@ -153,9 +147,14 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
 	// Deserialize request
 	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
 
+	std::vector<std::string> players;
+
 	// Get all the players in a desired room through room manager
-	auto room = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId);
-	std::vector<std::string> players = room.getAllUsers();
+	if (m_handlerFactory.getRoomManager().doesRoomExist(getPlayersInRoomRequest.roomId))
+	{
+		auto room = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId);
+		players = room.getAllUsers();
+	}
 	
 	// Stay in menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);
@@ -334,6 +333,6 @@ RequestResult MenuRequestHandler::error(Requestinfo requestInfo)
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 
 	// New handler is nullptr - indicates Error
-	requestResult.newHandler = nullptr;
+	requestResult.newHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	return requestResult;
 }

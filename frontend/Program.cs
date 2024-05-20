@@ -42,6 +42,10 @@ namespace frontend
 
                 byte[] bytes1 = new byte[1024];
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
+                Console.WriteLine(Encoding.Default.GetString(bytes1));
+
+                if (string.IsNullOrEmpty(Encoding.Default.GetString(bytes1))) { return ""; }
+
                 string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
                 return answer;
             }

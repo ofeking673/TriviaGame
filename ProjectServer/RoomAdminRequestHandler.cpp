@@ -5,7 +5,8 @@ bool RoomAdminRequestHandler::isRequestRelevant(Requestinfo requestInfo)
     return (requestInfo.id == CloseRoom ||
         requestInfo.id == StartGame ||
         requestInfo.id == GetRoomState ||
-        requestInfo.id == GetPlayersInRoom);
+        requestInfo.id == GetPlayersInRoom ||
+        m_roomManager.doesRoomExist(m_id));
 }
 
 RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -34,7 +35,6 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
     // TO-DO
     // IMPORTANT
     // Send leave messages to other members of room
-    m_room.removeUser(m_user);
     CloseRoomResponse closeRoomResponse;
 
     closeRoomResponse.status = TEMP_ROOM_CLOSE_STATUS;
@@ -42,10 +42,15 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(closeRoomResponse);
-    m_roomManager.deleteRoom(m_room.getRoomData().id);
+
+    if (m_roomManager.getRoom(m_id).getAllUsers().size() < 2)
+    {
+        m_roomManager.deleteRoom(m_id);
+    }
 
     MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
     requestResult.newHandler = (IRequestHandler*)menu;
+    m_room.removeUser(m_user);
 
     return requestResult;
 
