@@ -47,7 +47,7 @@ namespace frontend.Pages
                     listBox1.Invoke(methodInvoker);
                     string message = "3|0000";
 
-                    string answer = Program.sendAndRecieve(message);
+                    string answer = Program.sendAndRecieve(message, !stopThread);
                     //"Rooms":{ "RoomData, RoomData"}
                     RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
 
@@ -87,7 +87,7 @@ namespace frontend.Pages
 
             string json = JsonConvert.SerializeObject(room);
             string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string answer = Program.sendAndRecieve(finalMsg);
+            string answer = Program.sendAndRecieve(finalMsg, true);
 
             if (answer.Contains("310"))
             {

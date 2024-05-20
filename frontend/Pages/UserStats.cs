@@ -30,7 +30,7 @@ namespace frontend.Pages
         private void UserStats_Load(object sender, EventArgs e)
         {
             string message = "6|0000";
-            string answer = Program.sendAndRecieve(message);
+            string answer = Program.sendAndRecieve(message, true);
             UserStatsData usd = JsonConvert.DeserializeObject<UserStatsData>(answer);
             var entries = usd.personalStats.Split(',');
             for (int i = 0; i < entries.Length; i++)

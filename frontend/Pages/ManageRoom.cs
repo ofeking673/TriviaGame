@@ -34,7 +34,7 @@ namespace frontend.Pages
         //open thread, send socket message and when getting back deque/whatever the fuck of users use listbox.items.add(user.username)
         public void threadCall()
         {
-            while (true && !stopThread)
+            while (!stopThread)
             {
                 MethodInvoker updateUI = delegate
                 {
@@ -47,7 +47,7 @@ namespace frontend.Pages
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string answer = Program.sendAndRecieve(message);
+                string answer = Program.sendAndRecieve(message, !stopThread);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
@@ -85,7 +85,7 @@ namespace frontend.Pages
             //mm.Show();
 
             string message = "10|0000";
-            string answer = Program.sendAndRecieve(message);
+            string answer = Program.sendAndRecieve(message, true);
 
             if (answer.Contains("420"))
             {
@@ -98,16 +98,16 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            stopThread = true;
+            thread.Join();
+
             string message = "9|0000";
-            string answer = Program.sendAndRecieve(message);
+            string answer = Program.sendAndRecieve(message, stopThread);
 
             if (answer.Contains("410"))
             {
                 MessageBox.Show("Room closed!", "Going back to menu", MessageBoxButtons.OK);
             }
-
-            stopThread = true;
-            thread.Join();
 
             this.Hide();
             mainMenu mm = new mainMenu();

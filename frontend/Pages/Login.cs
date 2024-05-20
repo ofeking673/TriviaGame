@@ -39,7 +39,7 @@ namespace frontend.Pages
             string json = JsonConvert.SerializeObject(user); //"{"username": "username", "password":"password"}"
             string finalJson = $"0|{json.Length.ToString().PadLeft(4, '0')}{json}"; //code | json len | json
             //5 -> 0005
-            string answer = Program.sendAndRecieve(finalJson);
+            string answer = Program.sendAndRecieve(finalJson, true);
 
             Console.WriteLine(answer);
             if (answer.Contains("100"))

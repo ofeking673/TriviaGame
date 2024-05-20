@@ -45,8 +45,8 @@ namespace frontend.Pages
             this.Close();
             //handle log out here
 
-            string msg = "80000";
-            Program.sendAndRecieve(msg);
+            string msg = "8|0000";
+            Program.sendAndRecieve(msg, true);
         }
 
     }
