@@ -39,7 +39,7 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 		}
 		else if (requestInfo.id == GetPersonalStats)
 		{
-			// Get personal statistics
+			// Get personal statistics	
 			requestResult = getPersonalStats(requestInfo);
 		}
 		else if (requestInfo.id == GetHighScores)

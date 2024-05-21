@@ -118,6 +118,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 		// TO-DO maybe switch to menu request handler. Because only there is the logout.
 		// Otherwise it will be only: isRequestRelavant -> false
 		m_clients[client_socket]->HandleRequest(req);
+		std::cout << "user Logged out!\n";
 	}
 
 	closesocket(client_socket);

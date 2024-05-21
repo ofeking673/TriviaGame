@@ -17,6 +17,7 @@ namespace frontend.Pages
     {
         public bool stopThread = false;
         public Thread thread;
+        public Thread closeThread;
         public InRoom(int id)
         {
             this.roomId = id;
@@ -27,6 +28,9 @@ namespace frontend.Pages
         {
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
+
+            closeThread = new Thread(new ThreadStart(processType));
+            closeThread.Start();
         }
 
         public int update()
@@ -34,8 +38,7 @@ namespace frontend.Pages
             string message = "13|0000";
             if(stopThread) { return 2; }
             string answer = Program.sendAndRecieve(message, !stopThread);
-            Console.WriteLine(answer);
-
+            Console.WriteLine(answer + " Length = " + answer.Length);
             if(!string.IsNullOrEmpty(answer))
             {
                 StatusOnly status = new StatusOnly();
@@ -49,13 +52,10 @@ namespace frontend.Pages
                     case 0:
                         return 0;
                     case 1:
-                        MessageBox.Show("yo game starting");
                         stopThread = true;
                         return 1;
                     case 2:
-                        MessageBox.Show("Room was closed!");
                         stopThread = true;
-                        leaveRoom();
                         return 2;
                 }
             }
@@ -73,8 +73,6 @@ namespace frontend.Pages
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
                 if (stopThread) { return; } //incase we close room while this one is running
-                MethodInvoker upd = delegate { listBox1.Items.Clear(); };
-                listBox1.Invoke(upd);
 
                 int what = update();
                 Console.WriteLine(what);
@@ -83,8 +81,8 @@ namespace frontend.Pages
                     case 0:
                         break; 
                     case 1:
-                        return;
                     case 2:
+                        roomMethod = what;
                         return;
                 }
 
@@ -96,11 +94,12 @@ namespace frontend.Pages
 
                 string[] players = roomPlayers.PlayersInRoom.Split(',');
 
-                Console.WriteLine(players);
+                MethodInvoker upd = delegate { listBox1.Items.Clear(); };
+                listBox1.Invoke(upd);
+
                 foreach (var word in players)
                 {
                     Console.WriteLine(word);
-                    Thread.Sleep(1000);
                     MethodInvoker updateUI = delegate { listBox1.Items.Add(word); };
                     listBox1.Invoke(updateUI);
                 }
@@ -113,20 +112,31 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            leaveRoom();
+            stopThread = true;
+            processType();
         }
 
-        private void leaveRoom()
+        private void processType()
         {
-            Console.WriteLine("Closing");
-            thread.Abort();
+            thread.Join();
 
-            this.Hide();
-            JoinRoom j = new JoinRoom();
-            j.ShowDialog();            
+
+            switch(roomMethod)
+            {
+                case 1:
+                    MessageBox.Show("game started!", "Game notification", MessageBoxButtons.OK);
+                    //game start
+                    break;
+                case 2:
+                    this.Hide();
+                    JoinRoom j = new JoinRoom();
+                    j.ShowDialog();
+                    break;
+            }        
         }
 
         private int roomId;
+        private int roomMethod;
         public static Mutex mutex = new Mutex();
     }
 }

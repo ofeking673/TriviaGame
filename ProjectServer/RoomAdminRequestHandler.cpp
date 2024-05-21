@@ -5,12 +5,13 @@ bool RoomAdminRequestHandler::isRequestRelevant(Requestinfo requestInfo)
     return (requestInfo.id == CloseRoom ||
         requestInfo.id == StartGame ||
         requestInfo.id == GetRoomState ||
-        requestInfo.id == GetPlayersInRoom ||
+        requestInfo.id == GetPlayersInRoom &&
         m_roomManager.doesRoomExist(m_id));
 }
 
 RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
 {
+    std::cout << requestInfo.id << std::endl;
     if (isRequestRelevant(requestInfo))
     {
         switch (requestInfo.id) {
@@ -26,6 +27,7 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
     }
     else
     {
+        std::cout << requestInfo.id << std::endl;
         return error(requestInfo);
     }
 }
