@@ -64,6 +64,11 @@ Room& RoomManager::getRoom(unsigned int ID)
     return *(m_rooms[ID]);
 }
 
+bool RoomManager::doesRoomExist(unsigned int ID)
+{
+    return (m_rooms.find(ID) != m_rooms.end());
+}
+
 // Generate a unique room id
 unsigned int RoomManager::generateUniqueRoomId()
 {

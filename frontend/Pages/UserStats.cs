@@ -29,16 +29,8 @@ namespace frontend.Pages
 
         private void UserStats_Load(object sender, EventArgs e)
         {
-            string message = "60000";
-            string binary = Utils.StringToBinary(message);
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
-
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-            Console.WriteLine(answer);
+            string message = "6|0000";
+            string answer = Program.sendAndRecieve(message, true);
             UserStatsData usd = JsonConvert.DeserializeObject<UserStatsData>(answer);
             var entries = usd.personalStats.Split(',');
             for (int i = 0; i < entries.Length; i++)

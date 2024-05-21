@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace frontend.utils
 {
-    internal class RoomPlayers
+    internal class Error
     {
-        public string PlayersInRoom;
+        public string message;
     }
 }

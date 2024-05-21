@@ -23,6 +23,8 @@
 
 #define TEMP_GET_PLAYERS_IN_ROOM_RESPONSE_STATUS 240
 
+#define TEMP_GET_ROOM_STATE_STATUS 250
+
 // Rooms
 #define TEMP_CREATE_ROOM_RESPONSE_STATUS 300
 #define TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS 308
@@ -30,6 +32,10 @@
 #define TEMP_JOIN_ROOM_RESPONSE_STATUS 310
 #define TEMP_FAIL_JOIN_ROOM_RESPONSE_STATUS 318
 
+// Room user request handlers
+#define TEMP_LEAVE_ROOM_STATUS 400
+#define TEMP_ROOM_CLOSE_STATUS 410
+#define TEMP_ROOM_START_STATUS 420
 
 enum RequestId {
 	Login,
@@ -41,7 +47,12 @@ enum RequestId {
 	GetPersonalStats,
 	GetHighScores,
 	Logout,
-	end
+	CloseRoom,
+	StartGame,
+	GetRoomState,
+	LeaveRoom,
+	Update,
+	Error69 = 69
 };
 
 class IRequestHandler;
@@ -67,5 +78,18 @@ public:
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
+
+protected:
+	//for room request handlers
+	void getRoomStateResponseByRoom(Room m_room, GetRoomStateResponse& resp) {
+		RoomData rm = m_room.getRoomData();
+
+		resp.answerTimeOut = rm.timePerQuestion;
+		resp.hasGameBegun = rm.isActive;
+		resp.players = m_room.getAllUsers();
+		resp.questionCount = rm.numOfQuestionsInGame;
+		resp.status = TEMP_GET_ROOM_STATE_STATUS;
+		
+	};
 };
 

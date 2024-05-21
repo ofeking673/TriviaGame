@@ -20,6 +20,7 @@ public:
 	unsigned int getRoomState(unsigned int ID);
 	std::vector<RoomData> getRooms() const;
 	Room& getRoom(unsigned int ID);
+	bool doesRoomExist(unsigned int ID);
 
 	unsigned int generateUniqueRoomId();
 

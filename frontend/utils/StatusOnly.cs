@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace frontend.utils
 {
-    internal class RoomPlayers
+    internal class StatusOnly
     {
-        public string PlayersInRoom;
+        public int status;
     }
 }

@@ -1,4 +1,5 @@
 #include "Room.h"
+#include "Room.h"
 
 // Adds user to room
 bool Room::addUser(const LoggedUser& user)
@@ -35,6 +36,14 @@ std::vector<std::string> Room::getAllUsers() const
         usernames.push_back(user.getUsername());
     }
     return usernames;
+}
+
+void Room::startGame(LoggedUser& owner)
+{
+    if (m_users[0].getUsername() == owner.getUsername())
+    {
+        this->m_metadata.isActive = true;
+    }
 }
 
 RoomData Room::getRoomData() const

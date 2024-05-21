@@ -14,6 +14,8 @@ using std::mutex;
 using std::unique_lock;
 using std::vector;
 
+mutex mtx;
+
 Communicator::Communicator(RequestHandlerFactory handlerFactory):m_handlerFactory(handlerFactory)
 {
 	// notice that we step out to the global namespace
@@ -89,36 +91,21 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 			Buffer deserialize;
 			
 			std::string decodedstr = JsonRequestPacketDeserializer::binaryDecoder(str);
-			std::string jsonStr = decodedstr.substr(5);
-
+			
 			Requestinfo info; 
 			breakDownStr(info, decodedstr);
 
 			std::cout << "'" << info.id << "'";
-			switch (info.id) //TO-DO: add more types
+			mtx.lock();
+			RequestResult result = m_clients[client_socket]->HandleRequest(info);
+			mtx.unlock();
+			// Set current handler as new handler came back from handler request
+			m_clients[client_socket] = result.newHandler;
+			sendBuf = std::string(result.response.data.begin(), result.response.data.end());
+			send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+			if (info.id == Logout)
 			{
-			case SignUp:
-			case Login:
-			case CreateRoom:
-			case GetRooms:
-			case GetPlayersInRoom:
-			case JoinRoom:
-			case GetPersonalStats:
-			case GetHighScores:
-			case Logout:
-			HandleRequestAndSendResult:
-			{
-				RequestResult result = m_clients[client_socket]->HandleRequest(info);
-
-				// Set current handler as new handler came back from handler request
-				m_clients[client_socket] = result.newHandler;
-
-				sendBuf = std::string(result.response.data.begin(), result.response.data.end());
-				send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
 				break;
-			}
-			default:
-				throw std::runtime_error("Invalid request id :"+ std::to_string(info.id) + "\n");
 			}
 		}
 		TRACE("Client sent EXIT and quit.");
@@ -128,7 +115,10 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
 		Requestinfo req;
 		req.id = Logout;
+		// TO-DO maybe switch to menu request handler. Because only there is the logout.
+		// Otherwise it will be only: isRequestRelavant -> false
 		m_clients[client_socket]->HandleRequest(req);
+		std::cout << "user Logged out!\n";
 	}
 
 	closesocket(client_socket);
@@ -138,12 +128,15 @@ void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 {
 	Buffer buffer;
 
-	std::string jsonStr = buf.substr(5);
-	for (int i = 0; i < jsonStr.size(); i++)
-	{
-		buffer.data.push_back(jsonStr[i]);
+	if (buf.find_first_of("{") != std::string::npos)
+	{//{"data":"data"}
+		std::string jsonStr = buf.substr(buf.find_first_of("{"));
+		for (int i = 0; i < jsonStr.size(); i++)
+		{
+			buffer.data.push_back(jsonStr[i]);
+		}
 	}
-
+	
 	info.buf = buffer;
 	info.id = getIdFromStr(buf);
 
@@ -152,28 +145,38 @@ void Communicator::breakDownStr(Requestinfo& info, std::string buf)
 
 RequestId Communicator::getIdFromStr(std::string str)
 {
-	switch (str[0])
+	switch (std::stoi(str.substr(0, str.find_first_of("|"))))
 	{
-	case '0':
+	case 0:
 		return Login;
-	case '1':
+	case 1:
 		return SignUp;
-	case '2':
+	case 2:
 		return CreateRoom;
-	case '3':
+	case 3:
 		return GetRooms;
-	case '4':
+	case 4:
 		return GetPlayersInRoom;
-	case '5':
+	case 5:
 		return JoinRoom;
-	case '6':
+	case 6:
 		return GetPersonalStats;
-	case '7':
+	case 7:
 		return GetHighScores;
-	case '8':
+	case 8:
 		return Logout;
+	case 9:
+		return CloseRoom;
+	case 10:
+		return StartGame;
+	case 11:
+		return GetRoomState;
+	case 12:
+		return LeaveRoom;
+	case 13:
+		return Update;
 	default:
-		break;
+		return Error69; //we love when this happens
 	}
 }
 
@@ -189,28 +192,4 @@ void Communicator::acceptClient()
 	std::thread tr(&Communicator::handleNewClient, this, client_socket);
 	tr.detach();
 	m_clients[client_socket] = m_handlerFactory.createLoginRequestHandler();
-}
-
-void Communicator::sendResponse(Requestinfo* request)
-{
-	//we analyze each request class
-	Buffer buf;
-	switch (request->id)
-	{
-		case Login:
-		{
-			LoginResponse login;
-			login.status = request->id;
-			buf = m_serializer.serializeResponse(login);
-			break;
-		}
-		case SignUp:
-		{
-			SignupResponse signup;
-			signup.status = request->id;
-			buf = m_serializer.serializeResponse(signup);
-			break;
-		}
-	}
-
 }

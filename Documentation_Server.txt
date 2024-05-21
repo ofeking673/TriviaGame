@@ -124,6 +124,47 @@ GetHighScores:
 			vector<string> highScores [in the following format: (TO-DO! still need to think about in code. probably: username|score, username|score, ...)]
 			new handler = menu request handler
 
+
+CloseRoom:
+	Request:
+		RequestId = 9
+
+		client sends:
+			(only requestId)
+	Response:
+		If successful:
+			status = 410 //ONLY CALLED BY MANAGEROOM (OWNER)
+
+
+StartGame:
+	Request:
+		requestId = 10
+		client send only requestId
+
+	Response:
+		status = 420
+
+getRoomState:
+	request:
+		requestId = 11
+		only requestId
+	
+	Response:
+		{answerTimeout, hasGameBegun, Players, questionsCount, status = 250}
+
+LeaveRoom:
+	request:
+		requestId = 12
+
+	Response:
+		status = 400
+
+UpdateRoom:
+	requestId = 13
+
+	Response:
+		status = 
+		0 = ok , 1 = start, 2 = leave
 Logout:
 	Request:
 		RequestId = 8

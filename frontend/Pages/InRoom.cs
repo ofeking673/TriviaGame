@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace frontend.Pages
 {
@@ -16,47 +17,94 @@ namespace frontend.Pages
     {
         public bool stopThread = false;
         public Thread thread;
-
+        public Thread closeThread;
         public InRoom(int id)
         {
             this.roomId = id;
             InitializeComponent();
+        }
 
+        public void loadPage(object sender, EventArgs e)
+        {
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
+
+            closeThread = new Thread(new ThreadStart(processType));
+            closeThread.Start();
+        }
+
+        public int update()
+        {
+            string message = "13|0000";
+            if(stopThread) { return 2; }
+            string answer = Program.sendAndRecieve(message, !stopThread);
+            Console.WriteLine(answer + " Length = " + answer.Length);
+            if(!string.IsNullOrEmpty(answer))
+            {
+                StatusOnly status = new StatusOnly();
+                status.status = 2;
+
+                if (JsonConvert.DeserializeObject<Error>(answer).message != "")
+                    status = JsonConvert.DeserializeObject<StatusOnly>(answer);
+
+                switch (status.status)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        stopThread = true;
+                        return 1;
+                    case 2:
+                        stopThread = true;
+                        return 2;
+                }
+            }
+            return 2;
         }
 
         public void threadCall()
         {
-            while (true && !stopThread)
+            while (!stopThread)
             {
-                listBox1.Items.Clear();
+ 
                 RoomId roomId = new RoomId();
                 roomId.roomId = this.roomId;
 
                 string json = JsonConvert.SerializeObject(roomId);
-                string message = $"4{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string binary = Utils.StringToBinary(message);
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
+                string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                if (stopThread) { return; } //incase we close room while this one is running
 
-                Program.networkStream.Write(bytes, 0, bytes.Length);
+                int what = update();
+                Console.WriteLine(what);
+                switch (what)
+                {
+                    case 0:
+                        break; 
+                    case 1:
+                    case 2:
+                        roomMethod = what;
+                        return;
+                }
 
-                byte[] bytes1 = new byte[1024];
-                Program.networkStream.Read(bytes1, 0, bytes1.Length);
-                string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-
+                string answer = Program.sendAndRecieve(message, !stopThread);
+                Console.WriteLine(answer);
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 
-                if (string.IsNullOrEmpty(roomPlayers.playersInRoom)) { Thread.Sleep(3000); continue; }
+                if (string.IsNullOrEmpty(roomPlayers.PlayersInRoom)) { Thread.Sleep(3000); continue; }
 
-                string[] players = roomPlayers.playersInRoom.Split(',');
+                string[] players = roomPlayers.PlayersInRoom.Split(',');
+
+                MethodInvoker upd = delegate { listBox1.Items.Clear(); };
+                listBox1.Invoke(upd);
 
                 foreach (var word in players)
                 {
-                    listBox1.Items.Add(word);
+                    Console.WriteLine(word);
+                    MethodInvoker updateUI = delegate { listBox1.Items.Add(word); };
+                    listBox1.Invoke(updateUI);
                 }
-
-                listBox1.Items[0] += " - Room owner";
+                MethodInvoker updateUi = delegate { listBox1.Items[0] += " - Room owner"; };
+                listBox1.Invoke(updateUi);
 
                 Thread.Sleep(3000);
             }
@@ -64,13 +112,31 @@ namespace frontend.Pages
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            this.Hide();
             stopThread = true;
+            processType();
+        }
+
+        private void processType()
+        {
             thread.Join();
-            JoinRoom joinRoom = new JoinRoom();
-            joinRoom.ShowDialog();
+
+
+            switch(roomMethod)
+            {
+                case 1:
+                    MessageBox.Show("game started!", "Game notification", MessageBoxButtons.OK);
+                    //game start
+                    break;
+                case 2:
+                    this.Hide();
+                    JoinRoom j = new JoinRoom();
+                    j.ShowDialog();
+                    break;
+            }        
         }
 
         private int roomId;
+        private int roomMethod;
+        public static Mutex mutex = new Mutex();
     }
 }

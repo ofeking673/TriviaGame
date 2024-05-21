@@ -31,17 +31,8 @@ namespace frontend.Pages
             Room room = new Room(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
 
             string json = JsonConvert.SerializeObject(room);
-            string finalJson = $"{message}{json.Length.ToString().PadLeft(4, '0')}{json}";
-            Console.WriteLine(finalJson);
-            string binary = Utils.StringToBinary(finalJson);
-
-            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
-
-            Program.networkStream.Write(bytes, 0, bytes.Length);
-
-            byte[] bytes1 = new byte[1024];
-            Program.networkStream.Read(bytes1, 0, bytes1.Length);
-            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
+            string finalJson = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string answer = Program.sendAndRecieve(finalJson, true);
 
             Console.WriteLine(answer);
             
