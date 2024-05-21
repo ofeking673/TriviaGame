@@ -3,7 +3,11 @@
 // Checks if request relevant for handler
 bool RoomMemberRequestHandler::isRequestRelevant(Requestinfo requestInfo)
 {
-	return (requestInfo.id == LeaveRoom || requestInfo.id == GetRoomState || requestInfo.id == StartGame);
+	return (requestInfo.id == LeaveRoom ||
+		requestInfo.id == GetRoomState ||
+		requestInfo.id == GetPlayersInRoom ||
+		requestInfo.id == Update &&
+		m_roomManager.doesRoomExist(m_id));
 }
 
 // Handles Request based on request status
@@ -22,6 +26,8 @@ RequestResult RoomMemberRequestHandler::HandleRequest(Requestinfo requestInfo)
 			return getRoomState(requestInfo);
 		case Update:
 			return roomUpdate(requestInfo);
+		case GetPlayersInRoom:
+			return getPlayersInRoom(requestInfo);
 		}
 	}
 	else
@@ -66,18 +72,47 @@ RequestResult RoomMemberRequestHandler::getRoomState(Requestinfo requestInfo)
 	return requestresult;
 }
 
+RequestResult RoomMemberRequestHandler::getPlayersInRoom(Requestinfo requestInfo)
+{
+	RequestResult requestResult;
+
+	// Deserialize request
+	GetPlayersInRoomRequest getPlayersInRoomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersInRoomRequest(requestInfo.buf);
+
+	// Get all the players in a desired room through room manager
+	auto room = m_handlerFactory.getRoomManager().getRoom(getPlayersInRoomRequest.roomId);
+	std::vector<std::string> players = room.getAllUsers();
+
+
+	RoomMemberRequestHandler* member = m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
+	requestResult.newHandler = (IRequestHandler*)member;
+
+	// Create response
+	GetPlayersInRoomResponse getPlayersInRoomResponse;
+	getPlayersInRoomResponse.status = TEMP_GET_PLAYERS_IN_ROOM_RESPONSE_STATUS;
+	getPlayersInRoomResponse.players = players;
+
+
+	//Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getPlayersInRoomResponse);
+
+	return requestResult;
+}
+
 RequestResult RoomMemberRequestHandler::error(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
 
 	// Create response
 	ErrorResponse errorResponse;
-	errorResponse.message = "Error in Room Member Request Handler.";
+	errorResponse.message = "Error in member request handler.";
+	std::cout << "Error in member\n";
+
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 
 	// New handler is nullptr - indicates Error
-	requestResult.newHandler = nullptr;
+	requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user);
 	return requestResult;
 }
 
@@ -85,9 +120,23 @@ RequestResult RoomMemberRequestHandler::roomUpdate(Requestinfo Requestinfo)
 {
 	RoomUpdateResponse upd;
 	upd.status = m_room.status;
+	std::cout << upd.status;
 
 	RequestResult requestResult;
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(upd);
-	requestResult.newHandler = (upd.status == 2) ? (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user) : (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
+	//(upd.status == 2) ? (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user) : (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
+	if (upd.status == 2)
+	{
+		if (m_roomManager.getRoom(m_id).getAllUsers().size() < 2)
+		{
+			m_roomManager.deleteRoom(m_id);
+		}
+		requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user);
+	}
+	else
+	{
+		requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
+	}
+
 	return requestResult;
 }

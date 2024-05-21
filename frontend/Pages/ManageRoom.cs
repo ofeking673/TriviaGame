@@ -21,9 +21,12 @@ namespace frontend.Pages
         public ManageRoom(int id)
         {
             InitializeComponent();
-
+            this.Load += loadForm;
             this.roomId = id;
+        }
 
+        public void loadForm(object sender, EventArgs e)
+        {
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
         }
@@ -31,29 +34,44 @@ namespace frontend.Pages
         //open thread, send socket message and when getting back deque/whatever the fuck of users use listbox.items.add(user.username)
         public void threadCall()
         {
-            while (true && !stopThread)
+            while (!stopThread)
             {
-                listBox1.Items.Clear();
+                if (!listBox1.IsHandleCreated) continue;
+                MethodInvoker updateUI = delegate
+                {
+                    listBox1.Items.Clear();
+                };
+                listBox1.Invoke(updateUI);
+
                 RoomId roomId = new RoomId();
                 roomId.roomId = this.roomId;
 
                 string json = JsonConvert.SerializeObject(roomId);
-                string message = $"4{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string answer = Program.sendAndRecieve(message);
+                string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                string answer = Program.sendAndRecieve(message, !stopThread);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 
-                if (string.IsNullOrEmpty(roomPlayers.playersInRoom)) { Thread.Sleep(3000); continue; }
 
-                string[] players = roomPlayers.playersInRoom.Split(',');
+                if (string.IsNullOrEmpty(roomPlayers.PlayersInRoom)) { Thread.Sleep(3000); continue; }
+
+                string[] players = roomPlayers.PlayersInRoom.Split(',');
 
                 foreach (var word in players)
                 {
-                    listBox1.Items.Add(word);
+                    updateUI = delegate
+                    {
+                        listBox1.Items.Add(word);
+                    };
+                    listBox1.Invoke(updateUI);
                 }
 
-                listBox1.Items[0] += " - Room owner";
+                updateUI = delegate
+                {
+                    listBox1.Items[0] += " - Room owner";
+                };
+                listBox1.Invoke(updateUI);
                 Thread.Sleep(3000);
             }
         }
@@ -67,15 +85,34 @@ namespace frontend.Pages
             //mainMenu mm = new mainMenu();
             //mm.Show();
 
-            string message = "100000";
-            string answer = Program.sendAndRecieve(message);
-            
-            if (answer.Contains("420")) {
-                MessageBox.Show("ok game started bruh", "Game notification!", MessageBoxButtons.OK);
+            string message = "10|0000";
+            string answer = Program.sendAndRecieve(message, true);
+
+            if (answer.Contains("420"))
+            {
+                MessageBox.Show("You started the game!", "Game notification!", MessageBoxButtons.OK);
             }
-            
+
             //waht teh fuck did oyu do
 
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            stopThread = true;
+            thread.Join();
+
+            string message = "9|0000";
+            string answer = Program.sendAndRecieve(message, stopThread);
+
+            if (answer.Contains("410"))
+            {
+                MessageBox.Show("Room closed!", "Going back to menu", MessageBoxButtons.OK);
+            }
+
+            this.Hide();
+            mainMenu mm = new mainMenu();
+            mm.ShowDialog();
         }
     }
 }

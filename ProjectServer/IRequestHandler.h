@@ -51,7 +51,8 @@ enum RequestId {
 	StartGame,
 	GetRoomState,
 	LeaveRoom,
-	Update
+	Update,
+	Error69 = 69
 };
 
 class IRequestHandler;

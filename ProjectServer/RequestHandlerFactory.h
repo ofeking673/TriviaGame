@@ -1,18 +1,14 @@
-class RoomAdminRequestHandler;
-class RoomMemberRequestHandler;
-class MenuRequestHandler;
-class LoginRequestHandler;
-
 #pragma once
 #include "LoginManager.h"
 #include "IDatabase.h"
 #include "RoomManager.h"
 #include "StatisticsManager.h"
-#include "RoomAdminRequestHandler.h"
-#include "RoomMemberRequestHandler.h"
 
-// TO-DO circular dependencies V3
-
+// TO-DO manage circular dependencies when adding handlers
+class RoomAdminRequestHandler;
+class RoomMemberRequestHandler;
+class MenuRequestHandler;
+class LoginRequestHandler;
 
 
 class RequestHandlerFactory
@@ -32,8 +28,8 @@ public:
 	RoomManager& getRoomManager();
 
 	// Inside Room related
-	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room room);
-	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room room);
+	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room& room);
+	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room& room);
 
 private:
 	IDatabase* m_database;

@@ -42,9 +42,9 @@ namespace frontend.Pages
             SignupUser user = new SignupUser(this.textBox1.Text, this.textBox2.Text, this.textBox4.Text);
             string json = JsonConvert.SerializeObject(user);
             Console.WriteLine(json);
-            string finalJson = $"1{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string finalJson = $"1|{json.Length.ToString().PadLeft(4, '0')}{json}";
             
-            string answer = Program.sendAndRecieve(finalJson);
+            string answer = Program.sendAndRecieve(finalJson, true);
 
             Console.WriteLine(answer);
             if (answer.Contains("110"))
