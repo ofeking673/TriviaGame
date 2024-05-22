@@ -52,6 +52,10 @@ enum RequestId {
 	GetRoomState,
 	LeaveRoom,
 	Update,
+	LeaveGame,
+	GetQuestion,
+	SubmitAnswer,
+	GetGameResult,
 	Error69 = 69
 };
 
