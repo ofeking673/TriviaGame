@@ -2,6 +2,8 @@
 #include "Question.h"
 #include "LoggedUser.h"
 #include <map>
+#include <iostream>
+
 
 struct GameData
 {
@@ -14,13 +16,12 @@ struct GameData
 class Game
 {
 public:
-	Game(std::vector<LoggedUser> players, std::vector<Question> questions);
+	Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId);
 	~Game();
 
 	Question getQuestionForUser(LoggedUser user);
 	void submitAnswer(LoggedUser user, unsigned int answerId, unsigned int answerTime);
 	void removePlayer(LoggedUser user);
-	// ***
 
 private:
 	std::vector<Question> m_questions;
