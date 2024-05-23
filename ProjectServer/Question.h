@@ -8,6 +8,7 @@
 class Question
 {
 public:
+    // TO-DO check DB after the change of Question constructor
 
 	Question(std::string question, std::vector<std::string> answers)
         : m_question(question), m_possibleAnswers(answers) 

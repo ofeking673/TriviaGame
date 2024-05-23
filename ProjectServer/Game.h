@@ -23,6 +23,7 @@ public:
 	void submitAnswer(LoggedUser user, unsigned int answerId, unsigned int answerTime);
 	void removePlayer(LoggedUser user);
 
+	unsigned int getGameId() const;
 private:
 	std::vector<Question> m_questions;
 	std::map<LoggedUser, GameData> m_players;

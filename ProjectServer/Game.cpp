@@ -87,3 +87,8 @@ void Game::removePlayer(LoggedUser user)
         throw std::invalid_argument("User not found in the game");
     }
 }
+
+unsigned int Game::getGameId() const
+{
+    return m_gameId;
+}
