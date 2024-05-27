@@ -18,6 +18,7 @@ namespace frontend.Pages
         private int chosenAns;
         private int AnswerTimeOut;
         private int questionAmt;
+        private double elapsed;
 
 
         public Game(int answerTimeOut, int questionsCount)
@@ -53,7 +54,51 @@ namespace frontend.Pages
 
         public void processAns()
         {
+            submitAnswer submit = new submitAnswer(chosenAns, elapsed);
+            string json = JsonConvert.SerializeObject(submit);
+            string message = $"16|{json.Length.ToString().PadLeft(4, '0')}{json}";
+            string answer = Program.sendAndRecieve(message, true);
 
+            /*status = 600
+			correctAnswerId (unsigned int)
+			score (current score of user) (unsigned int)
+			new handler = game request handler
+            */
+
+            submitAnswerResponse resp = JsonConvert.DeserializeObject<submitAnswerResponse>(answer);
+            highlightCorrect(resp.correctAnswerId);
+            label3.Text = $"Score: {resp.score.ToString()}";
+        }
+
+        public void highlightCorrect(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    button1.BackColor = Color.Green;
+                    button2.BackColor = Color.Red;
+                    button3.BackColor = Color.Red;
+                    button4.BackColor = Color.Red;
+                    break;
+                case 2:
+                    button1.BackColor = Color.Red;
+                    button2.BackColor = Color.Green;
+                    button3.BackColor = Color.Red;
+                    button4.BackColor = Color.Red;
+                    break;
+                case 3:
+                    button1.BackColor = Color.Red;
+                    button2.BackColor = Color.Red;
+                    button3.BackColor = Color.Green;
+                    button4.BackColor = Color.Red;
+                    break;
+                case 4:
+                    button1.BackColor = Color.Red;
+                    button2.BackColor = Color.Red;
+                    button3.BackColor = Color.Red;
+                    button4.BackColor = Color.Green;
+                    break;
+            }
         }
 
         public static GameQuestion GetQuestion()
@@ -89,8 +134,7 @@ namespace frontend.Pages
 
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 100; //timer for question timeout
-            double elapsed = AnswerTimeOut;
-
+            elapsed = AnswerTimeOut;
             timer.Elapsed += (sender, e) =>
             {
                 elapsed -= 0.1;
