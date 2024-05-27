@@ -308,6 +308,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const SubmitAnswerRespons
     json j;
     j["status"] = submitAnswerResponse.status;
     j["correctAnswerId"] = submitAnswerResponse.correctAnswerId;
+    j["score"] = submitAnswerResponse.score;
 
     return jsonObjectSerializer(j);
 }

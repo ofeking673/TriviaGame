@@ -121,6 +121,7 @@ struct SubmitAnswerResponse
 {
 	unsigned int status;
 	unsigned int correctAnswerId;
+	unsigned int score;
 };
 
 // Game Results
