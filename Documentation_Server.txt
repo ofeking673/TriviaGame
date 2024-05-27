@@ -217,3 +217,40 @@ GetQuestion:
 			empty map <answerId (unsigned int), answer(string)>
 
 			new handler = game request handler 
+
+SubmitAnswer:
+	Request:
+		RequestId = 16
+	
+		client sends: 
+			answerId (unsigned int) [1-4]
+			answerTime (double)
+			
+	Response:
+		
+		If succeful:
+			status = 600
+			correctAnswerId (unsigned int)
+
+			new handler = game request handler
+
+
+GetGameResult:
+	Request:
+		RequestId = 17
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 610
+			results (vector<PlayerResults>)
+				PlayerResults contains:
+					username (string)
+					correctAnswerCount (unsigned int)
+					wrongAnswerCount (unsigned int)
+					averageAnswerTime (double)
+
+			new handler = game request handler
