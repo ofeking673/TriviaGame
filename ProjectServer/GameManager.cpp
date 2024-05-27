@@ -38,11 +38,11 @@ Game GameManager::createGame(const Room& room)
     unsigned int gameId = generateUniqueGameId();
 
 
-    Game newGame(players, questions, gameId, room.getRoomData().timePerQuestion);
+    Game* newGame = new Game(players, questions, gameId, room.getRoomData().timePerQuestion);
 
-    m_games.push_back(newGame);
+    m_games.push_back(*newGame);
     
-    return newGame;
+    return *newGame;
 }
 
 void GameManager::deleteGame(unsigned int gameId)

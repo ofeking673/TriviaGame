@@ -9,6 +9,7 @@ void DatabaseAccess::InitDb()
     sqlite3_exec(db, msg.c_str(), nullptr, nullptr, nullptr);
 
     msg = "CREATE TABLE STATISTICS(USERNAME TEXT NOT NULL PRIMARY KEY, AVERAGEANSWERTIME REAL NOT NULL, CORRECTANSWERS INTEGER NOT NULL, TOTALANSWERS INTEGER NOT NULL, PLAYEDGAMES INTEGER NOT NULL, PLAYERSCORE INTEGER NOT NULL)";
+    sqlite3_exec(db, msg.c_str(), nullptr, nullptr, nullptr);
 }
 
 bool DatabaseAccess::doesUserExist(std::string name)
@@ -68,23 +69,24 @@ int DatabaseAccess::getData(void* data, int argc, char** argv, char** azColName)
 
 std::list<Question> DatabaseAccess::getQuestions(int amt)
 {
-    std::list<Question> questionList;
-    std::string msg = "SELECT * FROM QUESTIONS ORDER BY RANDOM() LIMIT " + amt;
-    sqlite3_exec(db, msg.c_str(), getQuestionData, &questionList, nullptr);
+    std::list<Question>* questionList = new std::list<Question>();
+    std::string msg = "SELECT * FROM QUESTIONS ORDER BY RANDOM() LIMIT " + std::to_string(amt);
+    std::cout << msg;
+    sqlite3_exec(db, msg.c_str(), getQuestionData, questionList, nullptr);
 
-    return questionList;
+    return *questionList;
 }
 
 int DatabaseAccess::getQuestionData(void* data, int argc, char** argv, char** azColName) 
 { // question correct incorrect incorrect incorrect
-    std::list<Question>* questionList = (std::list<Question>*)data;
+    std::list<Question>* questionList = (std::list<Question>*)data; //q 1 2 3 4
     std::vector<std::string> questions;
     for (int i = 1; i <= 4; i++)
     {
         questions.push_back(argv[i]);
     }
 
-    Question q(argv[0], questions, argv[1]);
+    Question q(argv[0], questions);
     questionList->push_back(q);
     return 0;
 }
@@ -112,6 +114,13 @@ int DatabaseAccess::highScoreCallback(void* data, int argc, char** argv, char** 
 int DatabaseAccess::submitGameStatistics(GameData gameData)
 {
     return 0;
+}
+
+void DatabaseAccess::addQuestion(std::string question, std::vector<std::string> answers)
+{
+    //(QUESTION TEXT NOT NULL PRIMARY KEY, CORRECT TEXT NOT NULL, INCORRECT1 TEXT NOT NULL, INCORRECT2 TEXT NOT NULL, INCORRECT3 TEXT NOT NULL)
+    std::string msg = "INSERT INTO QUESTIONS(QUESTION, CORRECT,INCORRECT1,INCORRECT2,INCORRECT3) VALUES ( '" + question + "', '" + answers[0] + "', '" + answers[1] + "', '" + answers[2] + "', '" + answers[3] + "')";
+    sqlite3_exec(db, msg.c_str(), nullptr, nullptr, nullptr);
 }
 
 

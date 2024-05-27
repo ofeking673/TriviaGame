@@ -56,7 +56,7 @@ void Communicator::startHandleRequests()
 // listen to connecting requests from clients
 // accept them, and create thread for each client
 void Communicator::bindAndListen()
-{
+{	
 	struct sockaddr_in sa = { 0 };
 	sa.sin_port = htons(PORT);
 	sa.sin_family = AF_INET;
@@ -76,7 +76,7 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 {
 	char* buf = new char[READ_SIZE];
 	std::string sendBuf;
-	
+
 	try
 	{
 		while (true)
@@ -175,8 +175,24 @@ RequestId Communicator::getIdFromStr(std::string str)
 		return LeaveRoom;
 	case 13:
 		return Update;
+	case 14:
+		return LeaveGame;
+	case 15:
+		return GetQuestion;
+	case 16:
+		return SubmitAnswer;
+	case 17:
+		return GetGameResult;
 	default:
 		return Error69; //we love when this happens
+
+	/* 
+	LeaveGame,
+	GetQuestion,
+	SubmitAnswer,
+	GetGameResult,
+	*/
+		
 	}
 }
 

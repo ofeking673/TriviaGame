@@ -26,29 +26,30 @@ namespace frontend.Pages
             questionAmt = 0;
             InitializeComponent();
             AnswerTimeOut = answerTimeOut;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            chosenAns = 1;
+            chosenAns = 0;
             processAns();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            chosenAns = 2;
+            chosenAns = 1;
             processAns();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            chosenAns = 3;
+            chosenAns = 2;
             processAns();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            chosenAns = 4;
+            chosenAns = 3;
             processAns();
         }
 
@@ -74,25 +75,25 @@ namespace frontend.Pages
         {
             switch (id)
             {
-                case 1:
+                case 0:
                     button1.BackColor = Color.Green;
                     button2.BackColor = Color.Red;
                     button3.BackColor = Color.Red;
                     button4.BackColor = Color.Red;
                     break;
-                case 2:
+                case 1:
                     button1.BackColor = Color.Red;
                     button2.BackColor = Color.Green;
                     button3.BackColor = Color.Red;
                     button4.BackColor = Color.Red;
                     break;
-                case 3:
+                case 2:
                     button1.BackColor = Color.Red;
                     button2.BackColor = Color.Red;
                     button3.BackColor = Color.Green;
                     button4.BackColor = Color.Red;
                     break;
-                case 4:
+                case 3:
                     button1.BackColor = Color.Red;
                     button2.BackColor = Color.Red;
                     button3.BackColor = Color.Red;
@@ -106,11 +107,13 @@ namespace frontend.Pages
             string message = "15|0000";
             string answer = Program.sendAndRecieve(message, true);
 
+            Console.WriteLine(answer);
+
             GameQuestion q = JsonConvert.DeserializeObject<GameQuestion>(answer);
             return q;
         }
 
-        private void timeEnd(object sender, EventArgs e)
+        private void timeEnd()
         {
             button1.Hide();
             button2.Hide();
@@ -121,16 +124,16 @@ namespace frontend.Pages
 
 
             GameQuestion q = GetQuestion();
-            if (!string.IsNullOrEmpty(q.question))
+            if (string.IsNullOrEmpty(q.question))
             {
                 return;
             }
 
             label1.Text = q.question;
-            button1.Text = q.answers["1"];
-            button2.Text = q.answers["2"];
-            button3.Text = q.answers["3"];
-            button4.Text = q.answers["4"];
+            button1.Text = q.answers[0];
+            button2.Text = q.answers[1];
+            button3.Text = q.answers[2];
+            button4.Text = q.answers[3];
 
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 100; //timer for question timeout
@@ -141,7 +144,7 @@ namespace frontend.Pages
                 label2.Text = Math.Round(elapsed, 1).ToString();
                 if (elapsed < 0)
                 {
-                    timeEnd(sender, e);
+                    timeEnd();
                     return;
                 }
             };
@@ -155,7 +158,7 @@ namespace frontend.Pages
         }
         private void Game_Load(object sender, EventArgs e)
         {
-            timeEnd(sender, e);
+            timeEnd();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

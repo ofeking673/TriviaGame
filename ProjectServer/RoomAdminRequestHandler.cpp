@@ -57,6 +57,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
 {
+    std::cout << "Room started!\n";
     m_room.status = 1;
     m_room.startGame(m_user);
     m_handlerFactory.getGameManager().createGame(m_room);

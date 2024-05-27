@@ -40,7 +40,7 @@ namespace frontend
 
                 Program.networkStream.Write(bytes, 0, bytes.Length);
 
-                byte[] bytes1 = new byte[1024];
+                byte[] bytes1 = new byte[10000];
                 Program.networkStream.Read(bytes1, 0, bytes1.Length);
                 if (string.IsNullOrEmpty(Encoding.Default.GetString(bytes1))) { return ""; }
 

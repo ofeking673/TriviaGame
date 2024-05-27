@@ -12,6 +12,11 @@ Game::Game(std::vector<LoggedUser> players, std::vector<Question> questions, uns
 Game::~Game()
 {
     // Removing all players from game and writing their scores in DB
+    //instead do nothing, as sometimes dtor is called
+}
+
+void Game::prepareClose()
+{
     for (const auto& player : m_players)
     {
         removePlayer(player.first);

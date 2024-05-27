@@ -21,6 +21,9 @@ public:
 		{
 			InitDb();
 		}
+
+		//"int variable;", "variable int;", "int = variable;", "variable = int;"
+		
 	};
 
 	virtual void close() override {
@@ -66,7 +69,7 @@ public:
 
 	// Game related
 	virtual int submitGameStatistics(GameData gameData);
-	
+	void addQuestion(std::string question, std::vector<std::string> answers);
 private:
 	sqlite3* db;
 };

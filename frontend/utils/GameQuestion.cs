@@ -9,6 +9,6 @@ namespace frontend.utils
     public class GameQuestion
     {
         public string question;
-        public Dictionary<string, string> answers;
+        public string[] answers;
     }
 }

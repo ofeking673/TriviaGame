@@ -6,8 +6,9 @@ class GameRequestHandler : public IRequestHandler
 {
 public:
 	GameRequestHandler(LoggedUser user, Game& game, RequestHandlerFactory& handlerFactory) :
-		m_user(user), m_game(game), m_handlerFactory(handlerFactory),
-		m_gameManager(m_handlerFactory.getGameManager()) {};
+		m_user(user), m_game(game), m_handlerFactory(handlerFactory) {
+		m_gameManager = &m_handlerFactory.getGameManager();
+	};
 
 	virtual ~GameRequestHandler() = default;
 
@@ -17,7 +18,7 @@ public:
 private:
 	Game& m_game;
 	LoggedUser m_user;
-	GameManager& m_gameManager;
+	GameManager* m_gameManager;
 	RequestHandlerFactory& m_handlerFactory;
 
 	RequestResult getQuestion(Requestinfo requestInfo);

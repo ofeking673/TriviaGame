@@ -91,6 +91,9 @@ namespace frontend.Pages
             //mainMenu mm = new mainMenu();
             //mm.Show();
 
+            stopThread = true;
+            thread.Join();
+
             string message = "10|0000";
             string answer = Program.sendAndRecieve(message, true);
 

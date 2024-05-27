@@ -321,10 +321,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetQuestionResponse
     j["question"] = getQuestionResponse.question;
 
     // Serializing the map of answers into JSON
-    for (const auto& answer : getQuestionResponse.answers)
-    {
-        j["answers"][std::to_string(answer.first)] = answer.second;
-    }
+    j["answers"] = getQuestionResponse.answers;
 
     return jsonObjectSerializer(j);
 }

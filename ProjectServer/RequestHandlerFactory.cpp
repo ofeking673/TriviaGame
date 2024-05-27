@@ -8,7 +8,7 @@
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
     : m_database(database), m_loginManager(new LoginManager(database)),
-      m_statisticsManager(new StatisticsManager(database)), m_gameManager(new GameManager(database))
+      m_statisticsManager(new StatisticsManager(database))
 {
     if (m_database == nullptr) 
     {
@@ -16,6 +16,7 @@ RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
     }
     //: m_database(database), m_loginManager(database), m_statisticsManager(database), m_roomManager()
     m_roomManager = new RoomManager();
+    m_gameManager = new GameManager(database);
 }
 
 RequestHandlerFactory::~RequestHandlerFactory()

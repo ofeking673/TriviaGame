@@ -59,7 +59,7 @@ RequestResult GameRequestHandler::getQuestion(Requestinfo requestInfo)
 		// No more questions left - indicated by status
 		getQuestionResponse.status = TEMP_NO_MORE_QUESTIONS_LEFT_GET_QUESTION_RESPONSE_STATUS;
 		getQuestionResponse.question = "";
-		std::map<unsigned int, std::string> answers;
+		std::vector<std::string> answers;
 		getQuestionResponse.answers = answers;
 	}
 	else
@@ -67,18 +67,18 @@ RequestResult GameRequestHandler::getQuestion(Requestinfo requestInfo)
 		getQuestionResponse.question = wholeQuestion.getQuestion();
 
 		// Get the answers
-		std::map<unsigned int, std::string> answers;
+		std::vector<std::string> answers;
 		std::vector<std::string> answerList = wholeQuestion.getPossibleAnswers();
-		unsigned int answerId = 1;
 		for (auto it = answerList.begin(); it != answerList.end(); it++)
 		{
-			answers[answerId] = *it;
-			answerId++;
+			answers.push_back(*it);
 		}
 
 		getQuestionResponse.answers = answers;
 
 		getQuestionResponse.status = TEMP_GET_QUESTION_RESPONSE_STATUS;
+
+		std::cout << std::endl << getQuestionResponse.answers.data() << std::endl;
 	}
 
 	// New handler is Game request handler

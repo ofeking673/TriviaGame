@@ -118,7 +118,7 @@ struct GetQuestionResponse
 	unsigned int status;
 	std::string question;
 	//		answer number, answer sentence
-	std::map<unsigned int, std::string> answers;
+	std::vector<std::string> answers;
 };
 
 struct SubmitAnswerResponse

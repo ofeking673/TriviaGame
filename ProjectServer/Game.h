@@ -30,6 +30,7 @@ public:
 	std::vector<std::pair<LoggedUser, GameData>> getOrderedPlayersByScore() const;
 
 	bool hasPlayer(const LoggedUser& user) const;
+	void prepareClose();
 
 private:
 	std::vector<Question> m_questions;

@@ -7,6 +7,7 @@ class GameManager
 {
 public:
 	GameManager(IDatabase* database);
+	GameManager() = default;
 	~GameManager();
 
 	Game createGame(const Room& room);
