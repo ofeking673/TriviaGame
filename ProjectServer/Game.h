@@ -10,7 +10,7 @@ struct GameData
 	Question currentQuestion;
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
+	double averageAnswerTime;
 };
 
 class Game
@@ -20,7 +20,7 @@ public:
 	~Game();
 
 	Question getQuestionForUser(LoggedUser user);
-	void submitAnswer(LoggedUser user, unsigned int answerId, unsigned int answerTime);
+	void submitAnswer(LoggedUser user, unsigned int answerId, double answerTime);
 	void removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;

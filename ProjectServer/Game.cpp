@@ -41,7 +41,7 @@ Question Game::getQuestionForUser(LoggedUser user)
 /// <param name="user">Current User</param>
 /// <param name="answerId">Answer Id - the answer chosen by user</param>
 /// <param name="answerTime">Answer time to current question</param>
-void Game::submitAnswer(LoggedUser user, unsigned int answerId, unsigned int answerTime)
+void Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTime)
 {
     if (m_players.find(user) != m_players.end())
     {
