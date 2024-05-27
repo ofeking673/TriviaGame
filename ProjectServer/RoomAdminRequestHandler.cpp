@@ -34,9 +34,6 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 {
-    // TO-DO
-    // IMPORTANT
-    // Send leave messages to other members of room
     CloseRoomResponse closeRoomResponse;
 
     closeRoomResponse.status = TEMP_ROOM_CLOSE_STATUS;
@@ -62,15 +59,15 @@ RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
 {
     m_room.status = 1;
     m_room.startGame(m_user);
+    m_handlerFactory.getGameManager().createGame(m_room);
     StartGameResponse start;
     start.status = TEMP_ROOM_START_STATUS;
 
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(start);
     
-    //TO-DO need to make game handler
-    // For now will stay in roomAdminRequestHandler
-    requestResult.newHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_room);
+    // Move to Game request handloer
+    requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createGameRequestHandler(m_user);
 
     return requestResult;
 }
