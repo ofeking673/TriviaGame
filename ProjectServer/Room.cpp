@@ -51,4 +51,16 @@ RoomData Room::getRoomData() const
     return m_metadata;
 }
 
+bool Room::hasPlayer(const LoggedUser& user) const
+{
+    for (const auto& u : m_users) 
+    {
+        if (u.getUsername() == user.getUsername())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 

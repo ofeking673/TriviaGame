@@ -24,7 +24,7 @@ public:
 
 	unsigned int generateUniqueRoomId();
 
-	//void test(Room* room) { m_rooms.insert({ 0, room }); }
+	Room& getRoomForUser(const LoggedUser& user);
 
 private:
 	// RoomId -> Room

@@ -25,7 +25,7 @@ public:
 
 	unsigned int getGameId() const;
 
-	bool hasPlayer(const LoggedUser& user);
+	bool hasPlayer(const LoggedUser& user) const;
 
 private:
 	std::vector<Question> m_questions;
