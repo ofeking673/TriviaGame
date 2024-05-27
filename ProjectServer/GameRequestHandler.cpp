@@ -103,11 +103,11 @@ RequestResult GameRequestHandler::submitAnswer(Requestinfo requestInfo)
 	// Deserialize request
 	SubmitAnswerRequest submitAnswerRequest = JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(requestInfo.buf);
 
-	// Update scores in DB
-	m_game.submitAnswer(m_user, submitAnswerRequest.answerId, submitAnswerRequest.answerTime);
+	// Update scores in DB and get current score
+	unsigned int score = m_game.submitAnswer(m_user, submitAnswerRequest.answerId, submitAnswerRequest.answerTime);
 
-	// TO-DO: maybe submitAnswer() will return the current score of user.
-	//		  This, in order to show score on front during the game.
+	// Current score of user
+	submitAnswerResponse.score = score;
 
 	// Status of submit answer response
 	submitAnswerResponse.status = TEMP_SUBMIT_ANSWER_RESPONSE_STATUS;
