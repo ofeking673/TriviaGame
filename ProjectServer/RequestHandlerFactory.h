@@ -3,8 +3,10 @@
 #include "IDatabase.h"
 #include "RoomManager.h"
 #include "StatisticsManager.h"
+#include "GameManager.h"
 
 // TO-DO manage circular dependencies when adding handlers
+class GameRequestHandler;
 class RoomAdminRequestHandler;
 class RoomMemberRequestHandler;
 class MenuRequestHandler;
@@ -30,7 +32,11 @@ public:
 	// Inside Room related
 	RoomAdminRequestHandler* createRoomAdminRequestHandler(LoggedUser user, Room& room);
 	RoomMemberRequestHandler* createRoomMemberRequestHandler(LoggedUser user, Room& room);
-
+	
+	// Game related
+	GameRequestHandler* createGameRequestHandler(LoggedUser user);
+	GameManager& getGameManager();
+	
 private:
 	IDatabase* m_database;
 
@@ -41,4 +47,6 @@ private:
 	RoomManager* m_roomManager;
 	StatisticsManager* m_statisticsManager;
 
+	// Game related
+	GameManager* m_gameManager;
 };
