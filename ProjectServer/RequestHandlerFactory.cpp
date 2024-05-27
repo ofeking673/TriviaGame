@@ -1,4 +1,5 @@
 #include "RequestHandlerFactory.h"
+#include "GameRequestHandler.h"
 #include "RoomAdminRequestHandler.h"
 #include "RoomMemberRequestHandler.h"
 #include "MenuRequestHandler.h"
@@ -6,7 +7,8 @@
 
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* database)
-    : m_database(database), m_loginManager(new LoginManager(database)), m_statisticsManager(new StatisticsManager(database))
+    : m_database(database), m_loginManager(new LoginManager(database)),
+      m_statisticsManager(new StatisticsManager(database)), m_gameManager(new GameManager(database))
 {
     if (m_database == nullptr) 
     {
@@ -60,4 +62,16 @@ RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(Lo
 RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
 {
     return new RoomMemberRequestHandler(room, user, *this);
+}
+
+// Creates game request handler
+GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser user)
+{
+    return new GameRequestHandler(user, m_gameManager->getGameForUser(user), *this);
+}
+
+// Return the game manager
+GameManager& RequestHandlerFactory::getGameManager()
+{
+    return *m_gameManager;
 }
