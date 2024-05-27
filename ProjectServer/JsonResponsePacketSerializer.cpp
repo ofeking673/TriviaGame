@@ -296,6 +296,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsRespo
         playerResult["correctAnswerCount"] = result.correctAnswerCount;
         playerResult["wrongAnswerCount"] = result.wrongAnswerCount;
         playerResult["averageAnswerTime"] = result.averageAnswerTime;
+        playerResult["score"] = result.score;
         j["results"].push_back(playerResult);
     }
 

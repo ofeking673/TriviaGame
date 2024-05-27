@@ -130,6 +130,7 @@ struct PlayerResults
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
 	double averageAnswerTime;
+	unsigned int score;
 };
 
 struct GetGameResultsResponse
