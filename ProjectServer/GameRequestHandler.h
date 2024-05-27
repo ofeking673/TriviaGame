@@ -12,8 +12,8 @@ public:
 
 	virtual ~GameRequestHandler() = default;
 
-	virtual bool isRequestRelevant(Requestinfo requestInfo);
-	virtual RequestResult handleRequest(Requestinfo requestInfo);
+	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
+	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
 
 private:
 	Game& m_game;
