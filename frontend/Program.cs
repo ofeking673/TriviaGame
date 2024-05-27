@@ -17,7 +17,7 @@ namespace frontend
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Login());
+            Application.Run(new Game(0));
             
             Client.SendBufferSize = 1024;
             Client.ReceiveBufferSize = 1024;

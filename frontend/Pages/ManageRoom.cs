@@ -17,6 +17,7 @@ namespace frontend.Pages
         public bool stopThread = false;
         public Thread thread;
         private int roomId;
+        RoomState rm;
 
         public ManageRoom(int id)
         {
@@ -27,6 +28,11 @@ namespace frontend.Pages
 
         public void loadForm(object sender, EventArgs e)
         {
+            string message = "11|0000";
+            string answer = Program.sendAndRecieve(message, true);
+
+            rm = JsonConvert.DeserializeObject<RoomState>(answer);
+
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
         }
@@ -91,7 +97,7 @@ namespace frontend.Pages
             if (answer.Contains("420"))
             {
                 this.Hide();
-                Game game = new Game();
+                Game game = new Game(rm.answerTimeout, rm.questionsCount);
                 game.ShowDialog();
             }
 

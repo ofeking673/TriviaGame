@@ -18,6 +18,8 @@ namespace frontend.Pages
         public bool stopThread = false;
         public Thread thread;
         public Thread closeThread;
+        public RoomState rm;
+
         public InRoom(int id)
         {
             this.roomId = id;
@@ -26,6 +28,12 @@ namespace frontend.Pages
 
         public void loadPage(object sender, EventArgs e)
         {
+
+            string message = "11|0000";
+            string answer = Program.sendAndRecieve(message, true);
+
+            rm = JsonConvert.DeserializeObject<RoomState>(answer);
+
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
 
@@ -125,7 +133,7 @@ namespace frontend.Pages
             {
                 case 1:
                     this.Hide();
-                    Game game = new Game();
+                    Game game = new Game(rm.answerTimeout, rm.questionsCount);
                     game.ShowDialog();
                     break;
                 case 2:

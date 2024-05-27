@@ -36,6 +36,8 @@
             button4 = new Button();
             label2 = new Label();
             label3 = new Label();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -44,17 +46,18 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(414, 129);
+            label1.Location = new Point(362, 97);
             label1.Name = "label1";
-            label1.Size = new Size(130, 54);
+            label1.Size = new Size(105, 45);
             label1.TabIndex = 0;
             label1.Text = "label1";
             // 
             // button1
             // 
-            button1.Location = new Point(110, 320);
+            button1.Location = new Point(96, 240);
+            button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(269, 71);
+            button1.Size = new Size(235, 53);
             button1.TabIndex = 1;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
@@ -62,9 +65,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(579, 320);
+            button2.Location = new Point(507, 240);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(269, 71);
+            button2.Size = new Size(235, 53);
             button2.TabIndex = 2;
             button2.Text = "button2";
             button2.UseVisualStyleBackColor = true;
@@ -72,9 +76,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(110, 422);
+            button3.Location = new Point(96, 316);
+            button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
-            button3.Size = new Size(269, 71);
+            button3.Size = new Size(235, 53);
             button3.TabIndex = 3;
             button3.Text = "button3";
             button3.UseVisualStyleBackColor = true;
@@ -82,9 +87,10 @@
             // 
             // button4
             // 
-            button4.Location = new Point(579, 422);
+            button4.Location = new Point(507, 316);
+            button4.Margin = new Padding(3, 2, 3, 2);
             button4.Name = "button4";
-            button4.Size = new Size(269, 71);
+            button4.Size = new Size(235, 53);
             button4.TabIndex = 4;
             button4.Text = "button4";
             button4.UseVisualStyleBackColor = true;
@@ -93,28 +99,41 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(21, 33);
+            label2.Location = new Point(18, 25);
             label2.Name = "label2";
-            label2.Size = new Size(50, 20);
+            label2.Size = new Size(38, 15);
             label2.TabIndex = 5;
             label2.Text = "label2";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(852, 35);
+            label3.Location = new Point(787, 70);
             label3.Name = "label3";
-            label3.Size = new Size(50, 20);
+            label3.Size = new Size(38, 15);
             label3.TabIndex = 6;
             label3.Text = "label3";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox1.Location = new Point(787, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(40, 40);
+            pictureBox1.TabIndex = 7;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
             // Game
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(959, 525);
+            ClientSize = new Size(839, 394);
+            Controls.Add(pictureBox1);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button4);
@@ -123,9 +142,11 @@
             Controls.Add(button1);
             Controls.Add(label1);
             DoubleBuffered = true;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Game";
             Text = "Game";
             Load += Game_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -139,5 +160,6 @@
         private Button button4;
         private Label label2;
         private Label label3;
+        private PictureBox pictureBox1;
     }
 }
