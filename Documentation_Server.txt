@@ -180,3 +180,40 @@ Logout:
 		if failed:
 			status = 508
 			new handler = menu request handler 
+
+
+LeaveGame:
+	Request:
+		RequestId = 14
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 680
+			new handler = menu request handler
+
+GetQuestion:
+	Request:
+		RequestId = 15
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 260
+			question = "String of question"
+			map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler
+
+		if failed: (No more questions left)
+			status = 261
+			question = "" (empty)
+			empty map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler 
