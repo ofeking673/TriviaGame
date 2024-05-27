@@ -180,3 +180,78 @@ Logout:
 		if failed:
 			status = 508
 			new handler = menu request handler 
+
+
+LeaveGame:
+	Request:
+		RequestId = 14
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 680
+			new handler = menu request handler
+
+GetQuestion:
+	Request:
+		RequestId = 15
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 260
+			question = "String of question"
+			map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler
+
+		if failed: (No more questions left)
+			status = 261
+			question = "" (empty)
+			empty map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler 
+
+SubmitAnswer:
+	Request:
+		RequestId = 16
+	
+		client sends: 
+			answerId (unsigned int) [1-4]
+			answerTime (double)
+			
+	Response:
+		
+		If succeful:
+			status = 600
+			correctAnswerId (unsigned int)
+			score (current score of user) (unsigned int)
+			new handler = game request handler
+
+
+GetGameResult:
+	Request:
+		RequestId = 17
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 610
+			results (vector<PlayerResults>)
+				PlayerResults contains:
+					username (string)
+					correctAnswerCount (unsigned int)
+					wrongAnswerCount (unsigned int)
+					averageAnswerTime (double)
+					score (unsigned int)
+
+			new handler = game request handler

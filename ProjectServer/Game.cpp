@@ -1,11 +1,11 @@
 #include "Game.h"
 
-Game::Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId) :
-	m_questions(questions), m_gameId(gameId)
+Game::Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId, unsigned int timeLimit) :
+	m_questions(questions), m_gameId(gameId), m_timeLimit(timeLimit)
 {
 	for (const auto& player : players)
 	{
-		m_players[player] = GameData{*questions.begin(), 0, 0, 0};
+		m_players[player] = GameData{*questions.begin(), 0, 0, 0, 0};
 	}
 }
 
@@ -36,12 +36,14 @@ Question Game::getQuestionForUser(LoggedUser user)
 }
 
 /// <summary>
-/// Submits the answer and updates GameData of current user
+/// Submits the answer.
+/// Updates GameData of current user and his score.
 /// </summary>
 /// <param name="user">Current User</param>
 /// <param name="answerId">Answer Id - the answer chosen by user</param>
 /// <param name="answerTime">Answer time to current question</param>
-void Game::submitAnswer(LoggedUser user, unsigned int answerId, unsigned int answerTime)
+/// <returns>Returns the current score of user</returns>
+unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTime)
 {
     if (m_players.find(user) != m_players.end())
     {
@@ -49,6 +51,7 @@ void Game::submitAnswer(LoggedUser user, unsigned int answerId, unsigned int ans
         if (data.currentQuestion.getCorrectAnswerId() == answerId)
         {
             data.correctAnswerCount++;
+            data.score += calculateScore(answerTime); // Update score
         }
         else
         {
@@ -62,6 +65,14 @@ void Game::submitAnswer(LoggedUser user, unsigned int answerId, unsigned int ans
         {
             data.currentQuestion = *it;
         }
+        else
+        {
+            // Empty Question to indicate no more questions left
+            data.currentQuestion = Question();
+        }
+
+        // Return the current score of user
+        return data.score;
     }
     else
     {
@@ -91,4 +102,32 @@ void Game::removePlayer(LoggedUser user)
 unsigned int Game::getGameId() const
 {
     return m_gameId;
+}
+
+std::vector<std::pair<LoggedUser, GameData>> Game::getOrderedPlayersByScore() const
+{
+    std::vector<std::pair<LoggedUser, GameData>> orderedPlayers(m_players.begin(), m_players.end());
+
+    std::sort(orderedPlayers.begin(), orderedPlayers.end(), compareByScore);
+
+    return orderedPlayers;
+}
+
+
+bool Game::hasPlayer(const LoggedUser& user) const
+{
+    return m_players.find(user) != m_players.end();
+}
+
+unsigned int Game::calculateScore(unsigned int answerTime) const
+{
+    if (answerTime >= m_timeLimit)
+    {
+        return 0;
+    }
+    return static_cast<unsigned int>(100 * (1.0 - static_cast<double>(answerTime) / m_timeLimit));
+}
+bool Game::compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b)
+{
+    return a.second.score > b.second.score;
 }

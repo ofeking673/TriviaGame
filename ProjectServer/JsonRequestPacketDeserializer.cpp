@@ -108,6 +108,7 @@ SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerReques
     // Extract values and init LoginRequest
     SubmitAnswerRequest request;
     request.answerId = j.at("answerId").get<unsigned int>();
+    request.answerTime = j.at("answerTime").get<double>();
 
     return request;
 }

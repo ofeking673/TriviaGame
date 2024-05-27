@@ -55,6 +55,7 @@ struct GetPlayersInRoomRequest
 struct SubmitAnswerRequest
 {
 	unsigned int answerId;
+	double answerTime;
 };
 
 class JsonRequestPacketDeserializer

@@ -82,3 +82,16 @@ unsigned int RoomManager::generateUniqueRoomId()
 
     return newId; 
 }
+
+Room& RoomManager::getRoomForUser(const LoggedUser& user)
+{
+    for (auto& room : m_rooms)
+    {
+        if (room.second->hasPlayer(user))
+        {
+            return *room.second;
+        }
+    }
+    throw std::runtime_error("User not found in any game");
+}
+

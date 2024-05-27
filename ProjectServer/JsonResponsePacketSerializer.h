@@ -7,6 +7,10 @@
 #include "Room.h"
 #include "json.hpp"
 
+#define WAIT_IN_ROOM__ROOM_UPDATE_RESPONSE_STATUS 0
+#define GAME_STARTS__ROOM_UPDATE_RESPONSE_STATUS 1
+#define LEAVE__ROOM_UPDATE_RESPONSE_STATUS 2
+
 using json = nlohmann::json;
 
 // Struct of error response
@@ -121,6 +125,7 @@ struct SubmitAnswerResponse
 {
 	unsigned int status;
 	unsigned int correctAnswerId;
+	unsigned int score;
 };
 
 // Game Results
@@ -129,7 +134,8 @@ struct PlayerResults
 	std::string username;
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
+	double averageAnswerTime;
+	unsigned int score;
 };
 
 struct GetGameResultsResponse
