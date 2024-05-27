@@ -5,7 +5,6 @@
 class GameRequestHandler : public IRequestHandler
 {
 public:
-	// TO-DO maybe change implementation
 	GameRequestHandler(LoggedUser user, Game& game, RequestHandlerFactory& handlerFactory) :
 		m_user(user), m_game(game), m_handlerFactory(handlerFactory),
 		m_gameManager(m_handlerFactory.getGameManager()) {};

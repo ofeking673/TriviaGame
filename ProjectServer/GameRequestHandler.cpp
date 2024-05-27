@@ -127,8 +127,34 @@ RequestResult GameRequestHandler::getGameResults(Requestinfo requestInfo)
 
 	std::vector<PlayerResults> results;
 
-	// TO-DO: think of a way to get results from game. maybe add a function
+	// Get the ordered by scores game data 
+	std::vector<std::pair<LoggedUser, GameData>> playersToGameData  = m_game.getOrderedPlayersByScore();
+	
+	// Convert to PlayerResults vector - to return to user
+	std::vector<PlayerResults> results;
+	for (auto player : playersToGameData)
+	{
+		PlayerResults result;
+		result.averageAnswerTime = player.second.averageAnswerTime;
+		result.correctAnswerCount = player.second.correctAnswerCount;
+		result.score = player.second.score;
+		result.username = player.first.getUsername();
+		result.wrongAnswerCount = player.second.wrongAnswerCount;
+		
+		results.push_back(result);
+	}
+	
+	// Results of game
+	getGameResultsResponse.results = results;
 
+	// Status of get game results
+	getGameResultsResponse.status = TEMP_GET_GAME_RESULTS_RESPONSE_STATUS;
+
+	// Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(getGameResultsResponse);
+
+	// New handler is game request handler
+	requestResult.newHandler = m_handlerFactory.createGameRequestHandler(m_user);
 
 	return requestResult;
 }
@@ -140,8 +166,9 @@ RequestResult GameRequestHandler::leaveGame(Requestinfo requestInfo)
 	// Create response
 	LeaveGameResponse leaveGameResponse;
 
-	// TO-DO: manage a function to know what room is the user in, 
-	//		  to be able to log him out from the room
+	// Log the user out of the room. 
+	// NOTE: The user still in game to show scores at the end
+	m_handlerFactory.getRoomManager().getRoomForUser(m_user).removeUser(m_user);
 
 	// Status of leave game response
 	leaveGameResponse.status = TEMP_LEAVE_GAME_RESPONSE_STATUS;
