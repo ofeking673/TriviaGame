@@ -231,7 +231,7 @@ SubmitAnswer:
 		If succeful:
 			status = 600
 			correctAnswerId (unsigned int)
-
+			score (current score of user) (unsigned int)
 			new handler = game request handler
 
 
@@ -252,5 +252,6 @@ GetGameResult:
 					correctAnswerCount (unsigned int)
 					wrongAnswerCount (unsigned int)
 					averageAnswerTime (double)
+					score (unsigned int)
 
 			new handler = game request handler
