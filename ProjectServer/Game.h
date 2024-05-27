@@ -8,15 +8,16 @@
 struct GameData
 {
 	Question currentQuestion;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	double averageAnswerTime;
+	unsigned int correctAnswerCount = 0;
+	unsigned int wrongAnswerCount = 0;
+	double averageAnswerTime = 0.0;
+	unsigned int score = 0;
 };
 
 class Game
 {
 public:
-	Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId);
+	Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId, unsigned int timeLimit);
 	~Game();
 
 	Question getQuestionForUser(LoggedUser user);
@@ -24,6 +25,7 @@ public:
 	void removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;
+	std::map<LoggedUser, GameData> getUsersAndGameData() const;
 
 	bool hasPlayer(const LoggedUser& user) const;
 
@@ -31,6 +33,11 @@ private:
 	std::vector<Question> m_questions;
 	std::map<LoggedUser, GameData> m_players;
 	unsigned int m_gameId;
+	unsigned int m_timeLimit;
+
+	// Score formula:
+	// 100 * (1 - answerTime / timeLimit)
+	unsigned int calculateScore(unsigned int answerTime) const;
 
 	// TO-DO implement function when working on DB
 	void sumitGameStatsToDB(GameData gameData);

@@ -34,7 +34,7 @@ Game GameManager::createGame(const Room& room)
     unsigned int gameId = generateUniqueGameId();
 
 
-    Game newGame(players, questions, gameId);
+    Game newGame(players, questions, gameId, room.getRoomData().timePerQuestion);
 
     m_games.push_back(newGame);
     

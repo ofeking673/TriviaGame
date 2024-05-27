@@ -1,11 +1,11 @@
 #include "Game.h"
 
-Game::Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId) :
-	m_questions(questions), m_gameId(gameId)
+Game::Game(std::vector<LoggedUser> players, std::vector<Question> questions, unsigned int gameId, unsigned int timeLimit) :
+	m_questions(questions), m_gameId(gameId), m_timeLimit(timeLimit)
 {
 	for (const auto& player : players)
 	{
-		m_players[player] = GameData{*questions.begin(), 0, 0, 0};
+		m_players[player] = GameData{*questions.begin(), 0, 0, 0, 0};
 	}
 }
 
@@ -49,6 +49,7 @@ void Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTim
         if (data.currentQuestion.getCorrectAnswerId() == answerId)
         {
             data.correctAnswerCount++;
+            data.score += calculateScore(answerTime); // Update score
         }
         else
         {
@@ -98,7 +99,23 @@ unsigned int Game::getGameId() const
     return m_gameId;
 }
 
+std::map<LoggedUser, GameData> Game::getUsersAndGameData() const
+{
+    return m_players;
+}
+
+
 bool Game::hasPlayer(const LoggedUser& user) const
 {
     return m_players.find(user) != m_players.end();
+}
+
+unsigned int Game::calculateScore(unsigned int answerTime) const
+{
+    if (answerTime >= m_timeLimit)
+    {
+        return 0;
+    }
+    return static_cast<unsigned int>(100 * (1.0 - static_cast<double>(answerTime) / m_timeLimit));
+}
 }
