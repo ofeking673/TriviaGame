@@ -24,6 +24,9 @@ public:
 	void removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;
+
+	bool hasPlayer(const LoggedUser& user);
+
 private:
 	std::vector<Question> m_questions;
 	std::map<LoggedUser, GameData> m_players;

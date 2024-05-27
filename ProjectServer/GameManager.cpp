@@ -13,7 +13,7 @@ GameManager::~GameManager()
 {
 }
 
-Game GameManager::createGame(Room room)
+Game GameManager::createGame(const Room& room)
 {
     // Get users list
     std::vector<std::string> usersStr = room.getAllUsers();
@@ -52,6 +52,18 @@ void GameManager::deleteGame(unsigned int gameId)
             return;
         }
     }
+}
+
+Game& GameManager::getGameForUser(const LoggedUser& user)
+{
+    for (auto& game : m_games) 
+    {
+        if (game.hasPlayer(user)) 
+        {
+            return game;
+        }
+    }
+    throw std::runtime_error("User not found in any game");
 }
 
 /// <summary>

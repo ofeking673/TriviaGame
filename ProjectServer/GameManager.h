@@ -9,8 +9,10 @@ public:
 	GameManager(IDatabase* database);
 	~GameManager();
 
-	Game createGame(Room room);
+	Game createGame(const Room& room);
 	void deleteGame(unsigned int gameId);
+
+	Game& getGameForUser(const LoggedUser& user);
 
 private:
 	IDatabase* m_database;

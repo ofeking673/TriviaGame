@@ -97,3 +97,8 @@ unsigned int Game::getGameId() const
 {
     return m_gameId;
 }
+
+bool Game::hasPlayer(const LoggedUser& user)
+{
+    return m_players.find(user) != m_players.end();
+}
