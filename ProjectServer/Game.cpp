@@ -99,9 +99,13 @@ unsigned int Game::getGameId() const
     return m_gameId;
 }
 
-std::map<LoggedUser, GameData> Game::getUsersAndGameData() const
+std::vector<std::pair<LoggedUser, GameData>> Game::getOrderedPlayersByScore() const
 {
-    return m_players;
+    std::vector<std::pair<LoggedUser, GameData>> orderedPlayers(m_players.begin(), m_players.end());
+
+    std::sort(orderedPlayers.begin(), orderedPlayers.end(), compareByScore);
+
+    return orderedPlayers;
 }
 
 
@@ -118,4 +122,7 @@ unsigned int Game::calculateScore(unsigned int answerTime) const
     }
     return static_cast<unsigned int>(100 * (1.0 - static_cast<double>(answerTime) / m_timeLimit));
 }
+bool Game::compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b)
+{
+    return a.second.score > b.second.score;
 }

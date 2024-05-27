@@ -25,7 +25,9 @@ public:
 	void removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;
-	std::map<LoggedUser, GameData> getUsersAndGameData() const;
+
+	// Returns ordered vector of users and their scores to show in game results
+	std::vector<std::pair<LoggedUser, GameData>> getOrderedPlayersByScore() const;
 
 	bool hasPlayer(const LoggedUser& user) const;
 
@@ -38,6 +40,8 @@ private:
 	// Score formula:
 	// 100 * (1 - answerTime / timeLimit)
 	unsigned int calculateScore(unsigned int answerTime) const;
+
+	bool compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b);
 
 	// TO-DO implement function when working on DB
 	void sumitGameStatsToDB(GameData gameData);
