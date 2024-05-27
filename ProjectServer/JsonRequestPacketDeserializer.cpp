@@ -97,3 +97,17 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
     return request;
 }
 
+SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(Buffer bufSubmitAnswerRequest)
+{
+    // Convert std::vector<unsigned char> (Buffer) to std::string
+    std::string jsonStr(bufSubmitAnswerRequest.data.begin(), bufSubmitAnswerRequest.data.end());
+
+    // Parse the JSON string into a json object
+    json j = json::parse(jsonStr);
+
+    // Extract values and init LoginRequest
+    SubmitAnswerRequest request;
+    request.answerId = j.at("answerId").get<unsigned int>();
+
+    return request;
+}

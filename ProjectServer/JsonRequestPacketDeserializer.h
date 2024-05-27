@@ -51,7 +51,11 @@ struct GetPlayersInRoomRequest
 	unsigned int roomId;
 };
 
-
+// Game related
+struct SubmitAnswerRequest
+{
+	unsigned int answerId;
+};
 
 class JsonRequestPacketDeserializer
 {
@@ -72,4 +76,7 @@ public:
 	static GetPlayersInRoomRequest deserializeGetPlayersInRoomRequest(Buffer bufGetPlayersRequest);
 	static JoinRoomRequest deserializeJoinRoomRequest(Buffer bufJoinRoomRequest);
 	static CreateRoomRequest deserializeCreateRoomRequest(Buffer bufCreateRoomRequest);
+
+	// Game related
+	static SubmitAnswerRequest deserializeSubmitAnswerRequest(Buffer bufSubmitAnswerRequest);
 };

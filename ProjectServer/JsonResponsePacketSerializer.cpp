@@ -282,6 +282,56 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const RoomUpdateResponse&
     return statusOnlySerializeResponse(roomUpdateResponse.status);
 }
 
+// Game related
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsResponse& getGameResultsResponse)
+{
+    json j;
+    j["status"] = getGameResultsResponse.status;
+
+    // Serializing the vector of PlayerResults
+    for (const auto& result : getGameResultsResponse.results)
+    {
+        json playerResult;
+        playerResult["username"] = result.username;
+        playerResult["correctAnswerCount"] = result.correctAnswerCount;
+        playerResult["wrongAnswerCount"] = result.wrongAnswerCount;
+        playerResult["averageAnswerTime"] = result.averageAnswerTime;
+        j["results"].push_back(playerResult);
+    }
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const SubmitAnswerResponse& submitAnswerResponse)
+{
+    json j;
+    j["status"] = submitAnswerResponse.status;
+    j["correctAnswerId"] = submitAnswerResponse.correctAnswerId;
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetQuestionResponse& getQuestionResponse)
+{
+    // Convert GetQuestionResponse to JSON
+    json j;
+    j["status"] = getQuestionResponse.status;
+    j["question"] = getQuestionResponse.question;
+
+    // Serializing the map of answers into JSON
+    for (const auto& answer : getQuestionResponse.answers)
+    {
+        j["answers"][std::to_string(answer.first)] = answer.second;
+    }
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveGameResponse& leaveGameResponse)
+{
+    return statusOnlySerializeResponse(leaveGameResponse.status);
+}
+
 /// <summary>
 /// Serialize response that contains status only from JSON to binary buffer
 /// </summary>
