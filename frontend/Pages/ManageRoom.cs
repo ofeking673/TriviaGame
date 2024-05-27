@@ -90,7 +90,9 @@ namespace frontend.Pages
 
             if (answer.Contains("420"))
             {
-                MessageBox.Show("You started the game!", "Game notification!", MessageBoxButtons.OK);
+                this.Hide();
+                Game game = new Game();
+                game.ShowDialog();
             }
 
             //waht teh fuck did oyu do

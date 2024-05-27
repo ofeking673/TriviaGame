@@ -124,8 +124,9 @@ namespace frontend.Pages
             switch(roomMethod)
             {
                 case 1:
-                    MessageBox.Show("game started!", "Game notification", MessageBoxButtons.OK);
-                    //game start
+                    this.Hide();
+                    Game game = new Game();
+                    game.ShowDialog();
                     break;
                 case 2:
                     this.Hide();
