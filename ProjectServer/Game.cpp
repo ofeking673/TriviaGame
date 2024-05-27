@@ -36,12 +36,14 @@ Question Game::getQuestionForUser(LoggedUser user)
 }
 
 /// <summary>
-/// Submits the answer and updates GameData of current user
+/// Submits the answer.
+/// Updates GameData of current user and his score.
 /// </summary>
 /// <param name="user">Current User</param>
 /// <param name="answerId">Answer Id - the answer chosen by user</param>
 /// <param name="answerTime">Answer time to current question</param>
-void Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTime)
+/// <returns>Returns the current score of user</returns>
+unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTime)
 {
     if (m_players.find(user) != m_players.end())
     {
@@ -68,6 +70,9 @@ void Game::submitAnswer(LoggedUser user, unsigned int answerId, double answerTim
             // Empty Question to indicate no more questions left
             data.currentQuestion = Question();
         }
+
+        // Return the current score of user
+        return data.score;
     }
     else
     {

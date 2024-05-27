@@ -21,7 +21,7 @@ public:
 	~Game();
 
 	Question getQuestionForUser(LoggedUser user);
-	void submitAnswer(LoggedUser user, unsigned int answerId, double answerTime);
+	unsigned int submitAnswer(LoggedUser user, unsigned int answerId, double answerTime);
 	void removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;
