@@ -30,4 +30,7 @@ public:
 	virtual int getNumOfPlayerGames(std::string username) = 0;
 	virtual int getPlayerScore(std::string username) = 0;
 	virtual std::vector<std::string> getHighScores() = 0;
+
+	// Game related
+	virtual int submitGameStatistics(const GameData& gameData) = 0;
 };

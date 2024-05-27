@@ -11,6 +11,10 @@ GameManager::GameManager(IDatabase* database)
 
 GameManager::~GameManager()
 {
+    for (auto game : m_games)
+    {
+        deleteGame(game.getGameId());
+    }
 }
 
 Game GameManager::createGame(const Room& room)
@@ -48,6 +52,10 @@ void GameManager::deleteGame(unsigned int gameId)
     {
         if (it->getGameId() == gameId)
         {
+            for (auto player : it->getOrderedPlayersByScore())
+            {
+                submitGameStatsToDB(player.second);
+            }
             m_games.erase(it);
             return;
         }
@@ -64,6 +72,11 @@ Game& GameManager::getGameForUser(const LoggedUser& user)
         }
     }
     throw std::runtime_error("User not found in any game");
+}
+
+void GameManager::submitGameStatsToDB(const GameData& gameData)
+{
+    m_database->submitGameStatistics(gameData);
 }
 
 /// <summary>

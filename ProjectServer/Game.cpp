@@ -89,8 +89,6 @@ void Game::removePlayer(LoggedUser user)
         // Therefore, we can give the list of scores for the players
         // who left in the middle of the game as well.
 
-        // Game data of player is being put in DB
-        sumitGameStatsToDB(it->second);
         m_players.erase(it);
     }
     else 

@@ -42,7 +42,4 @@ private:
 	unsigned int calculateScore(unsigned int answerTime) const;
 
 	bool compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b);
-
-	// TO-DO implement function when working on DB
-	void sumitGameStatsToDB(GameData gameData);
 };

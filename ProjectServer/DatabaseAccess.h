@@ -62,6 +62,11 @@ public:
 
 	static int highScoreCallback(void* data, int argc, char** argv, char** azColName);
 
+
+
+	// Game related
+	virtual int submitGameStatistics(const GameData& gameData);
+	
 private:
 	sqlite3* db;
 };
