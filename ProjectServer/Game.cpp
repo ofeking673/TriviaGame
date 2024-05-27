@@ -62,6 +62,11 @@ void Game::submitAnswer(LoggedUser user, unsigned int answerId, unsigned int ans
         {
             data.currentQuestion = *it;
         }
+        else
+        {
+            // Empty Question to indicate no more questions left
+            data.currentQuestion = Question();
+        }
     }
     else
     {
