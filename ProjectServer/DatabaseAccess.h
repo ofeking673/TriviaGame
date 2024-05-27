@@ -65,7 +65,7 @@ public:
 
 
 	// Game related
-	virtual int submitGameStatistics(const GameData& gameData);
+	virtual int submitGameStatistics(GameData gameData);
 	
 private:
 	sqlite3* db;

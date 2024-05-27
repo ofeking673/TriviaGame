@@ -3,6 +3,7 @@
 #include <map>
 #include "Question.h"
 #include <list>
+#include "Game.h"
 
 #define FILENAME "database.sql"
 
@@ -32,5 +33,5 @@ public:
 	virtual std::vector<std::string> getHighScores() = 0;
 
 	// Game related
-	virtual int submitGameStatistics(const GameData& gameData) = 0;
+	virtual int submitGameStatistics(GameData gameData) = 0;
 };

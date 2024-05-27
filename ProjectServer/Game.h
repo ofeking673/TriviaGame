@@ -41,5 +41,4 @@ private:
 	// 100 * (1 - answerTime / timeLimit)
 	unsigned int calculateScore(unsigned int answerTime) const;
 
-	bool compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b);
 };

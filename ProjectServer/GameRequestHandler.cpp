@@ -125,8 +125,6 @@ RequestResult GameRequestHandler::getGameResults(Requestinfo requestInfo)
 	// Create response
 	GetGameResultsResponse getGameResultsResponse;
 
-	std::vector<PlayerResults> results;
-
 	// Get the ordered by scores game data 
 	std::vector<std::pair<LoggedUser, GameData>> playersToGameData  = m_game.getOrderedPlayersByScore();
 	

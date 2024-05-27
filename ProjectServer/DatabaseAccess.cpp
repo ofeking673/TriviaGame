@@ -109,6 +109,11 @@ int DatabaseAccess::highScoreCallback(void* data, int argc, char** argv, char** 
     return 0;
 }
 
+int DatabaseAccess::submitGameStatistics(GameData gameData)
+{
+    return 0;
+}
+
 
 float DatabaseAccess::getPlayerAverageAnswerTime(std::string username)
 {

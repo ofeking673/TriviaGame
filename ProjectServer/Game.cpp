@@ -106,7 +106,19 @@ std::vector<std::pair<LoggedUser, GameData>> Game::getOrderedPlayersByScore() co
 {
     std::vector<std::pair<LoggedUser, GameData>> orderedPlayers(m_players.begin(), m_players.end());
 
-    std::sort(orderedPlayers.begin(), orderedPlayers.end(), compareByScore);
+    // Order players by score
+    for (int i = 0; i < orderedPlayers.size(); i++)
+    {
+        int maxIndex = i;
+        for (int j = i + 1; j < orderedPlayers.size(); j++)
+        {
+            if (orderedPlayers[j].second.score > orderedPlayers[maxIndex].second.score)
+            {
+                maxIndex = j;
+            }
+        }
+        std::swap(orderedPlayers[i], orderedPlayers[maxIndex]);
+    }
 
     return orderedPlayers;
 }
@@ -124,8 +136,4 @@ unsigned int Game::calculateScore(unsigned int answerTime) const
         return 0;
     }
     return static_cast<unsigned int>(100 * (1.0 - static_cast<double>(answerTime) / m_timeLimit));
-}
-bool Game::compareByScore(const std::pair<LoggedUser, GameData>& a, const std::pair<LoggedUser, GameData>& b)
-{
-    return a.second.score > b.second.score;
 }
