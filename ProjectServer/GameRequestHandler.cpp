@@ -168,6 +168,12 @@ RequestResult GameRequestHandler::leaveGame(Requestinfo requestInfo)
 	// NOTE: The user still in game to show scores at the end
 	m_handlerFactory.getRoomManager().getRoomForUser(m_user).removeUser(m_user);
 
+	// Delete game if last person in room
+	if (m_handlerFactory.getRoomManager().getRoomForUser(m_user).getAllUsers().empty())
+	{
+		m_gameManager->deleteGame(m_game.getGameId());
+	}
+
 	// Status of leave game response
 	leaveGameResponse.status = TEMP_LEAVE_GAME_RESPONSE_STATUS;
 
