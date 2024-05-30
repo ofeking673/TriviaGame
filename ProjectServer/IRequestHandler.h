@@ -90,7 +90,7 @@ public:
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
-
+	virtual LoggedUser getUser() = 0;
 protected:
 	//for room request handlers
 	void getRoomStateResponseByRoom(Room m_room, GetRoomStateResponse& resp) {

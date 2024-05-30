@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
-#define NO_MORE_QUESTIONS_LEFT 0
+#define NO_MORE_QUESTIONS_LEFT 999
 
 class Question
 {
@@ -25,10 +25,14 @@ public:
             shuffleVector();
 
             // Find the id of the correct answer in the shuffled list
-            auto it = std::find(m_possibleAnswers.begin(), m_possibleAnswers.end(), correctAnswer);
-            if (it != m_possibleAnswers.end())
+            
+            for (int i = 0; i < m_possibleAnswers.size(); i++)
             {
-                m_correctAnswerId = std::distance(m_possibleAnswers.begin(), it);
+                if (m_possibleAnswers[i] == answers[0])
+                {
+                    m_correctAnswerId = i;
+                    break;
+                }
             }
         }
         else

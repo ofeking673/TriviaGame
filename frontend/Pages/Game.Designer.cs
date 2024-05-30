@@ -42,19 +42,19 @@
             // 
             // label1
             // 
-            label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(362, 97);
+            label1.Location = new Point(12, 96);
             label1.Name = "label1";
-            label1.Size = new Size(105, 45);
+            label1.Size = new Size(1066, 45);
             label1.TabIndex = 0;
             label1.Text = "label1";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // button1
             // 
-            button1.Location = new Point(96, 240);
+            button1.Location = new Point(219, 240);
             button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
             button1.Size = new Size(235, 53);
@@ -65,7 +65,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(507, 240);
+            button2.Location = new Point(630, 240);
             button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
             button2.Size = new Size(235, 53);
@@ -76,7 +76,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(96, 316);
+            button3.Location = new Point(219, 316);
             button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
             button3.Size = new Size(235, 53);
@@ -87,7 +87,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(507, 316);
+            button4.Location = new Point(630, 316);
             button4.Margin = new Padding(3, 2, 3, 2);
             button4.Name = "button4";
             button4.Size = new Size(235, 53);
@@ -99,7 +99,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(18, 25);
+            label2.Location = new Point(141, 25);
             label2.Name = "label2";
             label2.Size = new Size(38, 15);
             label2.TabIndex = 5;
@@ -118,7 +118,7 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
             pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox1.Location = new Point(787, 12);
+            pictureBox1.Location = new Point(910, 12);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(40, 40);
             pictureBox1.TabIndex = 7;
@@ -131,7 +131,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(839, 394);
+            ClientSize = new Size(1090, 560);
             Controls.Add(pictureBox1);
             Controls.Add(label3);
             Controls.Add(label2);

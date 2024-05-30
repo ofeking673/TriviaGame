@@ -128,7 +128,6 @@ std::vector<std::pair<LoggedUser, GameData>> Game::getOrderedPlayersByScore() co
     return orderedPlayers;
 }
 
-
 bool Game::hasPlayer(const LoggedUser& user) const
 {
     return m_players.find(user) != m_players.end();

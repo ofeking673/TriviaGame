@@ -97,12 +97,18 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 
 			std::cout << "'" << info.id << "'";
 			mtx.lock();
-			RequestResult result = m_clients[client_socket]->HandleRequest(info);
+			RequestResult result = m_clients[client_socket].first->HandleRequest(info);
 			mtx.unlock();
 			// Set current handler as new handler came back from handler request
-			m_clients[client_socket] = result.newHandler;
+			m_clients[client_socket].first = result.newHandler;
+			if (m_clients[client_socket].second.getUsername() == "")
+			{
+				m_clients[client_socket].second = result.newHandler->getUser();
+			}
+
 			sendBuf = std::string(result.response.data.begin(), result.response.data.end());
 			send(client_socket, sendBuf.c_str(), sendBuf.length(), 0);
+
 			if (info.id == Logout)
 			{
 				break;
@@ -117,7 +123,8 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 		req.id = Logout;
 		// TO-DO maybe switch to menu request handler. Because only there is the logout.
 		// Otherwise it will be only: isRequestRelavant -> false
-		m_clients[client_socket]->HandleRequest(req);
+		m_clients[client_socket].first = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_clients[client_socket].second);
+		m_clients[client_socket].first->HandleRequest(req);
 		std::cout << "user Logged out!\n";
 	}
 
@@ -207,5 +214,5 @@ void Communicator::acceptClient()
 	// create new thread for client	and detach from it
 	std::thread tr(&Communicator::handleNewClient, this, client_socket);
 	tr.detach();
-	m_clients[client_socket] = m_handlerFactory.createLoginRequestHandler();
+	m_clients[client_socket] = std::make_pair<IRequestHandler*, LoggedUser>((IRequestHandler*)m_handlerFactory.createLoginRequestHandler(), LoggedUser(""));
 }

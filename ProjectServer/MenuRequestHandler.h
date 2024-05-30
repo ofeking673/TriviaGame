@@ -23,6 +23,7 @@ public:
 
 	RequestResult error(Requestinfo requestInfo);
 
+	virtual LoggedUser getUser() override { return m_user; };
 private:
 	LoggedUser m_user;
 	RequestHandlerFactory& m_handlerFactory;

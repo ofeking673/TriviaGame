@@ -23,7 +23,9 @@ public:
 		}
 
 		//"int variable;", "variable int;", "int = variable;", "variable = int;"
-		
+		//	void addQuestion(std::string question, std::vector<std::string> answers);
+		/*std::vector<std::string> answers = {"Hello", "hello2", "hello3", "hello4"};
+		addQuestion("Q1", answers);*/
 	};
 
 	virtual void close() override {

@@ -13,7 +13,7 @@ public:
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) override;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) override;
-
+	virtual LoggedUser getUser() override { return m_user; };
 
 private:
 	RequestResult closeRoom(Requestinfo requestInfo);

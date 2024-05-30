@@ -12,6 +12,7 @@ using System.Windows.Forms;
 namespace frontend.Pages
 {
     using Newtonsoft.Json;
+    using System.Reflection.Emit;
     using utils;
     public partial class Game : Form
     {
@@ -19,6 +20,9 @@ namespace frontend.Pages
         private int AnswerTimeOut;
         private int questionAmt;
         private double elapsed;
+        private bool Clicked;
+        System.Timers.Timer timer;
+        private bool Continue;
 
 
         public Game(int answerTimeOut, int questionsCount)
@@ -32,33 +36,75 @@ namespace frontend.Pages
         private void button1_Click(object sender, EventArgs e)
         {
             chosenAns = 0;
-            processAns();
+            if (!Clicked)
+            {
+                Clicked= true;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             chosenAns = 1;
-            processAns();
+            if (!Clicked)
+            {
+                Clicked = true;
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             chosenAns = 2;
-            processAns();
+            if (!Clicked)
+            {
+                Clicked = true;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             chosenAns = 3;
-            processAns();
+            if (!Clicked)
+            {
+                Clicked = true;
+            }
+        }
+
+        private void setButtonUse(bool use)
+        {
+            resetButton();
+            MethodInvoker upd = delegate
+            {
+                button1.Enabled = use;
+            };
+            button1.Invoke(upd);
+
+            upd = delegate
+            {
+                button2.Enabled = use; 
+            };
+            button2.Invoke(upd);
+
+            upd = delegate
+            {
+                button3.Enabled = use;
+            };
+            button3.Invoke(upd);
+
+            upd = delegate
+            {
+                button4.Enabled = use;
+            };
+            button4.Invoke(upd);
+
         }
 
         public void processAns()
         {
-            submitAnswer submit = new submitAnswer(chosenAns, elapsed);
+            submitAnswer submit = new submitAnswer(chosenAns, AnswerTimeOut - elapsed);
             string json = JsonConvert.SerializeObject(submit);
             string message = $"16|{json.Length.ToString().PadLeft(4, '0')}{json}";
             string answer = Program.sendAndRecieve(message, true);
+            Console.WriteLine(answer);
 
             /*status = 600
 			correctAnswerId (unsigned int)
@@ -67,8 +113,15 @@ namespace frontend.Pages
             */
 
             submitAnswerResponse resp = JsonConvert.DeserializeObject<submitAnswerResponse>(answer);
+            if (resp.correctAnswerId == 999)
+            {
+                gameEnded();
+            }
             highlightCorrect(resp.correctAnswerId);
             label3.Text = $"Score: {resp.score.ToString()}";
+
+            Thread.Sleep(3000);
+            timeEnd();
         }
 
         public void highlightCorrect(int id)
@@ -102,6 +155,14 @@ namespace frontend.Pages
             }
         }
 
+        public void resetButton()
+        {
+            button1.BackColor = Color.Transparent;
+            button2.BackColor = Color.Transparent;
+            button3.BackColor = Color.Transparent;
+            button4.BackColor = Color.Transparent;
+        }
+
         public static GameQuestion GetQuestion()
         {
             string message = "15|0000";
@@ -115,19 +176,18 @@ namespace frontend.Pages
 
         private void timeEnd()
         {
-            button1.Hide();
-            button2.Hide();
-            button3.Hide();
-            button4.Hide();
             label1.Text = "Getting next question.. Sit tight!";
             Thread.Sleep(1000);
 
 
             GameQuestion q = GetQuestion();
-            if (string.IsNullOrEmpty(q.question))
+            if (q.question == "")
             {
-                return;
+                gameEnded();
             }
+
+            setButtonUse(true);
+            Clicked = false;
 
             label1.Text = q.question;
             button1.Text = q.answers[0];
@@ -135,15 +195,26 @@ namespace frontend.Pages
             button3.Text = q.answers[2];
             button4.Text = q.answers[3];
 
-            System.Timers.Timer timer = new System.Timers.Timer();
+            timer = new System.Timers.Timer();
             timer.Interval = 100; //timer for question timeout
             elapsed = AnswerTimeOut;
             timer.Elapsed += (sender, e) =>
             {
                 elapsed -= 0.1;
-                label2.Text = Math.Round(elapsed, 1).ToString();
-                if (elapsed < 0)
+                // MethodInvoker upd = delegate { listBox1.Items.Clear(); };
+                //listBox1.Invoke(upd);
+
+                MethodInvoker upd = delegate
                 {
+                    label2.Text = Math.Round(elapsed, 1).ToString();
+                };
+                label2.Invoke(upd);
+
+                if (elapsed < 0 || Clicked)
+                {
+                    timer.Stop();
+                    setButtonUse(false);
+                    processAns();
                     timeEnd();
                     return;
                 }
@@ -156,16 +227,28 @@ namespace frontend.Pages
             button3.Show();
             button4.Show();
         }
+
         private void Game_Load(object sender, EventArgs e)
         {
             timeEnd();
+        }
+
+        private void gameEnded()
+        {
+            if(!this.Visible) return;
+            this.Hide();
+            timer.Stop();
+            timer.Dispose();
+
+            PostGame pg = new PostGame();
+            pg.ShowDialog();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             string message = "14|0000";
             string answer = Program.sendAndRecieve(message, true);
-
+            Console.Write(answer);
             if (answer.Contains("680"))
             {
                 this.Hide();

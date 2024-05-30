@@ -33,7 +33,7 @@ private:
 
 	JsonResponsePacketSerializer m_serializer;
 	SOCKET m_serverSocket;
-	std::map<SOCKET, IRequestHandler*> m_clients;
+	std::map<SOCKET, std::pair<IRequestHandler*, LoggedUser>> m_clients;
 	RequestHandlerFactory& m_handlerFactory;
 
 	// More functions
