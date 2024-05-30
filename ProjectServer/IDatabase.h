@@ -33,5 +33,5 @@ public:
 	virtual std::vector<std::string> getHighScores() = 0;
 
 	// Game related
-	virtual int submitGameStatistics(GameData gameData) = 0;
+	virtual int submitGameStatistics(const std::string& username, const GameData& gameData) = 0;
 };

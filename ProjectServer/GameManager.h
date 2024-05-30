@@ -15,7 +15,7 @@ public:
 
 	Game& getGameForUser(const LoggedUser& user);
 
-	void submitGameStatsToDB(const GameData& gameData);
+	void submitGameStatsToDB(const std::string& username,const GameData& gameData);
 private:
 	IDatabase* m_database;
 	std::vector<Game> m_games;

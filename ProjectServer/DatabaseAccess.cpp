@@ -111,8 +111,107 @@ int DatabaseAccess::highScoreCallback(void* data, int argc, char** argv, char** 
     return 0;
 }
 
-int DatabaseAccess::submitGameStatistics(GameData gameData)
+int DatabaseAccess::submitGameStatistics(const std::string& username, const GameData& gameData)
 {
+    // Prepare SQL statements
+    std::string selectQuery = "SELECT * FROM STATISTICS WHERE USERNAME = ?;";
+    std::string insertQuery = "INSERT INTO STATISTICS (USERNAME, AVERAGEANSWERTIME, CORRECTANSWERS, TOTALANSWERS, PLAYEDGAMES, PLAYERSCORE) VALUES (?, ?, ?, ?, ?, ?);";
+    std::string updateQuery = "UPDATE STATISTICS SET AVERAGEANSWERTIME = ?, CORRECTANSWERS = ?, TOTALANSWERS = ?, PLAYEDGAMES = ?, PLAYERSCORE = ? WHERE USERNAME = ?;";
+
+    sqlite3_stmt* stmt;
+    int rc;
+
+    // Check if the user already exists
+    rc = sqlite3_prepare_v2(db, selectQuery.c_str(), -1, &stmt, 0);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare select statement: " << sqlite3_errmsg(db) << std::endl;
+        return 1;
+    }
+
+    // Bind the username to the select statement
+    sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW) 
+    {
+        // User exists, update the row
+        double currentAvgAnswerTime = sqlite3_column_double(stmt, 1);
+        unsigned int currentCorrectAnswers = sqlite3_column_int(stmt, 2);
+        unsigned int currentTotalAnswers = sqlite3_column_int(stmt, 3);
+        unsigned int currentPlayedGames = sqlite3_column_int(stmt, 4);
+        unsigned int currentPlayerScore = sqlite3_column_int(stmt, 5);
+
+        unsigned int totalAnswers = currentTotalAnswers + gameData.correctAnswerCount + gameData.wrongAnswerCount;
+        double newAvgAnswerTime = (gameData.averageAnswerTime * (gameData.correctAnswerCount + gameData.wrongAnswerCount) + currentAvgAnswerTime * currentTotalAnswers) / totalAnswers;
+        unsigned int newCorrectAnswers = currentCorrectAnswers + gameData.correctAnswerCount;
+        unsigned int newTotalAnswers = totalAnswers;
+        unsigned int newPlayedGames = currentPlayedGames + 1;
+        unsigned int newPlayerScore = currentPlayerScore + gameData.score;
+
+        // Finalize the select statement
+        sqlite3_finalize(stmt);
+
+        // Prepare the update statement
+        rc = sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &stmt, 0);
+        if (rc != SQLITE_OK)
+        {
+            std::cerr << "Failed to prepare update statement: " << sqlite3_errmsg(db) << std::endl;
+            return 1;
+        }
+
+        // Bind the values to the update statement
+        sqlite3_bind_double(stmt, 1, newAvgAnswerTime);
+        sqlite3_bind_int(stmt, 2, newCorrectAnswers);
+        sqlite3_bind_int(stmt, 3, newTotalAnswers);
+        sqlite3_bind_int(stmt, 4, newPlayedGames);
+        sqlite3_bind_int(stmt, 5, newPlayerScore);
+        sqlite3_bind_text(stmt, 6, username.c_str(), -1, SQLITE_STATIC);
+
+        // Execute the update statement
+        rc = sqlite3_step(stmt);
+        if (rc != SQLITE_DONE) 
+        {
+            std::cerr << "Failed to update row: " << sqlite3_errmsg(db) << std::endl;
+        }
+
+    }
+    else if (rc == SQLITE_DONE) 
+    {
+        // User does not exist, insert a new row
+        sqlite3_finalize(stmt);
+
+        // Prepare the insert statement
+        rc = sqlite3_prepare_v2(db, insertQuery.c_str(), -1, &stmt, 0);
+        if (rc != SQLITE_OK) 
+        {
+            std::cerr << "Failed to prepare insert statement: " << sqlite3_errmsg(db) << std::endl;
+            return 1;
+        }
+
+        // Bind the values to the insert statement
+        sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_double(stmt, 2, gameData.averageAnswerTime);
+        sqlite3_bind_int(stmt, 3, gameData.correctAnswerCount);
+        sqlite3_bind_int(stmt, 4, gameData.correctAnswerCount + gameData.wrongAnswerCount);
+        sqlite3_bind_int(stmt, 5, 1);
+        sqlite3_bind_int(stmt, 6, gameData.score);
+
+        // Execute the insert statement
+        rc = sqlite3_step(stmt);
+        if (rc != SQLITE_DONE)
+        {
+            std::cerr << "Failed to insert row: " << sqlite3_errmsg(db) << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "Failed to step through select statement: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    // Finalize the statement
+    sqlite3_finalize(stmt);
+
     return 0;
 }
 
