@@ -54,7 +54,7 @@ void GameManager::deleteGame(unsigned int gameId)
         {
             for (auto player : it->getOrderedPlayersByScore())
             {
-                submitGameStatsToDB(player.second);
+                submitGameStatsToDB(player.first.getUsername(), player.second);
             }
             m_games.erase(it);
             return;
@@ -74,9 +74,9 @@ Game& GameManager::getGameForUser(const LoggedUser& user)
     throw std::runtime_error("User not found in any game");
 }
 
-void GameManager::submitGameStatsToDB(const GameData& gameData)
+void GameManager::submitGameStatsToDB(const std::string& username, const GameData& gameData)
 {
-    m_database->submitGameStatistics(gameData);
+    m_database->submitGameStatistics(username ,gameData);
 }
 
 /// <summary>

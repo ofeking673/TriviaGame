@@ -70,7 +70,7 @@ public:
 
 
 	// Game related
-	virtual int submitGameStatistics(GameData gameData);
+	virtual int submitGameStatistics(const std::string& username, const GameData& gameData);
 	void addQuestion(std::string question, std::vector<std::string> answers);
 private:
 	sqlite3* db;
