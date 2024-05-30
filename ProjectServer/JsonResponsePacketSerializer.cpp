@@ -308,7 +308,8 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsRespo
         ss << result.username << "|"
             << result.correctAnswerCount << "|"
             << result.wrongAnswerCount << "|"
-            << result.averageAnswerTime << ",";
+            << result.averageAnswerTime << "|"
+            << result.score << ",";
     }
 
     // Convert to string

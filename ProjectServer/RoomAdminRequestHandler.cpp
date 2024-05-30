@@ -42,14 +42,14 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(closeRoomResponse);
 
-    if (m_roomManager.getRoom(m_id).getAllUsers().size() < 2)
-    {
-        m_roomManager.deleteRoom(m_id);
-    }
-
     MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
     requestResult.newHandler = (IRequestHandler*)menu;
     m_room.removeUser(m_user);
+
+    if (m_roomManager.getRoom(m_id).getAllUsers().size() < 1)
+    {
+        m_roomManager.deleteRoom(m_id);
+    }
 
     return requestResult;
 

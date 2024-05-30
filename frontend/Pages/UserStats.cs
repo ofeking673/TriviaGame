@@ -18,17 +18,17 @@ namespace frontend.Pages
         public UserStats()
         {
             InitializeComponent();
-            //{label1, label2, label3, label4, label5 }
+        }
+
+        private void UserStats_Load(object sender, EventArgs e)
+        {
             labels[0] = label1;
             labels[1] = label2;
             labels[2] = label3;
             labels[3] = label4;
             labels[4] = label5;
 
-        }
 
-        private void UserStats_Load(object sender, EventArgs e)
-        {
             string message = "6|0000";
             string answer = Program.sendAndRecieve(message, true);
             UserStatsData usd = JsonConvert.DeserializeObject<UserStatsData>(answer);
