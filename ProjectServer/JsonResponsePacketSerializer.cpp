@@ -288,17 +288,39 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsRespo
     json j;
     j["status"] = getGameResultsResponse.status;
 
-    // Serializing the vector of PlayerResults
+    //// Serializing the vector of PlayerResults
+    //for (const auto& result : getGameResultsResponse.results)
+    //{
+    //    json playerResult;
+    //    playerResult["username"] = result.username;
+    //    playerResult["correctAnswerCount"] = result.correctAnswerCount;
+    //    playerResult["wrongAnswerCount"] = result.wrongAnswerCount;
+    //    playerResult["averageAnswerTime"] = result.averageAnswerTime;
+    //    playerResult["score"] = result.score;
+    //    j["results"].push_back(playerResult);
+    //}
+
+    std::ostringstream ss;
+
+    // Serialize the vector of PlayerResults
     for (const auto& result : getGameResultsResponse.results)
     {
-        json playerResult;
-        playerResult["username"] = result.username;
-        playerResult["correctAnswerCount"] = result.correctAnswerCount;
-        playerResult["wrongAnswerCount"] = result.wrongAnswerCount;
-        playerResult["averageAnswerTime"] = result.averageAnswerTime;
-        playerResult["score"] = result.score;
-        j["results"].push_back(playerResult);
+        ss << result.username << "|"
+            << result.correctAnswerCount << "|"
+            << result.wrongAnswerCount << "|"
+            << result.averageAnswerTime << ",";
     }
+
+    // Convert to string
+    std::string resultsStr = ss.str();
+
+    // Remove the last comma
+    if (!resultsStr.empty())
+    {
+        resultsStr.pop_back();
+    }
+    
+    j["results"] = resultsStr;
 
     return jsonObjectSerializer(j);
 }
