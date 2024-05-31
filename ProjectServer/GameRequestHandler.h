@@ -2,6 +2,8 @@
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
 
+#define LAST_PLAYER_IN_ROOM 1
+
 class GameRequestHandler : public IRequestHandler
 {
 public:
