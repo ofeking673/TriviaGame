@@ -103,7 +103,7 @@ namespace frontend.Pages
             submitAnswer submit = new submitAnswer(chosenAns, AnswerTimeOut - elapsed);
             string json = JsonConvert.SerializeObject(submit);
             string message = $"16|{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
             Console.WriteLine(answer);
 
             /*status = 600
@@ -166,7 +166,7 @@ namespace frontend.Pages
         public static GameQuestion GetQuestion()
         {
             string message = "15|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
 
             Console.WriteLine(answer);
 
@@ -247,7 +247,7 @@ namespace frontend.Pages
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             string message = "14|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
             Console.Write(answer);
             if (answer.Contains("680"))
             {

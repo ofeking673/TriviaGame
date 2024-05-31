@@ -46,7 +46,7 @@ namespace frontend.Pages
             //handle log out here
 
             string msg = "8|0000";
-            Program.sendAndRecieve(msg, true);
+            Program.sendAndRecieve(msg);
         }
 
     }

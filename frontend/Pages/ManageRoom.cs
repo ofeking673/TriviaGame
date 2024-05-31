@@ -29,7 +29,7 @@ namespace frontend.Pages
         public void loadForm(object sender, EventArgs e)
         {
             string message = "11|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
 
             rm = JsonConvert.DeserializeObject<RoomState>(answer);
 
@@ -54,7 +54,7 @@ namespace frontend.Pages
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string answer = Program.sendAndRecieve(message, !stopThread);
+                string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
@@ -95,7 +95,7 @@ namespace frontend.Pages
             thread.Join();
 
             string message = "10|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
 
             if (answer.Contains("420"))
             {
@@ -114,7 +114,7 @@ namespace frontend.Pages
             thread.Join();
 
             string message = "9|0000";
-            string answer = Program.sendAndRecieve(message, stopThread);
+            string answer = Program.sendAndRecieve(message);
 
             if (answer.Contains("410"))
             {

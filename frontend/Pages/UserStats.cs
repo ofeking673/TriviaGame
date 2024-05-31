@@ -30,7 +30,7 @@ namespace frontend.Pages
 
 
             string message = "6|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
             UserStatsData usd = JsonConvert.DeserializeObject<UserStatsData>(answer);
             var entries = usd.personalStats.Split(',');
             for (int i = 0; i < entries.Length; i++)

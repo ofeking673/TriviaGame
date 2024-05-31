@@ -30,7 +30,7 @@ namespace frontend.Pages
         {
 
             string message = "11|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
 
             rm = JsonConvert.DeserializeObject<RoomState>(answer);
 
@@ -45,7 +45,7 @@ namespace frontend.Pages
         {
             string message = "13|0000";
             if(stopThread) { return 2; }
-            string answer = Program.sendAndRecieve(message, !stopThread);
+            string answer = Program.sendAndRecieve(message);
             Console.WriteLine(answer + " Length = " + answer.Length);
             if(!string.IsNullOrEmpty(answer))
             {
@@ -94,7 +94,7 @@ namespace frontend.Pages
                         return;
                 }
 
-                string answer = Program.sendAndRecieve(message, !stopThread);
+                string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 

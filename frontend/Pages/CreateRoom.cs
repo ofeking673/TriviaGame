@@ -32,7 +32,7 @@ namespace frontend.Pages
 
             string json = JsonConvert.SerializeObject(room);
             string finalJson = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string answer = Program.sendAndRecieve(finalJson, true);
+            string answer = Program.sendAndRecieve(finalJson);
 
             Console.WriteLine(answer);
             

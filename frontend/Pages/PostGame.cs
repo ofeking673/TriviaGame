@@ -42,7 +42,7 @@ namespace frontend.Pages
                 listBox1.Invoke(methodInvoker);
 
                 string message = "17|0000";
-                string answer = Program.sendAndRecieve(message, true);
+                string answer = Program.sendAndRecieve(message);
 
                 getRoomInfo gri = JsonConvert.DeserializeObject<getRoomInfo>(answer);
 
@@ -71,6 +71,10 @@ namespace frontend.Pages
         {
             stopThread = true;
             thread.Join();
+
+            string message = "14|0000";
+            Program.sendAndRecieve(message);
+
 
             this.Hide();
             mainMenu mm = new mainMenu();
