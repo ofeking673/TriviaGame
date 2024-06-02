@@ -22,23 +22,24 @@ namespace frontend.Pages
 
         private void UserStats_Load(object sender, EventArgs e)
         {
-            labels[0] = label1;
-            labels[1] = label2;
-            labels[2] = label3;
-            labels[3] = label4;
-            labels[4] = label5;
-
-
             string message = "6|0000";
             string answer = Program.sendAndRecieve(message);
+            Console.WriteLine(answer);
             UserStatsData usd = JsonConvert.DeserializeObject<UserStatsData>(answer);
-            var entries = usd.personalStats.Split(',');
-            for (int i = 0; i < entries.Length; i++)
-            {
-                labels[i].Text += entries[i];
-            }
+            var entries = usd.UserStatistics.Split(',');
+
+            label1.Text += entries[0].ToString();
+            label2.Text += entries[1].ToString();
+            label3.Text += entries[2].ToString();
+            label4.Text += entries[4].ToString();
+            label5.Text += entries[3].ToString();
         }
 
-        private Label[] labels = new Label[5];
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            mainMenu mm = new mainMenu();
+            mm.ShowDialog();
+        }
     }
 }

@@ -80,22 +80,27 @@ namespace frontend.Pages
             string message = "5";
             var obj = listBox1.SelectedItem;
             string value = listBox1.GetItemText(obj);
+            string joinable = value.Substring(value.IndexOf(": ") + 2, value.Length - value.IndexOf(": ")-2);
+            Console.WriteLine(joinable);
             value = value.Substring(value.IndexOf("[") + 1, value.IndexOf("]") - value.IndexOf("[")-1);
             Console.WriteLine(value);
             RoomJoin room = new RoomJoin();
             room.roomId = int.Parse(value);
 
-            string json = JsonConvert.SerializeObject(room);
-            string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string answer = Program.sendAndRecieve(finalMsg);
-
-            if (answer.Contains("310"))
+            if (joinable == "yes")
             {
-                stopThread = true;
-                thread.Join();
-                this.Hide();
-                InRoom inRoom = new InRoom(int.Parse(value));
-                inRoom.ShowDialog();
+                string json = JsonConvert.SerializeObject(room);
+                string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                string answer = Program.sendAndRecieve(finalMsg);
+
+                if (answer.Contains("310"))
+                {
+                    stopThread = true;
+                    thread.Join();
+                    this.Hide();
+                    InRoom inRoom = new InRoom(int.Parse(value));
+                    inRoom.ShowDialog();
+                }
             }
             else
             {

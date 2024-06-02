@@ -119,6 +119,33 @@ void Communicator::handleNewClient(const SOCKET client_socket)
 	catch (const std::exception& e)
 	{
 		TRACE("Something went wrong in socket %s, what=%s", m_clients[client_socket], e.what());
+
+		try
+		{
+			int gameId = m_handlerFactory.getGameManager().getGameForUser(m_clients[client_socket].second).getGameId();
+			if (m_handlerFactory.getGameManager().getGameForUser(m_clients[client_socket].second).removePlayer(m_clients[client_socket].second))
+			{
+				m_handlerFactory.getGameManager().deleteGame(gameId);
+			}
+
+			Room room = m_handlerFactory.getRoomManager().getRoomForUser(m_clients[client_socket].second);
+			int id = room.getRoomData().id;
+
+			if (m_handlerFactory.getRoomManager().getRoom(id).removeUser(m_clients[client_socket].second))
+			{
+				m_handlerFactory.getRoomManager().deleteRoom(id);
+			}	
+
+		}
+		catch (const std::runtime_error& e)
+		{
+			goto logout;
+		}
+
+		
+
+
+		logout:
 		Requestinfo req;
 		req.id = Logout;
 		// TO-DO maybe switch to menu request handler. Because only there is the logout.

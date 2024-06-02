@@ -164,12 +164,14 @@ RequestResult GameRequestHandler::leaveGame(Requestinfo requestInfo)
 	// Create response
 	LeaveGameResponse leaveGameResponse;
 
+	int id = m_handlerFactory.getRoomManager().getRoomForUser(m_user).getRoomData().id;
 	// Delete game if last person in room
 	if (m_handlerFactory.getRoomManager().getRoomForUser(m_user).getAllUsers().size() == LAST_PLAYER_IN_ROOM)
 	{
 		// Log the user out of the room. 
 		// NOTE: The user still in game to show scores at the end
 		m_handlerFactory.getRoomManager().getRoomForUser(m_user).removeUser(m_user);
+		m_handlerFactory.getRoomManager().deleteRoom(id);
 		m_gameManager->deleteGame(m_game.getGameId());
 	}
 	else

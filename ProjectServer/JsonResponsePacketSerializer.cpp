@@ -197,10 +197,12 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoreRespons
     {
         if (i > 0)
         {
-            highScores += ", ";
+            highScores += ",";
         }
         highScores += getHighScoreResponse.statistics[i];
     }
+    std::cout << highScores << std::endl;
+    highScores.pop_back();
     j["HighScores"] = highScores;
 
     return jsonObjectSerializer(j);
@@ -235,7 +237,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPersonalStatsRes
     {
         if (i > 0) 
         {
-            statisticsString += ", ";
+            statisticsString += ",";
         }
         statisticsString += getPersonalStatsResponse.statistics[i];
     }

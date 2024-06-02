@@ -105,9 +105,14 @@ int DatabaseAccess::floatStatisticCallback(void* data, int argc, char** argv, ch
 
 int DatabaseAccess::highScoreCallback(void* data, int argc, char** argv, char** azColName)
 {
+    
     std::string* dataString = (std::string*)data;
-    dataString->append(argv[0] + '|');
+    dataString->append(argv[0]); //name|score,name2|score
+    dataString->append("|");
     dataString->append(argv[1]);
+    dataString->append(",");
+
+    std::cout << std::endl << dataString << std::endl;
     return 0;
 }
 
@@ -226,7 +231,7 @@ void DatabaseAccess::addQuestion(std::string question, std::vector<std::string> 
 float DatabaseAccess::getPlayerAverageAnswerTime(std::string username)
 {
     float answerTime;
-    std::string msg = "SELECT AVERAGEANSWERTIME FROM STATISTICS WHERE NAME = '" + username + "'";
+    std::string msg = "SELECT AVERAGEANSWERTIME FROM STATISTICS WHERE USERNAME = '" + username + "'";
     sqlite3_exec(db, msg.c_str(), floatStatisticCallback, &answerTime, nullptr);
     return answerTime;
 }
@@ -254,7 +259,7 @@ int DatabaseAccess::getPlayerScore(std::string username)
 int DatabaseAccess::getIntScore(std::string username, std::string dataType)
 {
     int answer;
-    std::string msg = "SELECT "+ dataType +" FROM STATISTICS WHERE NAME = '" + username + "'";
+    std::string msg = "SELECT "+ dataType +" FROM STATISTICS WHERE USERNAME = '" + username + "'";
     sqlite3_exec(db, msg.c_str(), intStatisticCallback, &answer, nullptr);
     return answer;
 }
@@ -276,7 +281,7 @@ std::vector<std::string> DatabaseAccess::getHighScores()
 std::string DatabaseAccess::getMaxStat(std::string type)
 {
     std::string value;
-    std::string msg = "SELECT NAME, MAX(" + type + ") LIMIT 10";
+    std::string msg = "SELECT USERNAME, MAX("+ type +") AS MAXSCORE FROM STATISTICS GROUP BY USERNAME ORDER BY MAXSCORE DESC LIMIT 10";
     sqlite3_exec(db, msg.c_str(), highScoreCallback, &value, nullptr);
     return value;
 }

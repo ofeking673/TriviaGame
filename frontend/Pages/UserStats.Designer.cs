@@ -35,7 +35,9 @@
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -115,6 +117,15 @@
             label5.TabIndex = 5;
             label5.Text = "Correct answers: ";
             // 
+            // pictureBox2
+            // 
+            pictureBox2.Location = new Point(985, 12);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(40, 40);
+            pictureBox2.TabIndex = 6;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
+            // 
             // UserStats
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
@@ -122,6 +133,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1037, 723);
+            Controls.Add(pictureBox2);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -135,6 +147,7 @@
             Text = "UserStats";
             Load += UserStats_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -147,5 +160,6 @@
         private Label label3;
         private Label label4;
         private Label label5;
+        private PictureBox pictureBox2;
     }
 }

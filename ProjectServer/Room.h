@@ -22,7 +22,7 @@ public:
 	~Room() = default;
 
 	bool addUser(const LoggedUser& user);
-	void removeUser(const LoggedUser& user);
+	bool removeUser(const LoggedUser& user);
 	std::vector<std::string> getAllUsers() const;
 	void startGame(LoggedUser& owner);
 

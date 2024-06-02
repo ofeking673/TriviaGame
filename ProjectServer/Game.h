@@ -22,7 +22,7 @@ public:
 
 	Question getQuestionForUser(LoggedUser user);
 	unsigned int submitAnswer(LoggedUser user, unsigned int answerId, double answerTime);
-	void removePlayer(LoggedUser user);
+	bool removePlayer(LoggedUser user);
 
 	unsigned int getGameId() const;
 

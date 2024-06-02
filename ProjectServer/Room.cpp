@@ -14,14 +14,14 @@ bool Room::addUser(const LoggedUser& user)
 }
 
 // Removes a user from the room
-void Room::removeUser(const LoggedUser& user)
+bool Room::removeUser(const LoggedUser& user)
 {
     for (auto it = m_users.begin(); it != m_users.end(); it++)
     {
         if (it->getUsername() == user.getUsername())
         {
             m_users.erase(it);
-            return;
+            return m_users.empty();
         }
     }
 }

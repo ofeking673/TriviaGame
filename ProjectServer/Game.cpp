@@ -85,7 +85,7 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerId, double a
     }
 }
 
-void Game::removePlayer(LoggedUser user)
+bool Game::removePlayer(LoggedUser user)
 {
     auto it = m_players.find(user);
     if (it != m_players.end()) 
@@ -95,10 +95,12 @@ void Game::removePlayer(LoggedUser user)
         // who left in the middle of the game as well.
 
         m_players.erase(it);
+        return m_players.empty();
     }
     else 
     {
         throw std::invalid_argument("User not found in the game");
+        return false;
     }
 }
 
