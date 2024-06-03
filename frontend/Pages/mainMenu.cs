@@ -47,6 +47,7 @@ namespace frontend.Pages
 
             string msg = "8|0000";
             Program.sendAndRecieve(msg);
+            Application.Exit();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
