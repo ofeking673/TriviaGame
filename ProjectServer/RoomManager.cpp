@@ -1,5 +1,15 @@
 #include "RoomManager.h"
 
+// Initialize static members
+RoomManager* RoomManager::instance = nullptr;
+std::once_flag RoomManager::initInstanceFlag;
+
+RoomManager& RoomManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &RoomManager::initSingleton);
+    return *instance;
+}
+
 RoomManager::RoomManager(const RoomManager& other)
 {
     m_rooms.insert(other.m_rooms.begin(), other.m_rooms.end());
@@ -93,5 +103,10 @@ Room& RoomManager::getRoomForUser(const LoggedUser& user)
         }
     }
     throw std::runtime_error("User not found in any game");
+}
+
+void RoomManager::initSingleton()
+{
+    instance = new RoomManager();
 }
 
