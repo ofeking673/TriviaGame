@@ -56,5 +56,10 @@ namespace frontend.Pages
             addQuestion addq = new addQuestion();
             addq.ShowDialog();
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

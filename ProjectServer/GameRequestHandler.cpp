@@ -113,7 +113,7 @@ RequestResult GameRequestHandler::submitAnswer(Requestinfo requestInfo)
 	submitAnswerResponse.status = TEMP_SUBMIT_ANSWER_RESPONSE_STATUS;
 
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(submitAnswerResponse);
-	requestResult.newHandler = m_handlerFactory.createGameRequestHandler(m_user);
+	requestResult.newHandler = RequestHandlerFactory::getInstance(&DatabaseAccess::getInstance()).createGameRequestHandler(m_user);
 
 	return requestResult;
 }

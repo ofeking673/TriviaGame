@@ -67,6 +67,7 @@ enum RequestId {
 	SubmitAnswer,
 	GetGameResult,
 	AddQuestion,
+	StartMatchmaking,
 	Error69 = 69
 };
 
