@@ -1,9 +1,14 @@
 #include "Communicator.h"
-
 #include <exception>
 #include <iostream>
 #include <string>
 #include <numeric>
+
+
+// Initialize static members
+Communicator* Communicator::instance = nullptr;
+std::once_flag Communicator::initInstanceFlag;
+
 
 // using static const instead of macros 
 static const unsigned short PORT = 8826;
@@ -16,13 +21,19 @@ using std::vector;
 
 mutex mtx;
 
-Communicator::Communicator(RequestHandlerFactory handlerFactory):m_handlerFactory(handlerFactory)
+Communicator::Communicator(RequestHandlerFactory& handlerFactory):m_handlerFactory(handlerFactory)
 {
 	// notice that we step out to the global namespace
 	// for the resolution of the function socket
 	m_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_serverSocket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__ " - socket");
+}
+
+Communicator& Communicator::getInstance(RequestHandlerFactory& handlerFactory)
+{
+	std::call_once(initInstanceFlag, &Communicator::initSingleton, std::ref(handlerFactory));
+	return *instance;
 }
 
 Communicator::~Communicator()
@@ -51,6 +62,11 @@ void Communicator::startHandleRequests()
 		acceptClient();
 		TRACE("accepting client...");
 	}
+}
+
+void Communicator::initSingleton(RequestHandlerFactory& handlerFactory)
+{
+	instance = new Communicator(handlerFactory);
 }
 
 // listen to connecting requests from clients
