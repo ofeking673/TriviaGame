@@ -16,8 +16,14 @@ class LoginRequestHandler;
 class RequestHandlerFactory
 {
 public:
-	// TO-DO: Need to change - when adding new managers
-	RequestHandlerFactory(IDatabase* database);
+
+	// Public method to access the single instance
+	static RequestHandlerFactory& getInstance(IDatabase* database);
+
+	// Delete copy constructor and assignment operator
+	RequestHandlerFactory(const RequestHandlerFactory&) = delete;
+	RequestHandlerFactory& operator=(const RequestHandlerFactory&) = delete;
+
 	~RequestHandlerFactory();
 
 	// Login & Signup related
@@ -38,15 +44,28 @@ public:
 	GameManager& getGameManager();
 	
 private:
+	// TO-DO: Need to change - when adding new managers
+	RequestHandlerFactory(IDatabase* database);
+
+	// Static method to initialize the singleton instance
+	static void initSingleton(IDatabase* database);
+
+	// Pointer to the single instance
+	static RequestHandlerFactory* instance;
+
+	// Flag to ensure the instance is only created once
+	static std::once_flag initInstanceFlag;
+
+
 	IDatabase* m_database;
 
 	// Login & Signup related
-	LoginManager* m_loginManager;
+	LoginManager& m_loginManager;
 
 	// Room & statistics related
-	RoomManager* m_roomManager;
-	StatisticsManager* m_statisticsManager;
+	RoomManager& m_roomManager;
+	StatisticsManager& m_statisticsManager;
 
 	// Game related
-	GameManager* m_gameManager;
+	GameManager& m_gameManager;
 };

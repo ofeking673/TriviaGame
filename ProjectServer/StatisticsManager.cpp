@@ -1,11 +1,27 @@
 #include "StatisticsManager.h"
 
+
+// Initialize static members
+StatisticsManager* StatisticsManager::instance = nullptr;
+std::once_flag StatisticsManager::initInstanceFlag;
+
 StatisticsManager::StatisticsManager(IDatabase* database) : m_database(database)
 {
     if (m_database == nullptr)
     {
         throw std::invalid_argument("Invalid Database pointer");
     }
+}
+
+void StatisticsManager::initSingleton()
+{
+    instance = new StatisticsManager(&DatabaseAccess::getInstance());
+}
+
+StatisticsManager& StatisticsManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &StatisticsManager::initSingleton);
+    return *instance;
 }
 
 StatisticsManager::~StatisticsManager()

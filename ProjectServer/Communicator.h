@@ -19,13 +19,36 @@
 class Communicator
 {
 public:
-	Communicator(RequestHandlerFactory handlerFactory);
+	// Access the single instance
+	static Communicator& getInstance(RequestHandlerFactory& handlerFactory);
+
+	// Delete copy constructors
+	Communicator(const Communicator&) = delete;
+	Communicator& operator=(const Communicator&) = delete;
+
+
 	~Communicator();
 	//void serve();
 	
 	void startHandleRequests();
 
 private:
+	// Private ctor
+	Communicator(RequestHandlerFactory& handlerFactory);
+
+	// Static method to initialize the singleton instance
+	static void initSingleton(RequestHandlerFactory& handlerFactory);
+
+	// Pointer to the single instance
+	static Communicator* instance;
+
+	// Flag to ensure the instance is only created once
+	static std::once_flag initInstanceFlag;
+
+
+
+
+
 	void bindAndListen();
 	void handleNewClient(const SOCKET client_socket);
 	void breakDownStr(Requestinfo& info, std::string buf);

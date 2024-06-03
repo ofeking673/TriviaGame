@@ -18,7 +18,7 @@ int main()
 		TRACE("Starting...");
 		// NOTICE at the end of this block the WSA will be closed 
 		WSAInitializer wsa_init;
-		Server md_server;
+		Server& md_server = Server::getInstance();
 		md_server.run();
 	}
 	catch (const std::exception& e)

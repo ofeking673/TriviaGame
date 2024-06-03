@@ -115,8 +115,7 @@ RequestResult MenuRequestHandler::getRooms(Requestinfo requestInfo)
 	RequestResult requestResult;
 
 	// Get all rooms through room manager
-	auto roomManager = m_handlerFactory.getRoomManager();
-	std::vector<RoomData> rooms = roomManager.getRooms();
+	std::vector<RoomData> rooms = m_handlerFactory.getRoomManager().getRooms();
 	std::cout << rooms.size() << " rooms"<< std::endl;
 	// Stay in menu request handler
 	MenuRequestHandler* menuRequestHandler = m_handlerFactory.createMenuRequestHandler(m_user);

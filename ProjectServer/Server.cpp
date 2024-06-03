@@ -1,11 +1,26 @@
 #include "Server.h"
 
+// Initialize static members
+Server* Server::instance = nullptr;
+std::once_flag Server::initInstanceFlag;
 
-Server::Server()
+
+Server::Server() :
+	m_database(DatabaseAccess::getInstance()),
+	m_handlerFactory(RequestHandlerFactory::getInstance(&m_database)),
+	m_communicator(&Communicator::getInstance(m_handlerFactory))
 {
-	m_database = DatabaseAccess::getInstance();
-	m_handlerFactory = new RequestHandlerFactory(m_database);
-	m_communicator = new Communicator(*m_handlerFactory);
+}
+
+void Server::initSingleton()
+{
+	instance = new Server();
+}
+
+Server& Server::getInstance()
+{
+	std::call_once(initInstanceFlag, &Server::initSingleton);
+	return *instance;
 }
 
 Server::~Server()
