@@ -321,7 +321,7 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	return requestResult;
 }
 
-RequestResult MenuRequestHandler::addQuestion(Requestinfo requestInfo)s
+RequestResult MenuRequestHandler::addQuestion(Requestinfo requestInfo)
 {
 	RequestResult requestResult;
 

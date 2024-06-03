@@ -9,10 +9,10 @@ class DatabaseAccess : public IDatabase
 public:
 
 	// Access the single instance
-	static DatabaseAccess& getInstance()
+	static DatabaseAccess* getInstance()
 	{
 		std::call_once(initInstanceFlag, &DatabaseAccess::initSingleton);
-		return *instance;
+		return instance;
 	}
 
 	// Delete copy constructors
@@ -42,6 +42,7 @@ public:
 	virtual void close() override {
 		sqlite3_close(db);
 		db = nullptr;
+		delete this;
 	};
 
 	virtual void InitDb() override;
