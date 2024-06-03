@@ -25,7 +25,7 @@ Server& Server::getInstance()
 
 Server::~Server()
 {
-	m_database->close();
+	m_database.close();
 	m_communicator = nullptr;
 }
 

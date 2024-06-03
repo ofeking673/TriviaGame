@@ -44,13 +44,15 @@ namespace frontend.Pages
                 answers[0] = textBox2.Text;
                 answers[1] = textBox3.Text;
                 answers[2] = textBox4.Text;
-                answers[3] = textBox4.Text;
+                answers[3] = textBox5.Text;
 
 
                 newQuestion q = new newQuestion(textBox1.Text, answers[0], answers[1], answers[2], answers[3]);
                 string json = JsonConvert.SerializeObject(q);
-                string message = $"18|{json.Length}{json}";
+                string message = $"18|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                Console.WriteLine(message);
                 string answer = Program.sendAndRecieve(message);
+                Console.WriteLine(answer);
 
                 this.Hide();
                 mainMenu mm = new mainMenu();

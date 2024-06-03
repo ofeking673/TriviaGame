@@ -118,10 +118,12 @@ namespace frontend.Pages
                 gameEnded();
             }
             highlightCorrect(resp.correctAnswerId);
-            label3.Text = $"Score: {resp.score.ToString()}";
-
+            //label3.Text = $"Score: {resp.score.ToString()}";
+            label3.Invoke(delegate
+            {
+                label3.Text = $"Score: {resp.score.ToString()}";
+            });
             Thread.Sleep(3000);
-            timeEnd();
         }
 
         public void highlightCorrect(int id)
@@ -176,8 +178,9 @@ namespace frontend.Pages
 
         private void timeEnd()
         {
-            label1.Text = "Getting next question.. Sit tight!";
-            Thread.Sleep(1000);
+            setButtonUse(false);
+            label1.Invoke(delegate { label1.Text = "Getting next question.. Sit tight!"; });
+            Thread.Sleep(2000);
 
 
             GameQuestion q = GetQuestion();
@@ -186,14 +189,12 @@ namespace frontend.Pages
                 gameEnded();
             }
 
-            setButtonUse(true);
+            label1.Invoke(delegate { label1.Text = q.question; });
+            button1.Invoke(delegate { button1.Text = q.answers[0]; });
+            button2.Invoke(delegate { button2.Text = q.answers[1]; });
+            button3.Invoke(delegate { button3.Text = q.answers[2]; });
+            button4.Invoke(delegate { button4.Text = q.answers[3]; });
             Clicked = false;
-
-            label1.Text = q.question;
-            button1.Text = q.answers[0];
-            button2.Text = q.answers[1];
-            button3.Text = q.answers[2];
-            button4.Text = q.answers[3];
 
             timer = new System.Timers.Timer();
             timer.Interval = 100; //timer for question timeout
@@ -222,10 +223,8 @@ namespace frontend.Pages
 
             timer.Start();
 
-            button1.Show();
-            button2.Show();
-            button3.Show();
-            button4.Show();
+
+            setButtonUse(true);
         }
 
         private void Game_Load(object sender, EventArgs e)

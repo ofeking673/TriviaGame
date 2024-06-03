@@ -46,7 +46,7 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 // Return the login manager
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
-    return m_loginManager;
+    return m_loginManager.getInstance();
 }
 
 // Creates menu request handler
@@ -58,13 +58,13 @@ MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler(LoggedUser u
 // Return the statistics manager
 StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 {
-    return m_statisticsManager;
+    return m_statisticsManager.getInstance();
 }
 
 // Return the room manager
 RoomManager& RequestHandlerFactory::getRoomManager()
 {
-    return m_roomManager;
+    return m_roomManager.getInstance();
 }
 
 // Creates room admin request handler
@@ -88,5 +88,5 @@ GameRequestHandler* RequestHandlerFactory::createGameRequestHandler(LoggedUser u
 // Return the game manager
 GameManager& RequestHandlerFactory::getGameManager()
 {
-    return m_gameManager;
+    return m_gameManager.getInstance();
 }

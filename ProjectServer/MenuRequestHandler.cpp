@@ -6,7 +6,7 @@ bool MenuRequestHandler::isRequestRelevant(Requestinfo requestInfo)
     return (requestInfo.id == CreateRoom || requestInfo.id == GetRooms ||
             requestInfo.id == GetPlayersInRoom || requestInfo.id == JoinRoom ||
             requestInfo.id == GetPersonalStats || requestInfo.id == GetHighScores ||
-			requestInfo.id == Logout);
+			requestInfo.id == Logout || requestInfo.id == AddQuestion);
 }
 
 RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -51,6 +51,10 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 		{
 			// Logout
 			requestResult = signout(requestInfo);
+		}
+		else if (requestInfo.id == AddQuestion)
+		{
+			requestResult = addQuestion(requestInfo);
 		}
 	}
 	else

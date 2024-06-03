@@ -11,8 +11,7 @@
 #include "JsonRequestPacketDeserializer.h"
 #include "RequestHandlerFactory.h"
 
-//offset of how many characters until json starts (1 + 4 bytes)
-#define JSON_OFFSET 40
+
 //size of buffer for socket reading
 #define READ_SIZE 1000
 // accept new clients and handle them.

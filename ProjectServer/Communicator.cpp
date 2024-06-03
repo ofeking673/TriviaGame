@@ -233,6 +233,8 @@ RequestId Communicator::getIdFromStr(std::string str)
 		return SubmitAnswer;
 	case 17:
 		return GetGameResult;
+	case 18:
+		return AddQuestion;
 	default:
 		return Error69; //we love when this happens
 

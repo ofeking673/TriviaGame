@@ -68,7 +68,7 @@ RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(start);
     
     // Move to Game request handloer
-    requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createGameRequestHandler(m_user);
+    requestResult.newHandler = (IRequestHandler*)RequestHandlerFactory::getInstance(nullptr).createGameRequestHandler(m_user);
 
     return requestResult;
 }
