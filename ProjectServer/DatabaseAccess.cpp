@@ -4,7 +4,11 @@
 DatabaseAccess* DatabaseAccess::instance = nullptr;
 std::once_flag DatabaseAccess::initInstanceFlag;
 
-
+DatabaseAccess& DatabaseAccess::getInstance()
+{
+    std::call_once(initInstanceFlag, &DatabaseAccess::initSingleton);
+    return *instance;
+}
 
 void DatabaseAccess::InitDb()
 {
@@ -231,6 +235,11 @@ void DatabaseAccess::addQuestion(std::string question, std::vector<std::string> 
     //(QUESTION TEXT NOT NULL PRIMARY KEY, CORRECT TEXT NOT NULL, INCORRECT1 TEXT NOT NULL, INCORRECT2 TEXT NOT NULL, INCORRECT3 TEXT NOT NULL)
     std::string msg = "INSERT INTO QUESTIONS(QUESTION, CORRECT,INCORRECT1,INCORRECT2,INCORRECT3) VALUES ( '" + question + "', '" + answers[0] + "', '" + answers[1] + "', '" + answers[2] + "', '" + answers[3] + "')";
     sqlite3_exec(db, msg.c_str(), nullptr, nullptr, nullptr);
+}
+
+void DatabaseAccess::initSingleton()
+{
+    instance = new DatabaseAccess();
 }
 
 

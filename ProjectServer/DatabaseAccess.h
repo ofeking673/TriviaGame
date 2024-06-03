@@ -9,11 +9,7 @@ class DatabaseAccess : public IDatabase
 public:
 
 	// Access the single instance
-	static DatabaseAccess& getInstance()
-	{
-		std::call_once(initInstanceFlag, &DatabaseAccess::initSingleton);
-		return *instance;
-	}
+	static DatabaseAccess& getInstance();
 
 	// Delete copy constructors
 	DatabaseAccess(const DatabaseAccess&) = delete;
@@ -96,10 +92,7 @@ private:
 	}
 
 	// Static method to initialize the singleton instance
-	static void initSingleton()
-	{
-		instance = new DatabaseAccess();
-	}
+	static void initSingleton();
 
 	// Pointer to the single instance
 	static DatabaseAccess* instance;

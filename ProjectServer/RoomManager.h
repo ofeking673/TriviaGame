@@ -34,7 +34,7 @@ public:
 
 private:
 	// Private ctor
-	RoomManager() = default;
+	RoomManager() {};
 
 	// Static method to initialize the singleton instance
 	static void initSingleton();

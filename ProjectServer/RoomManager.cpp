@@ -10,11 +10,6 @@ RoomManager& RoomManager::getInstance()
     return *instance;
 }
 
-RoomManager::RoomManager(const RoomManager& other)
-{
-    m_rooms.insert(other.m_rooms.begin(), other.m_rooms.end());
-}
-
 // Creates a new room and add it to the rooms map
 bool RoomManager::createRoom(LoggedUser user, RoomData& roomData)
 {
