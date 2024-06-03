@@ -35,4 +35,5 @@ public:
 
 	// Game related
 	virtual int submitGameStatistics(const std::string& username, const GameData& gameData) = 0;
+	virtual void addQuestion(std::string question, std::vector<std::string> answers) = 0;
 };

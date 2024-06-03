@@ -38,6 +38,7 @@ public:
 	virtual void close() override {
 		sqlite3_close(db);
 		db = nullptr;
+		delete this;
 	};
 
 	virtual void InitDb() override;
@@ -75,7 +76,7 @@ public:
 
 	// Game related
 	virtual int submitGameStatistics(const std::string& username, const GameData& gameData);
-	void addQuestion(std::string question, std::vector<std::string> answers);
+	virtual void addQuestion(std::string question, std::vector<std::string> answers) override;
 private:
 
 

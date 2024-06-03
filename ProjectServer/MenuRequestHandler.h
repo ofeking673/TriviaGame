@@ -20,6 +20,7 @@ public:
 	RequestResult getHighScore(Requestinfo requestInfo);
 	RequestResult joinRoom(Requestinfo requestInfo);
 	RequestResult createRoom(Requestinfo requestInfo);
+	RequestResult addQuestion(Requestinfo requestInfo);
 
 	RequestResult error(Requestinfo requestInfo);
 

@@ -49,5 +49,11 @@ namespace frontend.Pages
             Program.sendAndRecieve(msg);
         }
 
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            addQuestion addq = new addQuestion();
+            addq.ShowDialog();
+        }
     }
 }

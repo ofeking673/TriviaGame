@@ -52,7 +52,7 @@ namespace frontend.Pages
                 foreach (var item in gri.results.Split(","))
                 {
                     string[] data = item.Split("|");
-                    string userData = $"{data[0]}: {int.Parse(data[1])} - {int.Parse(data[2]) - 1}, AVG: {data[3]}, Score: {data[4]}";
+                    string userData = $"{data[0]}: {int.Parse(data[1])} - {int.Parse(data[2])}, AVG: {data[3]}, Score: {data[4]}";
 
                     updateUI = delegate { listBox1.Items.Add(userData); };
                     listBox1.Invoke(updateUI);

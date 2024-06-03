@@ -45,6 +45,8 @@
 #define TEMP_GET_GAME_RESULTS_RESPONSE_STATUS 610
 #define TEMP_LEAVE_GAME_RESPONSE_STATUS 680
 
+#define TEMP_ADD_QUESTION_TO_DATABASE_RESPONSE_STATUS 880
+
 enum RequestId {
 	Login,
 	SignUp,
@@ -64,6 +66,7 @@ enum RequestId {
 	GetQuestion,
 	SubmitAnswer,
 	GetGameResult,
+	AddQuestion,
 	Error69 = 69
 };
 
