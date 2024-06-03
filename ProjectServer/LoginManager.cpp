@@ -1,5 +1,10 @@
 #include "LoginManager.h"
 
+// Initialize static members
+LoginManager* LoginManager::instance = nullptr;
+std::once_flag LoginManager::initInstanceFlag;
+
+
 LoginManager::LoginManager(IDatabase* database)
     : m_database(database)
 {
@@ -7,6 +12,17 @@ LoginManager::LoginManager(IDatabase* database)
     {
         throw std::invalid_argument("Invalid Database pointer");
     }
+}
+
+void LoginManager::initSingleton()
+{
+    instance = new LoginManager(&DatabaseAccess::getInstance());
+}
+
+LoginManager& LoginManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &LoginManager::initSingleton);
+    return *instance;
 }
 
 LoginManager::~LoginManager()
