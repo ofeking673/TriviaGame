@@ -7,10 +7,21 @@
 class DatabaseAccess : public IDatabase
 {
 public:
-	DatabaseAccess()
+
+	// Access the single instance
+	static DatabaseAccess& getInstance()
 	{
-		open(FILENAME);
-	};
+		std::call_once(initInstanceFlag, &DatabaseAccess::initSingleton);
+		return *instance;
+	}
+
+	// Delete copy constructors
+	DatabaseAccess(const DatabaseAccess&) = delete;
+	DatabaseAccess& operator=(const DatabaseAccess&) = delete;
+
+
+
+
 
 	virtual void open(std::string fileName) override
 	{
@@ -32,9 +43,6 @@ public:
 		sqlite3_close(db);
 		db = nullptr;
 	};
-
-
-	~DatabaseAccess() { close(); };
 
 	virtual void InitDb() override;
 	
@@ -73,6 +81,33 @@ public:
 	virtual int submitGameStatistics(const std::string& username, const GameData& gameData);
 	void addQuestion(std::string question, std::vector<std::string> answers);
 private:
+
+
+	// Private ctor
+	DatabaseAccess() 
+	{
+		open(FILENAME);
+	}
+
+	// Private dtor
+	~DatabaseAccess() 
+	{
+		close();
+	}
+
+	// Static method to initialize the singleton instance
+	static void initSingleton()
+	{
+		instance = new DatabaseAccess();
+	}
+
+	// Pointer to the single instance
+	static DatabaseAccess* instance;
+
+	// Flag to ensure the instance is only created once
+	static std::once_flag initInstanceFlag;
+
+
+
 	sqlite3* db;
 };
-
