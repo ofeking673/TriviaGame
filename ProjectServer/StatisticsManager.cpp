@@ -36,4 +36,9 @@ std::vector<std::string> StatisticsManager::getUserStatistics(std::string userna
     return userStatistics;
 }
 
+void StatisticsManager::addQuestion(std::string question, std::vector<std::string> answers)
+{
+    m_database->addQuestion(question, answers);
+}
+
 

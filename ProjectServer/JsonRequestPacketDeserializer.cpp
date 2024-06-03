@@ -112,3 +112,20 @@ SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerReques
 
     return request;
 }
+
+AddQuestionRequest JsonRequestPacketDeserializer::deserializeAddQuestionRequest(Buffer bufAddQuestionRequest)
+{
+    std::string jsonStr(bufAddQuestionRequest.data.begin(), bufAddQuestionRequest.data.end());
+
+    json j = json::parse(jsonStr);
+
+    AddQuestionRequest request;
+
+    request.question = j["question"].get<std::string>();
+    request.correctAns = j["correctAnswer"].get<std::string>();
+    request.Answer1 = j["answer1"].get<std::string>();
+    request.Answer2 = j["answer2"].get<std::string>();
+    request.Answer3 = j["answer3"].get<std::string>();
+
+    return request;
+}

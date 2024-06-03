@@ -58,7 +58,7 @@ unsigned int Game::submitAnswer(LoggedUser user, unsigned int answerId, double a
             data.correctAnswerCount++;
             data.score += calculateScore(answerTime); // Update score
         }
-        else
+        else if(data.currentQuestion.getQuestion() != "")
         {
             data.wrongAnswerCount++;
         }

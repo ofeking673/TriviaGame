@@ -356,6 +356,11 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveGameResponse& 
     return statusOnlySerializeResponse(leaveGameResponse.status);
 }
 
+Buffer JsonResponsePacketSerializer::serializeResponse(const AddQuestionResponse& addQuestionResponse)
+{
+    return statusOnlySerializeResponse(addQuestionResponse.status);
+}
+
 /// <summary>
 /// Serialize response that contains status only from JSON to binary buffer
 /// </summary>

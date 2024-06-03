@@ -101,6 +101,10 @@ namespace frontend.Pages
                     InRoom inRoom = new InRoom(int.Parse(value));
                     inRoom.ShowDialog();
                 }
+                else
+                {
+                    ErrorJoin(sender, e);
+                }
             }
             else
             {

@@ -321,6 +321,27 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	return requestResult;
 }
 
+RequestResult MenuRequestHandler::addQuestion(Requestinfo requestInfo)s
+{
+	RequestResult requestResult;
+
+	AddQuestionRequest request = JsonRequestPacketDeserializer::deserializeAddQuestionRequest(requestInfo.buf);
+
+	std::vector<std::string> answers = { request.correctAns, request.Answer1, request.Answer2, request.Answer3 };
+
+	m_handlerFactory.getStatisticsManager().addQuestion(request.question, answers);
+	
+	AddQuestionResponse questionResponse;
+	questionResponse.status = TEMP_ADD_QUESTION_TO_DATABASE_RESPONSE_STATUS;
+
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(questionResponse);
+
+	requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user);
+
+
+	return requestResult;
+}
+
 // In case of error - Call the function to return response indicates there was an error
 RequestResult MenuRequestHandler::error(Requestinfo requestInfo)
 {

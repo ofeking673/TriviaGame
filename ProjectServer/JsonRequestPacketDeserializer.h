@@ -58,6 +58,15 @@ struct SubmitAnswerRequest
 	double answerTime;
 };
 
+struct AddQuestionRequest 
+{
+	std::string question;
+	std::string correctAns;
+	std::string Answer1;
+	std::string Answer2;
+	std::string Answer3;
+};
+
 class JsonRequestPacketDeserializer
 {
 public:
@@ -80,4 +89,6 @@ public:
 
 	// Game related
 	static SubmitAnswerRequest deserializeSubmitAnswerRequest(Buffer bufSubmitAnswerRequest);
+
+	static AddQuestionRequest deserializeAddQuestionRequest(Buffer bufAddQuestionRequest);
 };

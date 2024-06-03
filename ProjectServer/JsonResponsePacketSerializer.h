@@ -144,6 +144,10 @@ struct GetGameResultsResponse
 	std::vector<PlayerResults> results;
 };
 
+struct AddQuestionResponse {
+	unsigned int status;
+};
+
 // Static class to serialize json response packets
 class JsonResponsePacketSerializer
 {
@@ -180,6 +184,7 @@ public:
 	static Buffer serializeResponse(const GetQuestionResponse& getQuestionResponse);
 	static Buffer serializeResponse(const LeaveGameResponse& leaveGameResponse);
 
+	static Buffer serializeResponse(const AddQuestionResponse& addQuestionResponse);
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
 	static Buffer jsonObjectSerializer(json j);
