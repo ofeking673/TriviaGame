@@ -1,5 +1,9 @@
 #include "GameManager.h"
 
+// Initialize static members
+GameManager* GameManager::instance = nullptr;
+std::once_flag GameManager::initInstanceFlag;
+
 GameManager::GameManager(IDatabase* database) 
 	: m_database(database)
 {
@@ -7,6 +11,17 @@ GameManager::GameManager(IDatabase* database)
     {
         throw std::invalid_argument("Invalid Database pointer");
     }
+}
+
+void GameManager::initSingleton()
+{
+    instance = new GameManager(&DatabaseAccess::getInstance());
+}
+
+GameManager& GameManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &GameManager::initSingleton);
+    return *instance;
 }
 
 GameManager::~GameManager()
