@@ -1,5 +1,11 @@
 #include "DatabaseAccess.h"
 
+// Initialize static members
+DatabaseAccess* DatabaseAccess::instance = nullptr;
+std::once_flag DatabaseAccess::initInstanceFlag;
+
+
+
 void DatabaseAccess::InitDb()
 {
     std::string msg = "CREATE TABLE USERS(NAME TEXT NOT NULL PRIMARY KEY, PASSWORD TEXT NOT NULL, EMAIL TEXT NOT NULL)";
