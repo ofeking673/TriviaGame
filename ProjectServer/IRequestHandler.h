@@ -110,7 +110,8 @@ protected:
 		resp.players = m_room.getAllUsers();
 		resp.questionCount = rm.numOfQuestionsInGame;
 		resp.status = TEMP_GET_ROOM_STATE_STATUS;
-		
+		resp.isMatchmaking = rm.isMatchmaking;
+		resp.waitingForAnotherUser = rm.waitingForMatchmaking;
 	};
 };
 

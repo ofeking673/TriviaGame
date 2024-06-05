@@ -1,5 +1,4 @@
 #include "Room.h"
-#include "Room.h"
 
 // Adds user to room
 bool Room::addUser(const LoggedUser& user)
@@ -7,6 +6,10 @@ bool Room::addUser(const LoggedUser& user)
     if (m_metadata.maxPlayers > m_users.size() && !getRoomData().isActive)
     {
         m_users.push_back(user);
+        if (m_metadata.isMatchmaking == TO_MATCHMAKING && m_users.size() == 2)
+        {
+            m_metadata.waitingForMatchmaking = FOUND_USER;
+        }
         return true;
     }
     return false;

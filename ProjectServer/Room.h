@@ -3,11 +3,14 @@
 #include <iostream>
 #include <vector>
 
+// isMatchmaking values
 #define TO_MATCHMAKING 1
 #define NOT_TO_MATCHMAKING 0
 
+//waitingForMatchmaking values
 #define WAITING 1
 #define FOUND_USER 0
+
 
 // Struct to represent data of room
 struct RoomData

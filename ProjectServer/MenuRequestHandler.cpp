@@ -294,6 +294,8 @@ RequestResult MenuRequestHandler::createRoom(Requestinfo requestInfo)
 	roomData.name = createRoomRequest.roomName;
 	roomData.numOfQuestionsInGame = createRoomRequest.questionsCount;
 	roomData.timePerQuestion = createRoomRequest.answerTimeout;
+	roomData.isMatchmaking = NOT_TO_MATCHMAKING;
+	roomData.waitingForMatchmaking = FOUND_USER;
 
 	// Stay in menu request handler
 	// TO-DO may need to change handler...
@@ -341,6 +343,69 @@ RequestResult MenuRequestHandler::addQuestion(Requestinfo requestInfo)
 
 	requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user);
 
+
+	return requestResult;
+}
+
+RequestResult MenuRequestHandler::startMatchmaking(Requestinfo requestInfo)
+{
+	RequestResult requestResult;
+	StartMatchmakingResponse startMatchmakingResponse;
+
+	RoomData roomData;
+
+	int roomId = m_handlerFactory.getRoomManager().getRoomIdForMatchmaking();
+
+	// There is no room awaiting for matchmaking -> create a new one
+	if (roomId == NOT_FOUND)
+	{
+		// Set room data for new room
+		roomData.id = 0; // Will generate a unique id in function
+		roomData.isActive = false; // Room starts as not active (waiting to start the game)
+		roomData.maxPlayers = 2; // Max users is 2 in matchmaking
+		roomData.name = "matchmakingRoom";
+		roomData.numOfQuestionsInGame = 10;
+		roomData.timePerQuestion = 20;
+		roomData.isMatchmaking = TO_MATCHMAKING;
+		roomData.waitingForMatchmaking = WAITING;
+
+		if (m_handlerFactory.getRoomManager().createRoom(m_user, roomData))
+		{
+			startMatchmakingResponse.status = TEMP_CREATE_ROOM__START_MATCHMAKING_RESPONSE_STATUS;
+			RoomAdminRequestHandler* roomAdminRequestHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_handlerFactory.getRoomManager().getRoom(roomData.id));
+			requestResult.newHandler = (IRequestHandler*)roomAdminRequestHandler;
+		}
+		else
+		{
+			startMatchmakingResponse.status = TEMP_FAILED__START_MATCHMAKING_RESPONSE_STATUS;
+			MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
+			requestResult.newHandler = (IRequestHandler*)menu;
+		}
+	}
+
+	// There is an awaiting room for matchmaking -> join it
+	else
+	{
+		// Add the user to the next empty matchmaking room
+		if (m_handlerFactory.getRoomManager().getRoom(roomId).addUser(m_user))
+		{
+			RoomMemberRequestHandler* roomMemberRequestHandler = m_handlerFactory.createRoomMemberRequestHandler(m_user, m_handlerFactory.getRoomManager().getRoom(roomId));
+			requestResult.newHandler = (IRequestHandler*)roomMemberRequestHandler;
+			startMatchmakingResponse.status = TEMP_JOIN_ROOM__START_MATCHMAKING_RESPONSE_STATUS;
+		}
+		else
+		{
+			MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
+			requestResult.newHandler = (IRequestHandler*)menu;
+			startMatchmakingResponse.status = TEMP_FAILED__START_MATCHMAKING_RESPONSE_STATUS;
+		}
+	}
+
+
+	startMatchmakingResponse.roomId = roomData.id;
+
+	//Serialize response
+	requestResult.response = JsonResponsePacketSerializer::serializeResponse(startMatchmakingResponse);
 
 	return requestResult;
 }
