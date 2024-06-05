@@ -95,6 +95,8 @@ struct GetRoomStateResponse
 	std::vector<std::string> players;
 	unsigned int questionCount;
 	unsigned int answerTimeOut;
+	unsigned int isMatchmaking;
+	unsigned int waitingForAnotherUser;
 };
 
 struct LeaveRoomResponse
