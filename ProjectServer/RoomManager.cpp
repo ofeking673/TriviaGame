@@ -74,6 +74,22 @@ bool RoomManager::doesRoomExist(unsigned int ID)
     return (m_rooms.find(ID) != m_rooms.end());
 }
 
+// Returns a roomId that witing in matchmaking if exists
+unsigned int RoomManager::getRoomIdForMatchmaking()
+{
+    for (auto it = m_rooms.begin(); it != m_rooms.end(); it++)
+    {
+        if (it->second->getRoomData().isMatchmaking == TO_MATCHMAKING)
+        {
+            if (it->second->getRoomData().waitingForMatchmaking == WAITING)
+            {
+                return it->first;
+            }
+        }
+    }
+    return NOT_FOUND;
+}
+
 // Generate a unique room id
 unsigned int RoomManager::generateUniqueRoomId()
 {

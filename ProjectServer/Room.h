@@ -3,6 +3,12 @@
 #include <iostream>
 #include <vector>
 
+#define TO_MATCHMAKING 1
+#define NOT_TO_MATCHMAKING 0
+
+#define WAITING 1
+#define FOUND_USER 0
+
 // Struct to represent data of room
 struct RoomData
 {
@@ -12,6 +18,8 @@ struct RoomData
 	unsigned int numOfQuestionsInGame;
 	unsigned int timePerQuestion;
 	unsigned int isActive;
+	unsigned int isMatchmaking;
+	unsigned int waitingForMatchmaking;
 };
 
 
