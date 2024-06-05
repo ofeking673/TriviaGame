@@ -361,6 +361,15 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const AddQuestionResponse
     return statusOnlySerializeResponse(addQuestionResponse.status);
 }
 
+Buffer JsonResponsePacketSerializer::serializeResponse(const StartMatchmakingResponse& startMatchmakingResponse)
+{
+    json j;
+    j["status"] = startMatchmakingResponse.status;
+    j["roomId"] = startMatchmakingResponse.roomId;
+
+    return jsonObjectSerializer(j);
+}
+
 /// <summary>
 /// Serialize response that contains status only from JSON to binary buffer
 /// </summary>
