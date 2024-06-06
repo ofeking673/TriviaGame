@@ -95,6 +95,8 @@ struct GetRoomStateResponse
 	std::vector<std::string> players;
 	unsigned int questionCount;
 	unsigned int answerTimeOut;
+	unsigned int isMatchmaking;
+	unsigned int waitingForAnotherUser;
 };
 
 struct LeaveRoomResponse
@@ -144,8 +146,15 @@ struct GetGameResultsResponse
 	std::vector<PlayerResults> results;
 };
 
-struct AddQuestionResponse {
+struct AddQuestionResponse 
+{
 	unsigned int status;
+};
+
+struct StartMatchmakingResponse
+{
+	unsigned int status;
+	unsigned int roomId;
 };
 
 // Static class to serialize json response packets
@@ -185,6 +194,10 @@ public:
 	static Buffer serializeResponse(const LeaveGameResponse& leaveGameResponse);
 
 	static Buffer serializeResponse(const AddQuestionResponse& addQuestionResponse);
+
+	// Matchmaking
+	static Buffer serializeResponse(const StartMatchmakingResponse& startMatchmakingResponse);
+
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
 	static Buffer jsonObjectSerializer(json j);

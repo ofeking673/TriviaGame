@@ -47,6 +47,11 @@
 
 #define TEMP_ADD_QUESTION_TO_DATABASE_RESPONSE_STATUS 880
 
+// Matchmaking
+#define TEMP_CREATE_ROOM__START_MATCHMAKING_RESPONSE_STATUS 700
+#define TEMP_JOIN_ROOM__START_MATCHMAKING_RESPONSE_STATUS 701
+#define TEMP_FAILED__START_MATCHMAKING_RESPONSE_STATUS  708
+
 enum RequestId {
 	Login,
 	SignUp,
@@ -105,7 +110,8 @@ protected:
 		resp.players = m_room.getAllUsers();
 		resp.questionCount = rm.numOfQuestionsInGame;
 		resp.status = TEMP_GET_ROOM_STATE_STATUS;
-		
+		resp.isMatchmaking = rm.isMatchmaking;
+		resp.waitingForAnotherUser = rm.waitingForMatchmaking;
 	};
 };
 

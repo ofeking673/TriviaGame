@@ -59,7 +59,9 @@ namespace frontend.Pages
 
         private void button5_Click(object sender, EventArgs e)
         {
-
+            this.Hide();
+            Matchmaking matchmaking = new Matchmaking();
+            matchmaking.ShowDialog();
         }
     }
 }

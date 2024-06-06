@@ -9,6 +9,8 @@
 #include <memory>
 #include <mutex>
 
+#define NOT_FOUND 10001
+
 class RoomManager
 {
 public:
@@ -27,6 +29,8 @@ public:
 	std::vector<RoomData> getRooms() const;
 	Room& getRoom(unsigned int ID);
 	bool doesRoomExist(unsigned int ID);
+
+	unsigned int getRoomIdForMatchmaking();
 
 	unsigned int generateUniqueRoomId();
 

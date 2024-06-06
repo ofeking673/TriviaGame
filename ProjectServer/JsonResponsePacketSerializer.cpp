@@ -271,6 +271,9 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
     j["questionCount"] = getRoomStateResponse.questionCount;
     j["answerTimeOut"] = getRoomStateResponse.answerTimeOut;
 
+    j["isMatchmaking"] = getRoomStateResponse.isMatchmaking;
+    j["waitingForAnotherUser"] = getRoomStateResponse.waitingForAnotherUser;
+
     return jsonObjectSerializer(j);
 }
 
@@ -359,6 +362,15 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveGameResponse& 
 Buffer JsonResponsePacketSerializer::serializeResponse(const AddQuestionResponse& addQuestionResponse)
 {
     return statusOnlySerializeResponse(addQuestionResponse.status);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const StartMatchmakingResponse& startMatchmakingResponse)
+{
+    json j;
+    j["status"] = startMatchmakingResponse.status;
+    j["roomId"] = startMatchmakingResponse.roomId;
+
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>
