@@ -6,7 +6,7 @@ bool MenuRequestHandler::isRequestRelevant(Requestinfo requestInfo)
     return (requestInfo.id == CreateRoom || requestInfo.id == GetRooms ||
             requestInfo.id == GetPlayersInRoom || requestInfo.id == JoinRoom ||
             requestInfo.id == GetPersonalStats || requestInfo.id == GetHighScores ||
-			requestInfo.id == Logout || requestInfo.id == AddQuestion);
+			requestInfo.id == Logout || requestInfo.id == AddQuestion || requestInfo.id == StartMatchmaking);
 }
 
 RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
@@ -55,6 +55,10 @@ RequestResult MenuRequestHandler::HandleRequest(Requestinfo requestInfo)
 		else if (requestInfo.id == AddQuestion)
 		{
 			requestResult = addQuestion(requestInfo);
+		}
+		else if (requestInfo.id == StartMatchmaking)
+		{
+			requestResult = startMatchmaking(requestInfo);
 		}
 	}
 	else
@@ -381,6 +385,7 @@ RequestResult MenuRequestHandler::startMatchmaking(Requestinfo requestInfo)
 			MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
 			requestResult.newHandler = (IRequestHandler*)menu;
 		}
+		startMatchmakingResponse.roomId = roomData.id;
 	}
 
 	// There is an awaiting room for matchmaking -> join it
@@ -399,10 +404,11 @@ RequestResult MenuRequestHandler::startMatchmaking(Requestinfo requestInfo)
 			requestResult.newHandler = (IRequestHandler*)menu;
 			startMatchmakingResponse.status = TEMP_FAILED__START_MATCHMAKING_RESPONSE_STATUS;
 		}
+		startMatchmakingResponse.roomId = roomId;
 	}
 
 
-	startMatchmakingResponse.roomId = roomData.id;
+	
 
 	//Serialize response
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(startMatchmakingResponse);

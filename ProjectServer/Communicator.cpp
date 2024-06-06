@@ -235,6 +235,8 @@ RequestId Communicator::getIdFromStr(std::string str)
 		return GetGameResult;
 	case 18:
 		return AddQuestion;
+	case 19:
+		return StartMatchmaking;
 	default:
 		return Error69; //we love when this happens
 

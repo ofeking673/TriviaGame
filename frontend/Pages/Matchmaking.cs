@@ -14,8 +14,8 @@ namespace frontend.Pages
 {
     public partial class Matchmaking : Form
     {
-        private int TEMP_MATCHMAKING_RESPONSE_STATUS = 1000;
-        private int TEMP_MATCHMAKING_ROOM_CREATED_STATUS = 1100;
+        private int TEMP_MATCHMAKING_RESPONSE_STATUS = 701;
+        private int TEMP_MATCHMAKING_ROOM_CREATED_STATUS = 700;
         public Matchmaking()
         {
             InitializeComponent();
