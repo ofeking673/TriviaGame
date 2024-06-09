@@ -58,11 +58,15 @@ namespace frontend.Pages
                         {
                             Console.WriteLine(word);
                             string[] strings = word.Split("|");
-                            string joinable = (strings[5] == "0") ? "yes" : "no";
-                            string text = $"{strings[name]} [{strings[id]}] Is joinable: {joinable}";
+                            string roomName = strings[name];
+                            if(roomName != "matchmakingRoom")
+                            {
+                                string joinable = (strings[5] == "0") ? "yes" : "no";
+                                string text = $"{strings[name]} [{strings[id]}] Is joinable: {joinable}";
 
-                            MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
-                            listBox1.Invoke(updateUI);
+                                MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
+                                listBox1.Invoke(updateUI);
+                            }
                         }
                         methodInvoker = delegate
                         {
