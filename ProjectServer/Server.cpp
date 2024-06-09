@@ -10,6 +10,7 @@ Server::Server() :
 	m_handlerFactory(RequestHandlerFactory::getInstance(&m_database)),
 	m_communicator(&Communicator::getInstance(m_handlerFactory))
 {
+	std::srand(std::time(0));
 }
 
 void Server::initSingleton()
