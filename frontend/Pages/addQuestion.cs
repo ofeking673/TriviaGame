@@ -47,7 +47,21 @@ namespace frontend.Pages
                 answers[3] = textBox5.Text;
 
 
-                newQuestion q = new newQuestion(textBox1.Text, answers[0], answers[1], answers[2], answers[3]);
+                // Rearrange the array so that the chosen element is first
+                int chosenIndex = id - 1;
+                string[] rearrangedAnswers = new string[4];
+                rearrangedAnswers[0] = answers[chosenIndex];
+
+                int index = 1;
+                for (int i = 0; i < answers.Length; i++)
+                {
+                    if (i != chosenIndex)
+                    {
+                        rearrangedAnswers[index++] = answers[i];
+                    }
+                }
+
+                newQuestion q = new newQuestion(textBox1.Text, rearrangedAnswers[0], rearrangedAnswers[1], rearrangedAnswers[2], rearrangedAnswers[3]);
                 string json = JsonConvert.SerializeObject(q);
                 string message = $"18|{json.Length.ToString().PadLeft(4, '0')}{json}";
                 Console.WriteLine(message);
@@ -62,6 +76,7 @@ namespace frontend.Pages
             {
                 MessageBox.Show("One or more fields are missing.", "Question creation", MessageBoxButtons.OK);
             }
+            button1.Enabled = true;
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
