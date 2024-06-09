@@ -43,7 +43,9 @@ namespace frontend.Pages
             }
             else
             {
-                //what the fuck
+                this.Hide();
+                mainMenu mainmenu = new mainMenu();
+                mainmenu.ShowDialog();
             }
         }
     }
