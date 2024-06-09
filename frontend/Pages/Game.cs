@@ -235,7 +235,7 @@ namespace frontend.Pages
         private void gameEnded()
         {
             if(!this.Visible) return;
-            this.Hide();
+            this.Invoke(this.Hide);
             timer.Stop();
             timer.Dispose();
 

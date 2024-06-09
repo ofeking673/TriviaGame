@@ -84,6 +84,11 @@ namespace frontend.Pages
             string message = "5";
             var obj = listBox1.SelectedItem;
             string value = listBox1.GetItemText(obj);
+            if(string.IsNullOrEmpty(value)) 
+            {
+                ErrorJoin(sender,e);
+                return;
+            }
             string joinable = value.Substring(value.IndexOf(": ") + 2, value.Length - value.IndexOf(": ")-2);
             Console.WriteLine(joinable);
             value = value.Substring(value.IndexOf("[") + 1, value.IndexOf("]") - value.IndexOf("[")-1);

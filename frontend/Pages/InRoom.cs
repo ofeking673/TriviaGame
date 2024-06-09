@@ -132,12 +132,12 @@ namespace frontend.Pages
             switch(roomMethod)
             {
                 case 1:
-                    this.Hide();
+                    this.Invoke(this.Hide);
                     Game game = new Game(rm.answerTimeout, rm.questionsCount);
                     game.ShowDialog();
                     break;
                 case 2:
-                    this.Hide();
+                    this.Invoke(this.Hide);
                     JoinRoom j = new JoinRoom();
                     j.ShowDialog();
                     break;
