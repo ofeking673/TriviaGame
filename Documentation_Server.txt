@@ -124,6 +124,23 @@ GetHighScores:
 			vector<string> highScores [in the following format: (TO-DO! still need to think about in code. probably: username|score, username|score, ...)]
 			new handler = menu request handler
 
+Logout:
+	Request:
+		RequestId = 8
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 500
+			new handler = nullptr (TO-DO maybe change in future to login request handler)
+		if failed:
+			status = 508
+			new handler = menu request handler 
+
+
 
 CloseRoom:
 	Request:
@@ -165,22 +182,6 @@ UpdateRoom:
 	Response:
 		status = 
 		0 = ok , 1 = start, 2 = leave
-Logout:
-	Request:
-		RequestId = 8
-	
-		client sends: 
-			(only requestId)
-
-	Response:
-		
-		If succeful:
-			status = 500
-			new handler = nullptr (TO-DO maybe change in future to login request handler)
-		if failed:
-			status = 508
-			new handler = menu request handler 
-
 
 LeaveGame:
 	Request:
@@ -255,3 +256,50 @@ GetGameResult:
 					score (unsigned int)
 
 			new handler = game request handler
+
+
+AddQuestion:
+	Request:
+		RequestId = 18
+	
+		client sends: 
+				
+				question (string) 
+				correctAns (string) 
+				Answer1 (string) 
+				Answer2 (string) 
+				Answer3 (string) 
+
+	Response:
+		
+		If succeful:
+			status = 880
+
+			new handler = menu request handler
+
+StartMatchmaking:
+	Request:
+		RequestId = 19
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			if created a new room (There was no one waiting on matchmaking):
+				status = 700
+				roomId (unsigned int)
+			
+				new handler = room admin request handler
+
+			if joined room (There was someone waiting in a room for matchmaking):
+				status = 701
+				roomId (unsigned int)
+			
+				new handler = room member request handler
+
+		if failed:
+			status = 708
+
+			new handler = menu request handler 
