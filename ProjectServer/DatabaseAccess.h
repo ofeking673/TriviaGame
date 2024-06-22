@@ -7,10 +7,17 @@
 class DatabaseAccess : public IDatabase
 {
 public:
-	DatabaseAccess()
-	{
-		open(FILENAME);
-	};
+
+	// Access the single instance
+	static DatabaseAccess& getInstance();
+
+	// Delete copy constructors
+	DatabaseAccess(const DatabaseAccess&) = delete;
+	DatabaseAccess& operator=(const DatabaseAccess&) = delete;
+
+
+
+
 
 	virtual void open(std::string fileName) override
 	{
@@ -21,15 +28,18 @@ public:
 		{
 			InitDb();
 		}
+
+		//"int variable;", "variable int;", "int = variable;", "variable = int;"
+		//	void addQuestion(std::string question, std::vector<std::string> answers);
+		/*std::vector<std::string> answers = {"Hello", "hello2", "hello3", "hello4"};
+		addQuestion("Q1", answers);*/
 	};
 
 	virtual void close() override {
 		sqlite3_close(db);
 		db = nullptr;
+		delete this;
 	};
-
-
-	~DatabaseAccess() { close(); };
 
 	virtual void InitDb() override;
 	
@@ -62,7 +72,36 @@ public:
 
 	static int highScoreCallback(void* data, int argc, char** argv, char** azColName);
 
+
+
+	// Game related
+	virtual int submitGameStatistics(const std::string& username, const GameData& gameData);
+	virtual void addQuestion(std::string question, std::vector<std::string> answers) override;
 private:
+
+
+	// Private ctor
+	DatabaseAccess() 
+	{
+		open(FILENAME);
+	}
+
+	// Private dtor
+	~DatabaseAccess() 
+	{
+		close();
+	}
+
+	// Static method to initialize the singleton instance
+	static void initSingleton();
+
+	// Pointer to the single instance
+	static DatabaseAccess* instance;
+
+	// Flag to ensure the instance is only created once
+	static std::once_flag initInstanceFlag;
+
+
+
 	sqlite3* db;
 };
-

@@ -34,7 +34,10 @@
             button3 = new Button();
             button4 = new Button();
             pictureBox1 = new PictureBox();
+            pictureBox2 = new PictureBox();
+            button5 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -50,7 +53,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(423, 585);
+            button2.Location = new Point(423, 535);
             button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
             button2.Size = new Size(144, 35);
@@ -61,7 +64,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(423, 687);
+            button3.Location = new Point(423, 683);
             button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
             button3.Size = new Size(144, 35);
@@ -72,7 +75,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(423, 484);
+            button4.Location = new Point(423, 459);
             button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
             button4.Size = new Size(144, 35);
@@ -93,6 +96,29 @@
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = Color.Transparent;
+            pictureBox2.BackgroundImage = (Image)resources.GetObject("pictureBox2.BackgroundImage");
+            pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox2.Location = new Point(890, 12);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(96, 77);
+            pictureBox2.TabIndex = 5;
+            pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(423, 611);
+            button5.Margin = new Padding(3, 4, 3, 4);
+            button5.Name = "button5";
+            button5.Size = new Size(144, 31);
+            button5.TabIndex = 6;
+            button5.Text = "Matchmaking";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // mainMenu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -100,6 +126,8 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(998, 764);
+            Controls.Add(button5);
+            Controls.Add(pictureBox2);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
@@ -110,6 +138,7 @@
             Name = "mainMenu";
             Text = "mainMenu";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
         }
 
@@ -120,5 +149,7 @@
         private Button button3;
         private Button button4;
         private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
+        private Button button5;
     }
 }

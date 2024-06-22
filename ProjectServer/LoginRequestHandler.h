@@ -11,7 +11,7 @@ public:
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo);
 	virtual RequestResult HandleRequest(Requestinfo requestInfo);
-
+	virtual LoggedUser getUser() override { return LoggedUser(""); };
 private:
 	RequestHandlerFactory& m_handlerFactory;
 	LoginManager& m_loginManager;

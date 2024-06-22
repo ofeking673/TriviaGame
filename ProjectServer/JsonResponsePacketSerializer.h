@@ -7,6 +7,10 @@
 #include "Room.h"
 #include "json.hpp"
 
+#define WAIT_IN_ROOM__ROOM_UPDATE_RESPONSE_STATUS 0
+#define GAME_STARTS__ROOM_UPDATE_RESPONSE_STATUS 1
+#define LEAVE__ROOM_UPDATE_RESPONSE_STATUS 2
+
 using json = nlohmann::json;
 
 // Struct of error response
@@ -91,6 +95,8 @@ struct GetRoomStateResponse
 	std::vector<std::string> players;
 	unsigned int questionCount;
 	unsigned int answerTimeOut;
+	unsigned int isMatchmaking;
+	unsigned int waitingForAnotherUser;
 };
 
 struct LeaveRoomResponse
@@ -98,8 +104,57 @@ struct LeaveRoomResponse
 	unsigned int status;
 };
 
-struct RoomUpdateResponse {
+struct RoomUpdateResponse 
+{
 	unsigned int status;
+};
+
+// Game related
+struct LeaveGameResponse
+{
+	unsigned int status;
+};
+
+struct GetQuestionResponse
+{
+	unsigned int status;
+	std::string question;
+	//		answer number, answer sentence
+	std::vector<std::string> answers;
+};
+
+struct SubmitAnswerResponse
+{
+	unsigned int status;
+	unsigned int correctAnswerId;
+	unsigned int score;
+};
+
+// Game Results
+struct PlayerResults
+{
+	std::string username;
+	unsigned int correctAnswerCount;
+	unsigned int wrongAnswerCount;
+	double averageAnswerTime;
+	unsigned int score;
+};
+
+struct GetGameResultsResponse
+{
+	unsigned int status;
+	std::vector<PlayerResults> results;
+};
+
+struct AddQuestionResponse 
+{
+	unsigned int status;
+};
+
+struct StartMatchmakingResponse
+{
+	unsigned int status;
+	unsigned int roomId;
 };
 
 // Static class to serialize json response packets
@@ -131,6 +186,18 @@ public:
 	static Buffer serializeResponse(const GetRoomStateResponse& getRoomStateResponse);
 	static Buffer serializeResponse(const LeaveRoomResponse& leaveRoomResponse);
 	static Buffer serializeResponse(const RoomUpdateResponse& roomUpdateResponse);
+
+	// Game related
+	static Buffer serializeResponse(const GetGameResultsResponse& getGameResultsResponse);
+	static Buffer serializeResponse(const SubmitAnswerResponse& submitAnswerResponse);
+	static Buffer serializeResponse(const GetQuestionResponse& getQuestionResponse);
+	static Buffer serializeResponse(const LeaveGameResponse& leaveGameResponse);
+
+	static Buffer serializeResponse(const AddQuestionResponse& addQuestionResponse);
+
+	// Matchmaking
+	static Buffer serializeResponse(const StartMatchmakingResponse& startMatchmakingResponse);
+
 private:
 	static Buffer statusOnlySerializeResponse(const unsigned int status);
 	static Buffer jsonObjectSerializer(json j);

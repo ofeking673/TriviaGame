@@ -32,22 +32,18 @@ namespace frontend
             return obj != null && obj.Text != null && obj.Text.Length > 0;
         }
 
-        public static string sendAndRecieve(string message, bool ok) {
-            if (ok)
-            {
-                string binary = Utils.StringToBinary(message);
-                byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
+        public static string sendAndRecieve(string message) {
+            string binary = Utils.StringToBinary(message);
+            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(binary);
 
-                Program.networkStream.Write(bytes, 0, bytes.Length);
+            Program.networkStream.Write(bytes, 0, bytes.Length);
 
-                byte[] bytes1 = new byte[1024];
-                Program.networkStream.Read(bytes1, 0, bytes1.Length);
-                if (string.IsNullOrEmpty(Encoding.Default.GetString(bytes1))) { return ""; }
+            byte[] bytes1 = new byte[10000];
+            Program.networkStream.Read(bytes1, 0, bytes1.Length);
+            if (string.IsNullOrEmpty(Encoding.Default.GetString(bytes1))) { return ""; }
 
-                string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
-                return answer;
-            }
-            return "";
+            string answer = Utils.GetBytesFromBinaryString(Encoding.Default.GetString(bytes1));
+            return answer;
         }
     }
 }

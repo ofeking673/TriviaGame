@@ -1,13 +1,15 @@
 #include "Room.h"
-#include "Room.h"
 
 // Adds user to room
 bool Room::addUser(const LoggedUser& user)
 {
-    if (m_metadata.maxPlayers > m_users.size())
+    if (m_metadata.maxPlayers > m_users.size() && !getRoomData().isActive)
     {
-        std::cout << "trying ot add" << std::endl;
         m_users.push_back(user);
+        if (m_metadata.isMatchmaking == TO_MATCHMAKING && m_users.size() == 2)
+        {
+            m_metadata.waitingForMatchmaking = FOUND_USER;
+        }
         return true;
     }
     return false;
@@ -15,14 +17,14 @@ bool Room::addUser(const LoggedUser& user)
 }
 
 // Removes a user from the room
-void Room::removeUser(const LoggedUser& user)
+bool Room::removeUser(const LoggedUser& user)
 {
     for (auto it = m_users.begin(); it != m_users.end(); it++)
     {
         if (it->getUsername() == user.getUsername())
         {
             m_users.erase(it);
-            return;
+            return m_users.empty();
         }
     }
 }
@@ -49,6 +51,18 @@ void Room::startGame(LoggedUser& owner)
 RoomData Room::getRoomData() const
 {
     return m_metadata;
+}
+
+bool Room::hasPlayer(const LoggedUser& user) const
+{
+    for (const auto& u : m_users) 
+    {
+        if (u.getUsername() == user.getUsername())
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 

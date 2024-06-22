@@ -17,6 +17,7 @@ namespace frontend.Pages
         public bool stopThread = false;
         public Thread thread;
         private int roomId;
+        RoomState rm;
 
         public ManageRoom(int id)
         {
@@ -27,6 +28,11 @@ namespace frontend.Pages
 
         public void loadForm(object sender, EventArgs e)
         {
+            string message = "11|0000";
+            string answer = Program.sendAndRecieve(message);
+
+            rm = JsonConvert.DeserializeObject<RoomState>(answer);
+
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
         }
@@ -48,7 +54,7 @@ namespace frontend.Pages
 
                 string json = JsonConvert.SerializeObject(roomId);
                 string message = $"4|{json.Length.ToString().PadLeft(4, '0')}{json}";
-                string answer = Program.sendAndRecieve(message, !stopThread);
+                string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
 
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
@@ -85,12 +91,17 @@ namespace frontend.Pages
             //mainMenu mm = new mainMenu();
             //mm.Show();
 
+            stopThread = true;
+            thread.Join();
+
             string message = "10|0000";
-            string answer = Program.sendAndRecieve(message, true);
+            string answer = Program.sendAndRecieve(message);
 
             if (answer.Contains("420"))
             {
-                MessageBox.Show("You started the game!", "Game notification!", MessageBoxButtons.OK);
+                this.Hide();
+                Game game = new Game(rm.answerTimeout, rm.questionsCount);
+                game.ShowDialog();
             }
 
             //waht teh fuck did oyu do
@@ -103,7 +114,7 @@ namespace frontend.Pages
             thread.Join();
 
             string message = "9|0000";
-            string answer = Program.sendAndRecieve(message, stopThread);
+            string answer = Program.sendAndRecieve(message);
 
             if (answer.Contains("410"))
             {

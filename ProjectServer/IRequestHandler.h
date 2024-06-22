@@ -25,6 +25,9 @@
 
 #define TEMP_GET_ROOM_STATE_STATUS 250
 
+#define TEMP_GET_QUESTION_RESPONSE_STATUS 260
+#define TEMP_NO_MORE_QUESTIONS_LEFT_GET_QUESTION_RESPONSE_STATUS 261
+
 // Rooms
 #define TEMP_CREATE_ROOM_RESPONSE_STATUS 300
 #define TEMP_FAIL_CREATE_ROOM_RESPONSE_STATUS 308
@@ -36,6 +39,18 @@
 #define TEMP_LEAVE_ROOM_STATUS 400
 #define TEMP_ROOM_CLOSE_STATUS 410
 #define TEMP_ROOM_START_STATUS 420
+
+// Game
+#define TEMP_SUBMIT_ANSWER_RESPONSE_STATUS 600
+#define TEMP_GET_GAME_RESULTS_RESPONSE_STATUS 610
+#define TEMP_LEAVE_GAME_RESPONSE_STATUS 680
+
+#define TEMP_ADD_QUESTION_TO_DATABASE_RESPONSE_STATUS 880
+
+// Matchmaking
+#define TEMP_CREATE_ROOM__START_MATCHMAKING_RESPONSE_STATUS 700
+#define TEMP_JOIN_ROOM__START_MATCHMAKING_RESPONSE_STATUS 701
+#define TEMP_FAILED__START_MATCHMAKING_RESPONSE_STATUS  708
 
 enum RequestId {
 	Login,
@@ -52,6 +67,12 @@ enum RequestId {
 	GetRoomState,
 	LeaveRoom,
 	Update,
+	LeaveGame,
+	GetQuestion,
+	SubmitAnswer,
+	GetGameResult,
+	AddQuestion,
+	StartMatchmaking,
 	Error69 = 69
 };
 
@@ -78,7 +99,7 @@ public:
 
 	virtual bool isRequestRelevant(Requestinfo requestInfo) = 0;
 	virtual RequestResult HandleRequest(Requestinfo requestInfo) = 0;
-
+	virtual LoggedUser getUser() = 0;
 protected:
 	//for room request handlers
 	void getRoomStateResponseByRoom(Room m_room, GetRoomStateResponse& resp) {
@@ -89,7 +110,8 @@ protected:
 		resp.players = m_room.getAllUsers();
 		resp.questionCount = rm.numOfQuestionsInGame;
 		resp.status = TEMP_GET_ROOM_STATE_STATUS;
-		
+		resp.isMatchmaking = rm.isMatchmaking;
+		resp.waitingForAnotherUser = rm.waitingForMatchmaking;
 	};
 };
 

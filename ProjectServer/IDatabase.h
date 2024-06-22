@@ -3,6 +3,8 @@
 #include <map>
 #include "Question.h"
 #include <list>
+#include "Game.h"
+#include <mutex>
 
 #define FILENAME "database.sql"
 
@@ -30,4 +32,8 @@ public:
 	virtual int getNumOfPlayerGames(std::string username) = 0;
 	virtual int getPlayerScore(std::string username) = 0;
 	virtual std::vector<std::string> getHighScores() = 0;
+
+	// Game related
+	virtual int submitGameStatistics(const std::string& username, const GameData& gameData) = 0;
+	virtual void addQuestion(std::string question, std::vector<std::string> answers) = 0;
 };

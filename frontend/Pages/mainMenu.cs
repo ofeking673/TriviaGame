@@ -46,8 +46,22 @@ namespace frontend.Pages
             //handle log out here
 
             string msg = "8|0000";
-            Program.sendAndRecieve(msg, true);
+            Program.sendAndRecieve(msg);
+            Application.Exit();
         }
 
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            addQuestion addq = new addQuestion();
+            addq.ShowDialog();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Matchmaking matchmaking = new Matchmaking();
+            matchmaking.ShowDialog();
+        }
     }
 }

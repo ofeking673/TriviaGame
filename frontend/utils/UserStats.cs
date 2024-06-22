@@ -8,6 +8,6 @@ namespace frontend.utils
 {
     internal class UserStatsData
     {
-        public string personalStats;
+        public string UserStatistics;
     }
 }

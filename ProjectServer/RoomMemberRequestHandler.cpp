@@ -125,17 +125,21 @@ RequestResult RoomMemberRequestHandler::roomUpdate(Requestinfo Requestinfo)
 	RequestResult requestResult;
 	requestResult.response = JsonResponsePacketSerializer::serializeResponse(upd);
 	//(upd.status == 2) ? (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user) : (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
-	if (upd.status == 2)
+	if (upd.status == LEAVE__ROOM_UPDATE_RESPONSE_STATUS)
 	{
 		if (m_roomManager.getRoom(m_id).getAllUsers().size() < 2)
 		{
 			m_roomManager.deleteRoom(m_id);
 		}
-		requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createMenuRequestHandler(m_user);
+		requestResult.newHandler = (IRequestHandler*)RequestHandlerFactory::getInstance(&DatabaseAccess::getInstance()).createMenuRequestHandler(m_user);
 	}
-	else
+	else if (upd.status == WAIT_IN_ROOM__ROOM_UPDATE_RESPONSE_STATUS)
 	{
-		requestResult.newHandler = (IRequestHandler*)m_handlerFactory.createRoomMemberRequestHandler(m_user, m_room);
+		requestResult.newHandler = (IRequestHandler*)RequestHandlerFactory::getInstance(&DatabaseAccess::getInstance()).createRoomMemberRequestHandler(m_user, m_room);
+	}
+	else if (upd.status == GAME_STARTS__ROOM_UPDATE_RESPONSE_STATUS)
+	{
+		requestResult.newHandler = (IRequestHandler*)RequestHandlerFactory::getInstance(&DatabaseAccess::getInstance()).createGameRequestHandler(m_user);
 	}
 
 	return requestResult;

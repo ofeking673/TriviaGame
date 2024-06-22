@@ -20,9 +20,13 @@ public:
 	RequestResult getHighScore(Requestinfo requestInfo);
 	RequestResult joinRoom(Requestinfo requestInfo);
 	RequestResult createRoom(Requestinfo requestInfo);
+	RequestResult addQuestion(Requestinfo requestInfo);
+
+	RequestResult startMatchmaking(Requestinfo requestInfo);
 
 	RequestResult error(Requestinfo requestInfo);
 
+	virtual LoggedUser getUser() override { return m_user; };
 private:
 	LoggedUser m_user;
 	RequestHandlerFactory& m_handlerFactory;

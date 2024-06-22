@@ -34,9 +34,6 @@ RequestResult RoomAdminRequestHandler::HandleRequest(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 {
-    // TO-DO
-    // IMPORTANT
-    // Send leave messages to other members of room
     CloseRoomResponse closeRoomResponse;
 
     closeRoomResponse.status = TEMP_ROOM_CLOSE_STATUS;
@@ -45,14 +42,14 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(closeRoomResponse);
 
-    if (m_roomManager.getRoom(m_id).getAllUsers().size() < 2)
-    {
-        m_roomManager.deleteRoom(m_id);
-    }
-
     MenuRequestHandler* menu = m_handlerFactory.createMenuRequestHandler(m_user);
     requestResult.newHandler = (IRequestHandler*)menu;
     m_room.removeUser(m_user);
+
+    if (m_roomManager.getRoom(m_id).getAllUsers().size() < 1)
+    {
+        m_roomManager.deleteRoom(m_id);
+    }
 
     return requestResult;
 
@@ -60,17 +57,18 @@ RequestResult RoomAdminRequestHandler::closeRoom(Requestinfo requestInfo)
 
 RequestResult RoomAdminRequestHandler::startGame(Requestinfo requestInfo)
 {
+    std::cout << "Room started!\n";
     m_room.status = 1;
     m_room.startGame(m_user);
+    m_handlerFactory.getGameManager().createGame(m_room);
     StartGameResponse start;
     start.status = TEMP_ROOM_START_STATUS;
 
     RequestResult requestResult;
     requestResult.response = JsonResponsePacketSerializer::serializeResponse(start);
     
-    //TO-DO need to make game handler
-    // For now will stay in roomAdminRequestHandler
-    requestResult.newHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_room);
+    // Move to Game request handloer
+    requestResult.newHandler = (IRequestHandler*)RequestHandlerFactory::getInstance(&DatabaseAccess::getInstance()).createGameRequestHandler(m_user);
 
     return requestResult;
 }

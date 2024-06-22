@@ -197,10 +197,12 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetHighScoreRespons
     {
         if (i > 0)
         {
-            highScores += ", ";
+            highScores += ",";
         }
         highScores += getHighScoreResponse.statistics[i];
     }
+    std::cout << highScores << std::endl;
+    highScores.pop_back();
     j["HighScores"] = highScores;
 
     return jsonObjectSerializer(j);
@@ -235,7 +237,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetPersonalStatsRes
     {
         if (i > 0) 
         {
-            statisticsString += ", ";
+            statisticsString += ",";
         }
         statisticsString += getPersonalStatsResponse.statistics[i];
     }
@@ -269,6 +271,9 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const GetRoomStateRespons
     j["questionCount"] = getRoomStateResponse.questionCount;
     j["answerTimeOut"] = getRoomStateResponse.answerTimeOut;
 
+    j["isMatchmaking"] = getRoomStateResponse.isMatchmaking;
+    j["waitingForAnotherUser"] = getRoomStateResponse.waitingForAnotherUser;
+
     return jsonObjectSerializer(j);
 }
 
@@ -280,6 +285,92 @@ Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveRoomResponse& 
 Buffer JsonResponsePacketSerializer::serializeResponse(const RoomUpdateResponse& roomUpdateResponse)
 {
     return statusOnlySerializeResponse(roomUpdateResponse.status);
+}
+
+// Game related
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetGameResultsResponse& getGameResultsResponse)
+{
+    json j;
+    j["status"] = getGameResultsResponse.status;
+
+    //// Serializing the vector of PlayerResults
+    //for (const auto& result : getGameResultsResponse.results)
+    //{
+    //    json playerResult;
+    //    playerResult["username"] = result.username;
+    //    playerResult["correctAnswerCount"] = result.correctAnswerCount;
+    //    playerResult["wrongAnswerCount"] = result.wrongAnswerCount;
+    //    playerResult["averageAnswerTime"] = result.averageAnswerTime;
+    //    playerResult["score"] = result.score;
+    //    j["results"].push_back(playerResult);
+    //}
+
+    std::ostringstream ss;
+
+    // Serialize the vector of PlayerResults
+    for (const auto& result : getGameResultsResponse.results)
+    {
+        ss << result.username << "|"
+            << result.correctAnswerCount << "|"
+            << result.wrongAnswerCount << "|"
+            << result.averageAnswerTime << "|"
+            << result.score << ",";
+    }
+
+    // Convert to string
+    std::string resultsStr = ss.str();
+
+    // Remove the last comma
+    if (!resultsStr.empty())
+    {
+        resultsStr.pop_back();
+    }
+    
+    j["results"] = resultsStr;
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const SubmitAnswerResponse& submitAnswerResponse)
+{
+    json j;
+    j["status"] = submitAnswerResponse.status;
+    j["correctAnswerId"] = submitAnswerResponse.correctAnswerId;
+    j["score"] = submitAnswerResponse.score;
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const GetQuestionResponse& getQuestionResponse)
+{
+    // Convert GetQuestionResponse to JSON
+    json j;
+    j["status"] = getQuestionResponse.status;
+    j["question"] = getQuestionResponse.question;
+
+    // Serializing the map of answers into JSON
+    j["answers"] = getQuestionResponse.answers;
+
+    return jsonObjectSerializer(j);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const LeaveGameResponse& leaveGameResponse)
+{
+    return statusOnlySerializeResponse(leaveGameResponse.status);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const AddQuestionResponse& addQuestionResponse)
+{
+    return statusOnlySerializeResponse(addQuestionResponse.status);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(const StartMatchmakingResponse& startMatchmakingResponse)
+{
+    json j;
+    j["status"] = startMatchmakingResponse.status;
+    j["roomId"] = startMatchmakingResponse.roomId;
+
+    return jsonObjectSerializer(j);
 }
 
 /// <summary>

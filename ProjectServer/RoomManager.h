@@ -7,12 +7,20 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <mutex>
+
+#define NOT_FOUND 10001
 
 class RoomManager
 {
 public:
-	RoomManager() = default;
-	RoomManager(const RoomManager& other);
+	// Public method to access the single instance
+	static RoomManager& getInstance();
+
+	// Delete copy constructors
+	RoomManager(const RoomManager& other) = delete;
+	RoomManager& operator=(const RoomManager& other) = delete;
+
 	~RoomManager() = default;
 
 	bool createRoom(LoggedUser user, RoomData& roomData);
@@ -22,11 +30,25 @@ public:
 	Room& getRoom(unsigned int ID);
 	bool doesRoomExist(unsigned int ID);
 
+	unsigned int getRoomIdForMatchmaking();
+
 	unsigned int generateUniqueRoomId();
 
-	//void test(Room* room) { m_rooms.insert({ 0, room }); }
+	Room& getRoomForUser(const LoggedUser& user);
 
 private:
+	// Private ctor
+	RoomManager() {};
+
+	// Static method to initialize the singleton instance
+	static void initSingleton();
+
+	// Pointer to the single instance
+	static RoomManager* instance;
+
+	// Flag to ensure the instance is only created once
+	static std::once_flag initInstanceFlag;
+
 	// RoomId -> Room
 	std::map<unsigned int, std::shared_ptr<Room>> m_rooms;
 };

@@ -44,7 +44,7 @@ namespace frontend.Pages
             Console.WriteLine(json);
             string finalJson = $"1|{json.Length.ToString().PadLeft(4, '0')}{json}";
             
-            string answer = Program.sendAndRecieve(finalJson, true);
+            string answer = Program.sendAndRecieve(finalJson);
 
             Console.WriteLine(answer);
             if (answer.Contains("110"))

@@ -1,11 +1,27 @@
 #include "StatisticsManager.h"
 
+
+// Initialize static members
+StatisticsManager* StatisticsManager::instance = nullptr;
+std::once_flag StatisticsManager::initInstanceFlag;
+
 StatisticsManager::StatisticsManager(IDatabase* database) : m_database(database)
 {
     if (m_database == nullptr)
     {
         throw std::invalid_argument("Invalid Database pointer");
     }
+}
+
+void StatisticsManager::initSingleton()
+{
+    instance = new StatisticsManager(&DatabaseAccess::getInstance());
+}
+
+StatisticsManager& StatisticsManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &StatisticsManager::initSingleton);
+    return *instance;
 }
 
 StatisticsManager::~StatisticsManager()
@@ -34,6 +50,11 @@ std::vector<std::string> StatisticsManager::getUserStatistics(std::string userna
     userStatistics.push_back(std::to_string(m_database->getPlayerAverageAnswerTime(username)));
 
     return userStatistics;
+}
+
+void StatisticsManager::addQuestion(std::string question, std::vector<std::string> answers)
+{
+    m_database->addQuestion(question, answers);
 }
 
 

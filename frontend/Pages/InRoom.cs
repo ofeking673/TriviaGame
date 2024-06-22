@@ -18,6 +18,8 @@ namespace frontend.Pages
         public bool stopThread = false;
         public Thread thread;
         public Thread closeThread;
+        public RoomState rm;
+
         public InRoom(int id)
         {
             this.roomId = id;
@@ -26,6 +28,12 @@ namespace frontend.Pages
 
         public void loadPage(object sender, EventArgs e)
         {
+
+            string message = "11|0000";
+            string answer = Program.sendAndRecieve(message);
+
+            rm = JsonConvert.DeserializeObject<RoomState>(answer);
+
             thread = new Thread(new ThreadStart(threadCall));
             thread.Start();
 
@@ -37,7 +45,7 @@ namespace frontend.Pages
         {
             string message = "13|0000";
             if(stopThread) { return 2; }
-            string answer = Program.sendAndRecieve(message, !stopThread);
+            string answer = Program.sendAndRecieve(message);
             Console.WriteLine(answer + " Length = " + answer.Length);
             if(!string.IsNullOrEmpty(answer))
             {
@@ -86,7 +94,7 @@ namespace frontend.Pages
                         return;
                 }
 
-                string answer = Program.sendAndRecieve(message, !stopThread);
+                string answer = Program.sendAndRecieve(message);
                 Console.WriteLine(answer);
                 RoomPlayers roomPlayers = JsonConvert.DeserializeObject<RoomPlayers>(answer);
 
@@ -124,11 +132,12 @@ namespace frontend.Pages
             switch(roomMethod)
             {
                 case 1:
-                    MessageBox.Show("game started!", "Game notification", MessageBoxButtons.OK);
-                    //game start
+                    this.Invoke(this.Hide);
+                    Game game = new Game(rm.answerTimeout, rm.questionsCount);
+                    game.ShowDialog();
                     break;
                 case 2:
-                    this.Hide();
+                    this.Invoke(this.Hide);
                     JoinRoom j = new JoinRoom();
                     j.ShowDialog();
                     break;

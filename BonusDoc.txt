@@ -1,0 +1,25 @@
+Matchmaking - 	Added option to click matchmaking on main menu.
+		The server will look for 2 players oressed matchmaking
+		 and they will be in a room together and will be able to 
+		start the game.
+		
+		*The room created for them will not be seen in join room screen
+		so no one will be able to join it.
+
+Add Question - 	Added a screen to add a new question. 
+		(Click the secret door on main menu)
+		Enter the question and 4 answers.
+		Enter the id of the correct answer.
+		The question added to Database!
+
+Singleton - 	There is only one of the following objects:
+		LoginManager
+		RoomManager
+		StatisticsManager
+		GameManager
+		RequestHandlerFactory
+		JsonRequestPacketDeserializer (only static methods)
+		JsonResponsePacketSerializer (only static methods)
+		IDatabase - DatabaseAccess
+		Communicator
+		Server

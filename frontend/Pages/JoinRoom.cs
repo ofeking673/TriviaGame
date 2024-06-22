@@ -47,7 +47,7 @@ namespace frontend.Pages
                     listBox1.Invoke(methodInvoker);
                     string message = "3|0000";
 
-                    string answer = Program.sendAndRecieve(message, !stopThread);
+                    string answer = Program.sendAndRecieve(message);
                     //"Rooms":{ "RoomData, RoomData"}
                     RoomData roomData = JsonConvert.DeserializeObject<RoomData>(answer);
 
@@ -58,11 +58,15 @@ namespace frontend.Pages
                         {
                             Console.WriteLine(word);
                             string[] strings = word.Split("|");
-                            string joinable = (strings[5] == "0") ? "yes" : "no";
-                            string text = $"{strings[name]} [{strings[id]}] Is joinable: {joinable}";
+                            string roomName = strings[name];
+                            if(roomName != "matchmakingRoom")
+                            {
+                                string joinable = (strings[5] == "0") ? "yes" : "no";
+                                string text = $"{strings[name]} [{strings[id]}] Is joinable: {joinable}";
 
-                            MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
-                            listBox1.Invoke(updateUI);
+                                MethodInvoker updateUI = delegate { listBox1.Items.Add(text); };
+                                listBox1.Invoke(updateUI);
+                            }
                         }
                         methodInvoker = delegate
                         {
@@ -80,22 +84,36 @@ namespace frontend.Pages
             string message = "5";
             var obj = listBox1.SelectedItem;
             string value = listBox1.GetItemText(obj);
+            if(string.IsNullOrEmpty(value)) 
+            {
+                ErrorJoin(sender,e);
+                return;
+            }
+            string joinable = value.Substring(value.IndexOf(": ") + 2, value.Length - value.IndexOf(": ")-2);
+            Console.WriteLine(joinable);
             value = value.Substring(value.IndexOf("[") + 1, value.IndexOf("]") - value.IndexOf("[")-1);
             Console.WriteLine(value);
             RoomJoin room = new RoomJoin();
             room.roomId = int.Parse(value);
 
-            string json = JsonConvert.SerializeObject(room);
-            string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
-            string answer = Program.sendAndRecieve(finalMsg, true);
-
-            if (answer.Contains("310"))
+            if (joinable == "yes")
             {
-                stopThread = true;
-                thread.Join();
-                this.Hide();
-                InRoom inRoom = new InRoom(int.Parse(value));
-                inRoom.ShowDialog();
+                string json = JsonConvert.SerializeObject(room);
+                string finalMsg = $"{message}|{json.Length.ToString().PadLeft(4, '0')}{json}";
+                string answer = Program.sendAndRecieve(finalMsg);
+
+                if (answer.Contains("310"))
+                {
+                    stopThread = true;
+                    thread.Join();
+                    this.Hide();
+                    InRoom inRoom = new InRoom(int.Parse(value));
+                    inRoom.ShowDialog();
+                }
+                else
+                {
+                    ErrorJoin(sender, e);
+                }
             }
             else
             {

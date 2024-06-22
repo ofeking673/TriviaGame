@@ -5,9 +5,12 @@ class LoggedUser
 {
 public:
 	LoggedUser(const std::string username);
+	LoggedUser() = default;
 	~LoggedUser() = default;
 
 	std::string getUsername() const;
+
+	bool operator< (const LoggedUser& other) const;
 
 private:
 	std::string m_username;

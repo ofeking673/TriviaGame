@@ -1,8 +1,13 @@
 #include "RoomManager.h"
 
-RoomManager::RoomManager(const RoomManager& other)
+// Initialize static members
+RoomManager* RoomManager::instance = nullptr;
+std::once_flag RoomManager::initInstanceFlag;
+
+RoomManager& RoomManager::getInstance()
 {
-    m_rooms.insert(other.m_rooms.begin(), other.m_rooms.end());
+    std::call_once(initInstanceFlag, &RoomManager::initSingleton);
+    return *instance;
 }
 
 // Creates a new room and add it to the rooms map
@@ -69,6 +74,22 @@ bool RoomManager::doesRoomExist(unsigned int ID)
     return (m_rooms.find(ID) != m_rooms.end());
 }
 
+// Returns a roomId that witing in matchmaking if exists
+unsigned int RoomManager::getRoomIdForMatchmaking()
+{
+    for (auto it = m_rooms.begin(); it != m_rooms.end(); it++)
+    {
+        if (it->second->getRoomData().isMatchmaking == TO_MATCHMAKING)
+        {
+            if (it->second->getRoomData().waitingForMatchmaking == WAITING)
+            {
+                return it->first;
+            }
+        }
+    }
+    return NOT_FOUND;
+}
+
 // Generate a unique room id
 unsigned int RoomManager::generateUniqueRoomId()
 {
@@ -82,3 +103,21 @@ unsigned int RoomManager::generateUniqueRoomId()
 
     return newId; 
 }
+
+Room& RoomManager::getRoomForUser(const LoggedUser& user)
+{
+    for (auto& room : m_rooms)
+    {
+        if (room.second->hasPlayer(user))
+        {
+            return *room.second;
+        }
+    }
+    throw std::runtime_error("User not found in any game");
+}
+
+void RoomManager::initSingleton()
+{
+    instance = new RoomManager();
+}
+
