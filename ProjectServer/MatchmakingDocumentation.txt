@@ -1,0 +1,42 @@
+menuRequestHandler::startMatchmaking()
+	add current user to the next empty room.
+	if there is a room with 1 user already -> add the current user there. | will be on roomMemeberRequestHandler
+	if there is no room awaiting for someone -> create a new room. | will be on roomAdminRequestHandler
+
+	The new room will contain the same room parameters:
+	[maxPlayers : 2, numOfQuestionsInGame : 10, timePerQuestion : 20]
+	 
+	
+GUI - 
+	The room admin will constantly (every 3 seconds) send getRoomStateResponse
+	While doing so, will be in a screen saying: looking for another player etc..
+	When another player joined the room, the room admin will know because
+	there are now 2 players in room. 
+	Than, a screen will pop:
+	USER1 VS USER2
+	starting in: (5, 4, 3, 2, 1)
+	 
+	The room member (second user) will also see the screen saying:
+	 looking for another player etc..
+	When game found, will see the screen:
+	USER1 VS USER2
+	starting in: (5, 4, 3, 2, 1)
+
+	
+	SUMMARY:
+	When pressing matchmaking button the screen of looking for players will be.
+	The users will always check for getRoomStateResponse
+	and than when found, a screen of user Vs user2.
+	
+	The first user, which is the room admin, will send a startGameRequest.
+	The game will start and the roomMemeber will know thanks to update
+	that happens every 3 seconds while in room. 
+
+	
+	Than game starts and from now on, the same as regular game.
+
+RoomManager
+	add to RoomData a parameter to show whether the 
+	room is a created room or a matchmaking room.
+	if the room is a created room - show on GUI on joinRoom screen
+	if the room is a matchmaking room - do NOT show on GUI on joinRoom screen

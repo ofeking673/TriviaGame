@@ -1,0 +1,305 @@
+Documentation of Trivia Server:
+
+Login:
+	Request:
+		RequestId = 0
+	
+		client sends: 
+			string username
+			string password
+	Response:
+		
+		If succeful:
+			status = 100
+			new handler = menu request handler
+		if failed:
+			status = 108
+			new handler = login request handler
+
+Signup:
+	Request:
+		RequestId = 1
+	
+		client sends: 
+			string username
+			string password
+			string email
+	Response:
+		
+		If succeful:
+			status = 110
+			new handler = menu request handler
+		if failed:
+			status = 118
+			new handler = login request handler
+
+
+
+CreateRoom:
+	Request:
+		RequestId = 2
+	
+		client sends: 
+			string roomName
+			unsigned int maxUsers;
+			unsigned int questionsCount;
+			unsigned int answerTimeout;
+	Response:
+		
+		If succeful:
+			status = 300
+			new handler = menu request handler (maybe will be changed later)
+		if failed:
+			status = 308
+			new handler = menu request handler 
+
+
+GetRooms:
+	Request:
+		RequestId = 3
+	
+		client sends: 
+			(only requestId)
+	Response:
+		
+		If succeful:
+			status = 210
+			vector<RoomData> rooms (eventually a string containing: "id|name|maxPlayers|numOfQuestionsInGame|timePerQuestion|isActive,...") 
+			new handler = menu request handler
+GetPlayersInRoom:
+	Request:
+		RequestId = 4
+	
+		client sends: 
+			unsigned int roomId
+
+	Response:
+		
+		If succeful:
+			status = 240
+			vector<string> players    --(usernames)
+			new handler = menu request handler
+
+JoinRoom:
+	Request:
+		RequestId = 5
+	
+		client sends: 
+			unsigned int roomId
+
+	Response:
+		
+		If succeful:
+			status = 310
+			new handler = menu request handler
+		if failed:
+			status = 318
+			new handler = menu request handler 
+
+GetPersonalStats:
+	Request:
+		RequestId = 6
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 220
+			vector<string> personalStats [in the following format: (playerScore, numOfPlayerGames, numOfTotalAnswers, numOfCorrectAnswers, playerAverageAnswerTime)]
+			new handler = menu request handler
+
+GetHighScores:
+	Request:
+		RequestId = 7
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 230
+			vector<string> highScores [in the following format: (TO-DO! still need to think about in code. probably: username|score, username|score, ...)]
+			new handler = menu request handler
+
+Logout:
+	Request:
+		RequestId = 8
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 500
+			new handler = nullptr (TO-DO maybe change in future to login request handler)
+		if failed:
+			status = 508
+			new handler = menu request handler 
+
+
+
+CloseRoom:
+	Request:
+		RequestId = 9
+
+		client sends:
+			(only requestId)
+	Response:
+		If successful:
+			status = 410 //ONLY CALLED BY MANAGEROOM (OWNER)
+
+
+StartGame:
+	Request:
+		requestId = 10
+		client send only requestId
+
+	Response:
+		status = 420
+
+getRoomState:
+	request:
+		requestId = 11
+		only requestId
+	
+	Response:
+		{answerTimeout, hasGameBegun, Players, questionsCount, status = 250}
+
+LeaveRoom:
+	request:
+		requestId = 12
+
+	Response:
+		status = 400
+
+UpdateRoom:
+	requestId = 13
+
+	Response:
+		status = 
+		0 = ok , 1 = start, 2 = leave
+
+LeaveGame:
+	Request:
+		RequestId = 14
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 680
+			new handler = menu request handler
+
+GetQuestion:
+	Request:
+		RequestId = 15
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 260
+			question = "String of question"
+			map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler
+
+		if failed: (No more questions left)
+			status = 261
+			question = "" (empty)
+			empty map <answerId (unsigned int), answer(string)>
+
+			new handler = game request handler 
+
+SubmitAnswer:
+	Request:
+		RequestId = 16
+	
+		client sends: 
+			answerId (unsigned int) [1-4]
+			answerTime (double)
+			
+	Response:
+		
+		If succeful:
+			status = 600
+			correctAnswerId (unsigned int)
+			score (current score of user) (unsigned int)
+			new handler = game request handler
+
+
+GetGameResult:
+	Request:
+		RequestId = 17
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			status = 610
+			results (vector<PlayerResults>)
+				PlayerResults contains:
+					username (string)
+					correctAnswerCount (unsigned int)
+					wrongAnswerCount (unsigned int)
+					averageAnswerTime (double)
+					score (unsigned int)
+
+			new handler = game request handler
+
+
+AddQuestion:
+	Request:
+		RequestId = 18
+	
+		client sends: 
+				
+				question (string) 
+				correctAns (string) 
+				Answer1 (string) 
+				Answer2 (string) 
+				Answer3 (string) 
+
+	Response:
+		
+		If succeful:
+			status = 880
+
+			new handler = menu request handler
+
+StartMatchmaking:
+	Request:
+		RequestId = 19
+	
+		client sends: 
+			(only requestId)
+
+	Response:
+		
+		If succeful:
+			if created a new room (There was no one waiting on matchmaking):
+				status = 700
+				roomId (unsigned int)
+			
+				new handler = room admin request handler
+
+			if joined room (There was someone waiting in a room for matchmaking):
+				status = 701
+				roomId (unsigned int)
+			
+				new handler = room member request handler
+
+		if failed:
+			status = 708
+
+			new handler = menu request handler 

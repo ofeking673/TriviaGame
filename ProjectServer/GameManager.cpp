@@ -1,0 +1,124 @@
+#include "GameManager.h"
+
+// Initialize static members
+GameManager* GameManager::instance = nullptr;
+std::once_flag GameManager::initInstanceFlag;
+
+GameManager::GameManager(IDatabase* database) 
+	: m_database(database)
+{
+    if (m_database == nullptr)
+    {
+        throw std::invalid_argument("Invalid Database pointer");
+    }
+}
+
+void GameManager::initSingleton()
+{
+    instance = new GameManager(&DatabaseAccess::getInstance());
+}
+
+GameManager& GameManager::getInstance()
+{
+    std::call_once(initInstanceFlag, &GameManager::initSingleton);
+    return *instance;
+}
+
+GameManager::~GameManager()
+{
+    for (auto game : m_games)
+    {
+        deleteGame(game.getGameId());
+    }
+}
+
+Game GameManager::createGame(const Room& room)
+{
+    // Get users list
+    std::vector<std::string> usersStr = room.getAllUsers();
+
+    std::vector<LoggedUser> players;
+    for (const auto& userStr : usersStr)
+    {
+        LoggedUser player(userStr);
+        players.push_back(player);
+    }
+
+    // Get questions from DB
+    std::list<Question> questionList = m_database->getQuestions(room.getRoomData().numOfQuestionsInGame);
+    // Convert to vector
+    std::vector<Question> questions(questionList.begin(), questionList.end());
+
+    // Generate unique game id
+    unsigned int gameId = generateUniqueGameId();
+
+
+    Game* newGame = new Game(players, questions, gameId, room.getRoomData().timePerQuestion);
+
+    m_games.push_back(*newGame);
+    
+    return *newGame;
+}
+
+void GameManager::deleteGame(unsigned int gameId)
+{
+    // Find the game with the given ID and remove it
+    for (auto it = m_games.begin(); it != m_games.end(); it++)
+    {
+        if (it->getGameId() == gameId)
+        {
+            for (auto player : it->getOrderedPlayersByScore())
+            {
+                submitGameStatsToDB(player.first.getUsername(), player.second);
+            }
+            m_games.erase(it);
+            return;
+        }
+    }
+}
+
+Game& GameManager::getGameForUser(const LoggedUser& user)
+{
+    for (auto& game : m_games) 
+    {
+        if (game.hasPlayer(user)) 
+        {
+            return game;
+        }
+    }
+    throw std::runtime_error("User not found in any game");
+}
+
+void GameManager::submitGameStatsToDB(const std::string& username, const GameData& gameData)
+{
+    m_database->submitGameStatistics(username ,gameData);
+}
+
+/// <summary>
+/// Generates a unique random id to game
+/// </summary>
+/// <returns>Game id</returns>
+unsigned int GameManager::generateUniqueGameId()
+{
+    srand(time(NULL));
+    unsigned int newId;
+    bool idExists;
+
+    do 
+    {
+        newId = rand() % 10000 + 1;  // 1-10000
+        idExists = false;
+
+        // Check if the ID already exists in the games vector
+        for (const auto& game : m_games)
+        {
+            if (game.getGameId() == newId) 
+            {
+                idExists = true;
+                break;
+            }
+        }
+    } while (idExists);
+
+    return newId;
+}
